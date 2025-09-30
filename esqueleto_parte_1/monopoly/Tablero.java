@@ -7,9 +7,13 @@ import java.util.*;
 
 public class Tablero {
     //Atributos.
-    private ArrayList<ArrayList<Casilla>> posiciones; //Posiciones del tablero: se define como un arraylist de arraylists de casillas (uno por cada lado del tablero).
+    private ArrayList<ArrayList<Casilla>> posiciones = null; //Posiciones del tablero: se define como un arraylist de arraylists de casillas (uno por cada lado del tablero).
     private HashMap<String, Grupo> grupos; //Grupos del tablero, almacenados como un HashMap con clave String (será el color del grupo).
     private Jugador banca = new Jugador(); //Un jugador que será la banca.
+
+    public void setGrupos(String color, Grupo grupo) {
+        this.grupos.put(color, grupo);
+    }
 
     public Tablero() {}
 
@@ -20,12 +24,10 @@ public class Tablero {
     
     //Método para crear todas las casillas del tablero. Formado a su vez por cuatro métodos (1/lado).
     private void generarCasillas() {
-        if (posiciones == null){
-            posiciones = new ArrayList<>();
+        posiciones = new ArrayList<>();
 
-            for (int i = 0; i < 4; i++) {
-                posiciones.add(new ArrayList<>());
-            }
+        for (int i = 0; i < 4; i++) {
+            posiciones.add(new ArrayList<>());
         }
 
         this.insertarLadoSur();
@@ -36,38 +38,49 @@ public class Tablero {
         generarGrupos();
     }
 
+    /////////////////// AÑADIR PRECAUCION SI NO ENCUENTRA LA CASILLA (null)
     private void generarGrupos() {
         if (posiciones == null) generarCasillas();
-        Grupo negro =  new Grupo(encontrar_casilla("RONDA DE VALENCIA"),
-                encontrar_casilla("PLAZA LAVAPIÉS"),
+        if (grupos == null) grupos = new HashMap<>();
+
+        Grupo negro =  new Grupo(encontrar_casilla((String) Solares.get(0).getFirst()),
+                encontrar_casilla((String) Solares.get(1).getFirst()),
                 Valor.BLACK);
-        Grupo cian =  new Grupo(encontrar_casilla("GLORIETA CUATRO CAMINOS"),
-                encontrar_casilla("AVENIDA DE REINA VICTORIA"),
-                encontrar_casilla("CALLE BRAVO MURILLO"),
+        setGrupos("negro", negro);
+        Grupo cian =  new Grupo(encontrar_casilla((String) Solares.get(2).getFirst()),
+                encontrar_casilla((String) Solares.get(3).getFirst()),
+                encontrar_casilla((String) Solares.get(4).getFirst()),
                 Valor.CYAN);
-        Grupo morado =  new Grupo(encontrar_casilla("GLORIETA DE BILBAO"),
-                encontrar_casilla("CALLE ALBERTO AGUILERA"),
-                encontrar_casilla("CALLE FUENCARRAL"),
+        setGrupos("cian", cian);
+        Grupo morado =  new Grupo(encontrar_casilla((String) Solares.get(5).getFirst()),
+                encontrar_casilla((String) Solares.get(6).getFirst()),
+                encontrar_casilla((String) Solares.get(7).getFirst()),
                 Valor.PURPLE);
-        Grupo amarillo =  new Grupo(encontrar_casilla("AVENIDA FELIPE II"),
-                encontrar_casilla("CALLE VELÁZQUEZ"),
-                encontrar_casilla("CALLE SERRANO"),
+        setGrupos("morado", morado);
+        Grupo amarillo =  new Grupo(encontrar_casilla((String) Solares.get(8).getFirst()),
+                encontrar_casilla((String) Solares.get(9).getFirst()),
+                encontrar_casilla((String) Solares.get(10).getFirst()),
                 Valor.YELLOW);
-        Grupo rojo =  new Grupo(encontrar_casilla("AVENIDA DE AMÉRICA"),
-                encontrar_casilla("CALLE MARÍA DE MOLINA"),
-                encontrar_casilla("CALLE CEA BERMÚDEZ"),
+        setGrupos("amarillo", amarillo);
+        Grupo rojo =  new Grupo(encontrar_casilla((String) Solares.get(11).getFirst()),
+                encontrar_casilla((String) Solares.get(12).getFirst()),
+                encontrar_casilla((String) Solares.get(13).getFirst()),
                 Valor.RED);
-        Grupo blanco =  new Grupo(encontrar_casilla("AVENIDA DE LOS REYES CATÓLICOS"),
-                encontrar_casilla("CALLE BAILÉN"),
-                encontrar_casilla("PLAZA DE ESPAÑA"),
+        setGrupos("rojo", rojo);
+        Grupo blanco =  new Grupo(encontrar_casilla((String) Solares.get(14).getFirst()),
+                encontrar_casilla((String) Solares.get(15).getFirst()),
+                encontrar_casilla((String) Solares.get(16).getFirst()),
                 Valor.WHITE);
-        Grupo verde =  new Grupo(encontrar_casilla("PUERTA DEL SOL"),
-                encontrar_casilla("CALLE DE ALCALÁ"),
-                encontrar_casilla("GRAN VÍA "),
+        setGrupos("blanco", blanco);
+        Grupo verde =  new Grupo(encontrar_casilla((String) Solares.get(17).getFirst()),
+                encontrar_casilla((String) Solares.get(18).getFirst()),
+                encontrar_casilla((String) Solares.get(19).getFirst()),
                 Valor.GREEN);
-        Grupo azul =  new Grupo(encontrar_casilla("PASEO DE LA CASTELLANA"),
-                encontrar_casilla("PASEO DEL PRADO"),
+        setGrupos("verde", verde);
+        Grupo azul =  new Grupo(encontrar_casilla((String) Solares.get(20).getFirst()),
+                encontrar_casilla((String) Solares.get(21).getFirst()),
                 Valor.BLUE);
+        setGrupos("azul", azul);
     }
     
     //Método para insertar las casillas del lado norte.
@@ -104,6 +117,151 @@ public class Tablero {
             ladoEste.add(asignarCasilla(i));
         }
         posiciones.add(ladoEste);
+    }
+
+    //Para imprimir el tablero, modificamos el método toString().
+    @Override
+    public String toString() {
+        generarCasillas();
+
+        // Dimensiones del tablero
+        int filas = 11;  // Total de filas necesarias
+        int columnas = 11; // Total de columnas necesarias
+        int lenCasilla = 40;
+
+        byte iSur = 4;
+        byte iOeste = 5;
+        byte iNorte = 6;
+        byte iEste = 7;
+
+        ////////////////// Crear matriz para organizar el tablero
+        String[][] matrizTablero = new String[filas][columnas];
+        String vacio = " ".repeat(lenCasilla);
+
+        // Inicializar con espacios vacíos
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                matrizTablero[i][j] = vacio; // 12 espacios para cada celda
+            }
+        }
+
+        // Llenar lado NORTE (fila 0)
+        ArrayList<Casilla> norte = posiciones.get(iNorte);
+        for (int j = 0; j < posiciones.get(iNorte).size(); j++) {
+            ArrayList<Avatar> avatares = norte.get(j).getAvatares();
+            String textoCasilla = "";
+            String nombre = norte.get(j).getNombre();
+
+            textoCasilla = String.format("%-40s", nombre);
+
+            if (!avatares.isEmpty()) textoCasilla = avataresString(lenCasilla, nombre, avatares);
+
+            if (norte.get(j).getTipo().equals("Solar")) {
+                String color = norte.get(j).getGrupo().getColorGrupo();
+                matrizTablero[0][j] = color + textoCasilla + Valor.RESET;
+            }
+            else matrizTablero[0][j] = textoCasilla;
+        }
+
+        // Llenar lado SUR (fila 10)
+        ArrayList<Casilla> sur = posiciones.get(iSur);
+        int tam = posiciones.get(iSur).size();
+        for (int j = tam - 1; j > -1; j--) {
+            ArrayList<Avatar> avatares = sur.get(j).getAvatares();
+            String textoCasilla = "";
+            String nombre = sur.get(j).getNombre();
+
+            textoCasilla = String.format("%-40s", nombre);
+
+            if (!avatares.isEmpty()) textoCasilla = avataresString(lenCasilla, nombre, avatares);
+
+            if (sur.get(j).getTipo().equals("Solar")) {
+                String color = sur.get(j).getGrupo().getColorGrupo();
+                    matrizTablero[10][tam - j - 1] = color + textoCasilla + Valor.RESET;
+            }
+            else matrizTablero[10][tam - j - 1] = textoCasilla;
+        }
+
+        // Llenar lado OESTE (columna 0)
+        ArrayList<Casilla> oeste = posiciones.get(iOeste);
+        tam = posiciones.get(iOeste).size();
+        for (int j = tam - 1; j > -1; j--) {
+            ArrayList<Avatar> avatares = oeste.get(j).getAvatares();
+            String textoCasilla = "";
+            String nombre = oeste.get(j).getNombre();
+
+            textoCasilla = String.format("%-40s", nombre);
+
+            if (!avatares.isEmpty()) textoCasilla = avataresString(lenCasilla, nombre, avatares);
+
+            if (oeste.get(j).getTipo().equals("Solar")) {
+                String color = oeste.get(j).getGrupo().getColorGrupo();
+                matrizTablero[tam - j][0] = color + textoCasilla + Valor.RESET;
+            }
+            else matrizTablero[tam - j][0] = textoCasilla;
+        }
+
+        // Llenar lado ESTE (columna 10)
+        ArrayList<Casilla> este = posiciones.get(iEste);
+        for (int j = 1; j < 10; j++) {
+            ArrayList<Avatar> avatares = este.get(j-1).getAvatares();
+            String textoCasilla = "";
+            String nombre = este.get(j-1).getNombre();
+
+            textoCasilla = String.format("%-40s", nombre);
+
+            if (!avatares.isEmpty()) textoCasilla = avataresString(lenCasilla, nombre, avatares);
+
+            if (este.get(j-1).getTipo().equals("Solar")) {
+                String color = este.get(j-1).getGrupo().getColorGrupo();
+                matrizTablero[j][10] = color + textoCasilla + Valor.RESET;
+            }
+            else matrizTablero[j][10] = textoCasilla;
+        }
+
+
+        ///////////////// Construir String tablero
+        StringBuilder tablero = new StringBuilder();
+        String bordeCasilla = "-".repeat((lenCasilla/2) + 1);
+        String separacion = (" " + bordeCasilla).repeat(columnas);
+        tablero.append(separacion).append("\n");
+
+        for (int i = 0; i < filas; i++) {
+            for (int k = 0; k < 2; k++) { // Líneas que ocupa cada casilla
+                String linea = "";
+                String lineaVacia = " ".repeat(lenCasilla/2);
+                for (int j = 0; j < columnas; j++) {
+                    String texto = matrizTablero[i][j];
+                    String[] lineasDiv = splitByWords(texto, lenCasilla/2);
+
+                    // Al dividir la cadena hay que volver a formatear el color
+                    String color = "";
+                    if (texto.startsWith("\u001B[")) {
+                        color = texto.substring(0, texto.indexOf('m') + 1);
+                        texto = texto.substring(texto.indexOf('m') + 1,  texto.length() - 10);
+                        lineasDiv = splitByWords(texto, lenCasilla/2);
+                        lineasDiv[0] = color + lineasDiv[0] + Valor.RESET;
+                        lineasDiv[1] = color + lineasDiv[1] + Valor.RESET;
+                    }
+
+                    if (k == 0) linea = lineasDiv[0];
+                    else linea =  lineasDiv[1];
+
+                    if (!texto.equals(vacio)) {
+                        if (j == 0) tablero.append("| ").append(linea).append("| ");
+                        else if (!matrizTablero[i][j-1].equals(vacio)) tablero.append(linea).append("| ");
+                        else tablero.append(" ".repeat(lenCasilla/2 - 4)).append("| ").append(linea).append("| ");
+                    }
+                    else tablero.append(lineaVacia);
+                }
+                if (k == 0) tablero.append("\n");
+            }
+
+            if (i == 0 || i == 9 || i == 10) tablero.append("\n").append(separacion).append("\n");
+            else tablero.append("\n").append(" ").append(bordeCasilla).append(" ".repeat(198)).append(" ").append(bordeCasilla).append("\n");
+        }
+
+        return tablero.toString();
     }
 
     //Método para asignar el tipo de casilla
@@ -153,104 +311,58 @@ public class Tablero {
         return new Casilla();
     }
 
-    //Para imprimir el tablero, modificamos el método toString().
-    @Override
-    public String toString() {
-        generarCasillas();
-
-        // Dimensiones del tablero
-        int filas = 11;  // Total de filas necesarias
-        int columnas = 11; // Total de columnas necesarias
-
-        byte iSur = 4;
-        byte iOeste = 5;
-        byte iNorte = 6;
-        byte iEste = 7;
-
-        // Crear matriz para organizar el tablero
-        String[][] matrizTablero = new String[filas][columnas];
-
-        // Inicializar con espacios vacíos
-        for (int i = 0; i < filas; i++) {
-            for (int j = 0; j < columnas; j++) {
-                matrizTablero[i][j] = "          "; // 8 espacios para cada celda
-            }
+    private String avataresString(int lenCasilla, String nombre, ArrayList<Avatar> avatares){
+        StringBuilder avs = new StringBuilder();
+        for (Avatar av : avatares){
+            String ID = av.getId();
+            avs.append("&").append(ID);
         }
-
-        // Llenar lado NORTE (fila 0)
-        ArrayList<Casilla> norte = posiciones.get(iNorte);
-        for (int j = 0; j < posiciones.get(iNorte).size(); j++) {
-            ArrayList<Avatar> avatares = norte.get(j).getAvatares();
-            if (norte.get(j).getTipo().equals("Solar")) {
-                String color = norte.get(j).getGrupo().getColorGrupo();
-                String nombre = norte.get(j).getTipo();
-                StringBuilder avs = new StringBuilder();
-                if (!avatares.isEmpty()){
-                    for (Avatar av : avatares){
-                        String ID = av.getId();
-                        avs.append(""  ID);
-                    }
-
-
-                }
-
-                matrizTablero[0][j] = String.format("%s%-10s%s", color, norte.get(j).getNombre(), Valor.RESET);
-            }
-            else matrizTablero[0][j] = String.format("%-10s", norte.get(j).getNombre());
-        }
-
-        // Llenar lado SUR (fila 10)
-        ArrayList<Casilla> sur = posiciones.get(iSur);
-        int tam = posiciones.get(iSur).size();
-        for (int j = tam - 1; j > -1; j--) {
-            if (sur.get(j).getTipo().equals("Solar")) {
-                String color = sur.get(j).getGrupo().getColorGrupo();
-                    matrizTablero[10][tam - j - 1] = String.format("%s%-10s%s", color, sur.get(j).getNombre(), Valor.RESET);
-            }
-            else matrizTablero[10][tam - j - 1] = String.format("%-10s", sur.get(j).getNombre());
-        }
-
-        // Llenar lado OESTE (columna 0)
-        ArrayList<Casilla> oeste = posiciones.get(iOeste);
-        tam = posiciones.get(iOeste).size();
-        for (int j = tam - 1; j > -1; j--) {
-            if (oeste.get(j).getTipo().equals("Solar")) {
-                String color = oeste.get(j).getGrupo().getColorGrupo();
-                matrizTablero[tam - j][0] = String.format("%s%-10s%s", color, oeste.get(j).getNombre(), Valor.RESET);
-            }
-            else matrizTablero[tam - j][0] = String.format("%-10s", oeste.get(j).getNombre());
-        }
-
-        // Llenar lado ESTE (columna 10)
-        ArrayList<Casilla> este = posiciones.get(iEste);
-        for (int j = 1; j < 10; j++) {
-            if (este.get(j-1).getTipo().equals("Solar")) {
-                String color = este.get(j-1).getGrupo().getColorGrupo();
-                matrizTablero[j][10] = String.format("%s%-10s%s", color, este.get(j-1).getNombre(), Valor.RESET);
-            }
-            else matrizTablero[j][10] = String.format("%-10s", este.get(j-1).getNombre());
-        }
-
-        StringBuilder tablero = new StringBuilder();
-        tablero.append(" -----------".repeat(columnas)).append("\n");
-
-        for (int i = 0; i < filas; i++) {
-            for (int j = 0; j < columnas; j++) {
-                if (!matrizTablero[i][j].equals("          ")) {
-                    if (j == 0) tablero.append("| ").append(matrizTablero[i][j]).append("| ");
-                    else if (!matrizTablero[i][j-1].equals("          ")) tablero.append(matrizTablero[i][j]).append("| ");
-                    else tablero.append("| ").append(matrizTablero[i][j]).append("| ");
-                }
-                else if (!matrizTablero[i][j+1].equals("          ")) tablero.append(matrizTablero[i][j]);
-                else tablero.append("            ");
-            }
-            if (i == 0 || i == 9 || i == 10) tablero.append("\n").append(" -----------".repeat(columnas)).append("\n");
-            else tablero.append("\n").append(" -----------").append(" ".repeat(108)).append(" -----------").append("\n");
-        }
-
-        return tablero.toString();
+        int espacios = lenCasilla - (nombre.length() + avs.length());
+        return nombre + " ".repeat(espacios) + avs.toString();
     }
-    
+    private static String[] splitByWords(String text, int width) {
+        if (text == null) text = "";
+
+        String[] words = text.split(" ");
+        StringBuilder line1 = new StringBuilder();
+        StringBuilder line2 = new StringBuilder();
+        boolean firstLine = true;
+
+        for (String word : words) {
+            StringBuilder currentLine = firstLine ? line1 : line2;
+
+            int spaceNeeded = (currentLine.length() == 0 ? 0 : 1) + word.length();
+
+            if (currentLine.length() + spaceNeeded <= width) {
+                // cabe en la línea actual
+                if (currentLine.length() != 0) currentLine.append(" ");
+                currentLine.append(word);
+            } else if (firstLine) {
+                // pasa a la segunda línea
+                firstLine = false;
+                currentLine = line2;
+                if (currentLine.length() != 0) currentLine.append(" ");
+                currentLine.append(word);
+            } else {
+                // segunda línea ya llena, recortar si sobra
+                int remaining = width - currentLine.length();
+                if (remaining > 0) {
+                    currentLine.append(word, 0, Math.min(word.length(), remaining));
+                }
+            }
+        }
+
+        String linea1 = String.format("%-20s", line1.toString());
+        String linea2 = String.format("%-20s", line2.toString());
+        return new String[]{linea1, linea2};
+    }
+
+    private static String padRight(String s, int width) {
+        if (s == null) s = "";
+        int padding = width - s.length();
+        return s + " ".repeat(Math.max(0, padding));
+    }
+
     //Método usado para buscar la casilla con el nombre pasado como argumento:
     public Casilla encontrar_casilla(String nombre){
         if (posiciones == null) generarCasillas();
@@ -264,23 +376,24 @@ public class Tablero {
         return null;
     }
 
-    private List<List<Integer>> SolServTrans = Arrays.asList(
+    private final List<List<Integer>> SolServTrans = Arrays.asList(
             Arrays.asList(1,3,6,8,9,11,13,14,16,18,19,21,23,24,26,27,29,31,32,34,37,39), // Posición Solares
             Arrays.asList(12,28), // Posición Servicios
             Arrays.asList(5,15,25,35) // Posición Transporte
     );
-    private List<Integer> impuestos = Arrays.asList(4,38);
-    private List<List<Integer>> SuCajEsp = Arrays.asList(
+    private final List<Integer> impuestos = Arrays.asList(4,38);
+    private final List<List<Integer>> SuCajEsp = Arrays.asList(
             Arrays.asList(7,22,36),
             Arrays.asList(2,17,33),
             Arrays.asList(0,10,20,30)
     );
 
-    private List<List<Object>> Solares = Arrays.asList(
+    //////////////// CUIDADO CON LOS ESPACIOS, LOS NOMBRES TIENEN QUE SER IGUALES ARRIBA Y ABAJO
+    private final List<List<Object>> Solares = Arrays.asList(
             Arrays.asList("RONDA DE VALENCIA", 600000),
             Arrays.asList("PLAZA LAVAPIÉS", 600000),
             Arrays.asList("GLORIETA CUATRO CAMINOS", 1000000),
-            Arrays.asList("AVENIDA DE REINA VICTORIA ", 1000000),
+            Arrays.asList("AVENIDA DE REINA VICTORIA", 1000000),
             Arrays.asList("CALLE BRAVO MURILLO", 1200000),
             Arrays.asList("GLORIETA DE BILBAO", 1400000),
             Arrays.asList("CALLE ALBERTO AGUILERA", 1400000),
@@ -289,15 +402,15 @@ public class Tablero {
             Arrays.asList("CALLE VELÁZQUEZ", 1800000),
             Arrays.asList("CALLE SERRANO", 2200000),
             Arrays.asList("AVENIDA DE AMÉRICA", 2200000),
-            Arrays.asList("CALLE DE MARÍA MOLINA", 2200000),
-            Arrays.asList("CALLE DE CEA BERMÚDEZ", 2400000),
+            Arrays.asList("CALLE MARÍA MOLINA", 2200000),
+            Arrays.asList("CALLE CEA BERMÚDEZ", 2400000),
             Arrays.asList("AVENIDA DE LOS REYES CATÓLICOS", 2600000),
             Arrays.asList("CALLE BAILÉN", 2600000),
             Arrays.asList("PLAZA DE ESPAÑA", 2800000),
             Arrays.asList("PUERTA DEL SOL", 3000000),
             Arrays.asList("CALLE DE ALCALÁ", 3000000),
             Arrays.asList("GRAN VÍA", 3200000),
-            Arrays.asList("PASE DE LA CASTELLANA", 3500000),
+            Arrays.asList("PASEO DE LA CASTELLANA", 3500000),
             Arrays.asList("PASEO DEL PRADO", 4000000)
     );
 }

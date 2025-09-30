@@ -72,6 +72,8 @@ public class Casilla {
         setPosicion(posicion);
         setValor(valor);
         setDuenho(duenho);
+
+        this.avatares = new ArrayList<>();
     }
 
     /*Constructor utilizado para inicializar las casillas de tipo IMPUESTOS.
@@ -83,6 +85,8 @@ public class Casilla {
         setTipo(tipo);
         setPosicion(posicion);
         setDuenho(duenho);
+
+        this.avatares = new ArrayList<>();
     }
 
     /*Constructor utilizado para crear las otras casillas (Suerte, Caja de comunidad y Especiales):
@@ -93,6 +97,8 @@ public class Casilla {
         setTipo(tipo);
         setPosicion(posicion);
         setDuenho(duenho);
+
+        this.avatares = new ArrayList<>();
     }
 
     //Método utilizado para añadir un avatar al array de avatares en casilla.
