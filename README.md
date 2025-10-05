@@ -21,7 +21,7 @@ Confirmar cambios:
 Subir cambios a GitHub:
 **git push origin main**       
 
-Descargar cambios de Github:\n
+Descargar cambios de Github:
 **git pull origin main**
 
 
