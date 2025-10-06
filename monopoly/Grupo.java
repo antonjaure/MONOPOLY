@@ -12,12 +12,25 @@ class Grupo {
     private String colorGrupo; //Color del grupo
     private int numCasillas; //Número de casillas del grupo.
 
+
+    public ArrayList<Casilla> getMiembros() {
+        return this.miembros;
+    }
     public String getColorGrupo() {
         return colorGrupo;
     }
 
+    public int numCasillas() {
+        return numCasillas;
+    }
+
+    public void setMiembros(ArrayList<Casilla> miembros) {
+        this.miembros = miembros;
+    }
+
+    
     //Constructor vacío.
-    public Grupo() {
+    public Grupo(){
     }
 
     /*Constructor para cuando el grupo está formado por DOS CASILLAS:

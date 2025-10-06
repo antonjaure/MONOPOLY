@@ -44,15 +44,14 @@ public class Casilla {
     public float getImpuesto() {
         return this.impuesto;
     }
+
+    public float getHipoteca() {
+        return this.hipoteca;
+    }
     
-
-
-
     public ArrayList<Avatar> getAvatares() {
         return this.avatares;
     }
-
-    
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
