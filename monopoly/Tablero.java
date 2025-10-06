@@ -413,4 +413,8 @@ public class Tablero {
             Arrays.asList("PASEO DE LA CASTELLANA", 3500000),
             Arrays.asList("PASEO DEL PRADO", 4000000)
     );
+
+    public ArrayList<ArrayList<Casilla>> getPosiciones() {
+        return this.posiciones;
+    }
 }

@@ -17,20 +17,42 @@ public class Casilla {
     private float hipoteca; //Valor otorgado por hipotecar una casilla
     private ArrayList<Avatar> avatares; //Avatares que están situados en la casilla.
 
-    public String getTipo() {
-        return tipo;
-    }
     public String getNombre() {
-        return nombre;
+        return this.nombre;
     }
+    
+    public String getTipo() {
+        return this.tipo;
+    }
+    
+    public float getValor() {
+        return this.valor;
+    }
+
+    public int getPosicion() {
+        return this.posicion;
+    }
+
+    public Jugador getDuenho() { 
+        return this.duenho;
+    }
+
     public Grupo getGrupo() {
-        return grupo;
+        return this.grupo;
     }
-    public Jugador getDuenho() { return duenho;}
+
+    public float getImpuesto() {
+        return this.impuesto;
+    }
+    
+
+
 
     public ArrayList<Avatar> getAvatares() {
-        return avatares;
+        return this.avatares;
     }
+
+    
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
