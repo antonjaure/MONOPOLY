@@ -26,6 +26,7 @@ public class Casilla {
     public Grupo getGrupo() {
         return grupo;
     }
+    public Jugador getDuenho() { return duenho;}
 
     public ArrayList<Avatar> getAvatares() {
         return avatares;
