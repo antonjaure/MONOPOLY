@@ -122,7 +122,7 @@ public class Tablero {
     //Para imprimir el tablero, modificamos el método toString().
     @Override
     public String toString() {
-        generarCasillas();
+        if (posiciones == null) generarCasillas();
 
         // Dimensiones del tablero
         int filas = 11;  // Total de filas necesarias
@@ -149,18 +149,17 @@ public class Tablero {
         ArrayList<Casilla> norte = posiciones.get(iNorte);
         for (int j = 0; j < posiciones.get(iNorte).size(); j++) {
             ArrayList<Avatar> avatares = norte.get(j).getAvatares();
-            String textoCasilla = "";
+            String contenidoTexto = "";
             String nombre = norte.get(j).getNombre();
-
-            textoCasilla = String.format("%-40s", nombre);
-
-            if (!avatares.isEmpty()) textoCasilla = avataresString(lenCasilla, nombre, avatares);
 
             if (norte.get(j).getTipo().equals("Solar")) {
                 String color = norte.get(j).getGrupo().getColorGrupo();
-                matrizTablero[0][j] = color + textoCasilla + Valor.RESET;
+                nombre = color + nombre + Valor.RESET;
             }
-            else matrizTablero[0][j] = textoCasilla;
+            contenidoTexto = nombre;
+            if (!avatares.isEmpty()) contenidoTexto = nombre + ';' + avataresString(avatares);
+
+            matrizTablero[0][j] = contenidoTexto;
         }
 
         // Llenar lado SUR (fila 10)
@@ -168,18 +167,17 @@ public class Tablero {
         int tam = posiciones.get(iSur).size();
         for (int j = tam - 1; j > -1; j--) {
             ArrayList<Avatar> avatares = sur.get(j).getAvatares();
-            String textoCasilla = "";
+            String contenidoTexto = "";
             String nombre = sur.get(j).getNombre();
-
-            textoCasilla = String.format("%-40s", nombre);
-
-            if (!avatares.isEmpty()) textoCasilla = avataresString(lenCasilla, nombre, avatares);
 
             if (sur.get(j).getTipo().equals("Solar")) {
                 String color = sur.get(j).getGrupo().getColorGrupo();
-                    matrizTablero[10][tam - j - 1] = color + textoCasilla + Valor.RESET;
+                nombre = color + nombre + Valor.RESET;
             }
-            else matrizTablero[10][tam - j - 1] = textoCasilla;
+            contenidoTexto = nombre;
+            if (!avatares.isEmpty()) contenidoTexto = nombre + ';' + avataresString(avatares);
+
+            matrizTablero[10][tam - j - 1] = contenidoTexto;
         }
 
         // Llenar lado OESTE (columna 0)
@@ -187,36 +185,34 @@ public class Tablero {
         tam = posiciones.get(iOeste).size();
         for (int j = tam - 1; j > -1; j--) {
             ArrayList<Avatar> avatares = oeste.get(j).getAvatares();
-            String textoCasilla = "";
+            String  contenidoTexto = "";
             String nombre = oeste.get(j).getNombre();
-
-            textoCasilla = String.format("%-40s", nombre);
-
-            if (!avatares.isEmpty()) textoCasilla = avataresString(lenCasilla, nombre, avatares);
 
             if (oeste.get(j).getTipo().equals("Solar")) {
                 String color = oeste.get(j).getGrupo().getColorGrupo();
-                matrizTablero[tam - j][0] = color + textoCasilla + Valor.RESET;
+                nombre = color + nombre + Valor.RESET;
             }
-            else matrizTablero[tam - j][0] = textoCasilla;
+            contenidoTexto = nombre;
+            if (!avatares.isEmpty()) contenidoTexto = nombre + ';' + avataresString(avatares);
+
+            matrizTablero[tam - j][0] = contenidoTexto;
         }
 
         // Llenar lado ESTE (columna 10)
         ArrayList<Casilla> este = posiciones.get(iEste);
         for (int j = 1; j < 10; j++) {
             ArrayList<Avatar> avatares = este.get(j-1).getAvatares();
-            String textoCasilla = "";
+            String contenidoTexto = "";
             String nombre = este.get(j-1).getNombre();
-
-            textoCasilla = String.format("%-40s", nombre);
-
-            if (!avatares.isEmpty()) textoCasilla = avataresString(lenCasilla, nombre, avatares);
 
             if (este.get(j-1).getTipo().equals("Solar")) {
                 String color = este.get(j-1).getGrupo().getColorGrupo();
-                matrizTablero[j][10] = color + textoCasilla + Valor.RESET;
+                nombre = color + nombre + Valor.RESET;
             }
-            else matrizTablero[j][10] = textoCasilla;
+            contenidoTexto = nombre;
+            if (!avatares.isEmpty()) contenidoTexto = nombre + ';' + avataresString(avatares);
+
+            matrizTablero[j][10] = contenidoTexto;
         }
 
 
@@ -231,15 +227,34 @@ public class Tablero {
                 String linea = "";
                 String lineaVacia = " ".repeat(lenCasilla/2);
                 for (int j = 0; j < columnas; j++) {
-                    String texto = matrizTablero[i][j];
-                    String[] lineasDiv = splitByWords(texto, lenCasilla/2);
+                    String[] contenidoCasilla = matrizTablero[i][j].split(";");
+                    String calle = contenidoCasilla[0];
 
                     // Al dividir la cadena hay que volver a formatear el color
                     String color = "";
-                    if (texto.startsWith("\u001B[")) {
-                        color = texto.substring(0, texto.indexOf('m') + 1);
-                        texto = texto.substring(texto.indexOf('m') + 1,  texto.length() - 10);
-                        lineasDiv = splitByWords(texto, lenCasilla/2);
+                    boolean solar = calle.startsWith("\u001B[");
+                    if (solar) {
+                        color = calle.substring(0, calle.indexOf('m') + 1);
+                        calle = calle.substring(calle.indexOf('m') + 1, calle.length() - 4);
+                    }
+
+                    String[] lineasDiv = splitByWords(calle, lenCasilla/2);
+
+                    String avatar = "";
+                    if (matrizTablero[i][j].contains(";")) {
+                        int lenAv = contenidoCasilla[1].length();
+                        avatar = "\033[1m" + contenidoCasilla[1] + "\033[22m";
+
+                        // Calcula cuántos espacios poner entre base y el texto añadido
+                        int margen = 1;
+                        lineasDiv[1] = lineasDiv[1].trim(); // quita espacios sobrantes
+                        int espacios = lenCasilla/2 - lineasDiv[1].length() - lenAv - margen;
+                        if (espacios < 0) espacios = 0;  // evita números negativos
+
+                        lineasDiv[1] = lineasDiv[1] + " ".repeat(espacios) + avatar + " ".repeat(margen);
+                    }
+
+                    if (solar) {
                         lineasDiv[0] = color + lineasDiv[0] + Valor.RESET;
                         lineasDiv[1] = color + lineasDiv[1] + Valor.RESET;
                     }
@@ -247,7 +262,7 @@ public class Tablero {
                     if (k == 0) linea = lineasDiv[0];
                     else linea =  lineasDiv[1];
 
-                    if (!texto.equals(vacio)) {
+                    if (!calle.equals(vacio)) {
                         if (j == 0) tablero.append("| ").append(linea).append("| ");
                         else if (!matrizTablero[i][j-1].equals(vacio)) tablero.append(linea).append("| ");
                         else tablero.append(" ".repeat(lenCasilla/2 - 4)).append("| ").append(linea).append("| ");
@@ -262,7 +277,7 @@ public class Tablero {
         }
 
         return tablero.toString();
-    }
+    } ///////////////////////////////////
 
     //Método para asignar el tipo de casilla
     private Casilla asignarCasilla(int pos) {
@@ -311,14 +326,13 @@ public class Tablero {
         return new Casilla();
     }
 
-    private String avataresString(int lenCasilla, String nombre, ArrayList<Avatar> avatares){
+    private String avataresString(ArrayList<Avatar> avatares){
         StringBuilder avs = new StringBuilder();
         for (Avatar av : avatares){
             String ID = av.getId();
             avs.append("&").append(ID);
         }
-        int espacios = lenCasilla - (nombre.length() + avs.length());
-        return nombre + " ".repeat(espacios) + avs.toString();
+        return avs.toString();
     }
     private static String[] splitByWords(String text, int width) {
         if (text == null) text = "";

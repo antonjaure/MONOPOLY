@@ -17,11 +17,28 @@ public class Menu {
     private boolean tirado; //Booleano para comprobar si el jugador que tiene el turno ha tirado o no.
     private boolean solvente; //Booleano para comprobar si el jugador que tiene el turno es solvente, es decir, si ha pagado sus deudas.
 
+    public void setJugador(Jugador jugador) {
+        if (jugadores == null) {
+            jugadores = new ArrayList<>();
+        }
+        this.jugadores.add(jugador);
+    }
+
+    public void setAvatar(Avatar avatar) {
+        if (avatares == null) {
+            avatares = new ArrayList<>();
+        }
+        this.avatares.add(avatar);
+    }
+
+    public ArrayList<Avatar> getAvatares() {
+        return avatares;
+    }
 
     // Metodo para inciar una partida: crea los jugadores y avatares.
     private void iniciarPartida() {
     }
-    
+
     /*Metodo que interpreta el comando introducido y toma la accion correspondiente.
     * Parámetro: cadena de caracteres (el comando).
     */

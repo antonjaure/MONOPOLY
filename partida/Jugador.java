@@ -6,6 +6,7 @@ import java.util.Random;
 
 import monopoly.*;
 
+import static monopoly.MonopolyETSE.menu;
 import static monopoly.MonopolyETSE.tablero;
 
 
@@ -34,12 +35,18 @@ public class Jugador {
         Avatar avatar = new Avatar();
         Random random = new Random();
 
+        if (avCreados == null) {
+            avCreados = new ArrayList<>();
+        }
+
         char ID = (char) ('A' + random.nextInt(26));
-        inicio:
-        for (Avatar av : avCreados) {
-            if (Objects.equals(av.getId(), String.valueOf(ID))) {
-                ID = (char) ('A' + random.nextInt(26));
-                continue inicio;
+        if (!avCreados.isEmpty()) {
+            inicio:
+            for (Avatar av : avCreados) {
+                if (Objects.equals(av.getId(), String.valueOf(ID))) {
+                    ID = (char) ('A' + random.nextInt(26));
+                    continue inicio;
+                }
             }
         }
         avatar.setId(String.valueOf(ID));
@@ -55,11 +62,14 @@ public class Jugador {
 
         setNombre(nombre);
 
-        Casilla salida = tablero.encontrar_casilla("Salida");
-        salida.anhadirAvatar(avatar);
+        avatar.setLugar(inicio);
+        inicio.anhadirAvatar(avatar);
 
         avatar.setJugador(this);
         setAvatar(avatar);
+
+        menu.setJugador(this);
+        menu.setAvatar(avatar);
     }
 
     //Otros métodos:
