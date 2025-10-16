@@ -138,20 +138,97 @@ public class Casilla {
     * - La banca (para ciertas comprobaciones).
     * - El valor de la tirada: para determinar impuesto a pagar en casillas de servicios.
     * Valor devuelto: true en caso de ser solvente (es decir, de cumplir las deudas), y false
-    * en caso de no cumplirlas.*/
+    * en caso de no cumplirlas.
+
+    Evalúa si se tiene el dinero suficiente para: comprarla, pagar el impuesto o el alquiler. Devuelve TRUE si se tiene el dinero suficiente
+    FALSE en caso contrario. La función ya tiene en cuenta si la casilla no tiene dueño (se ofrece comprarla)
+     o si el dueño es el propio jugador (no pasa nada).
+
+    FALTA IMPLEMENTAR EL CÓDIGO PARA LAS CASILLAS ESPECIALES (COMUNIDAD, SUERTE, IR A CÁRCEL, PARKING Y SALIDA)
+    */
+
     public boolean evaluarCasilla(Jugador actual, Jugador banca, int tirada) {
         Avatar avatar = actual.getAvatar();
         Casilla casilla = avatar.getCasilla();
         String tipo = casilla.getTipo();
 
+        switch(tipo) {
+            case "Solar": 
+            case "Transporte":
+                if(casilla.getDuenho() == banca) { //Si la casilla no tiene dueño, se ofrece comprarla.
+                    if(actual.getFortuna() >= casilla.getValor()) {
+                        return true;
+                    } else {
+                        return false; //No tiene dinero para comprarla.
+                    }
+                }else if(casilla.getDuenho() != actual) {
+                    float impuesto = casilla.getImpuesto();
+                    if(actual.getFortuna() >= impuesto) {
+                        return true; //Tiene dinero para pagar el alquiler.
+                    } else {
+                        return false; //No tiene dinero para pagar el alquiler.
+                    }
+                }
+                else if(casilla.getDuenho() == actual) {
+                    return true; //No pasa nada, es su casilla.
+                }
+                break;
+            case "Servicios":
+                if(casilla.getDuenho() == banca) { //Si la casilla no tiene dueño, se ofrece comprarla.
+                    if(actual.getFortuna() >= casilla.getValor()) {
+                        return true;
+                    } else {
+                        return false; //No tiene dinero para comprarla.
+                    }
+                }else if(casilla.getDuenho() != actual) {
+                    float impuesto = casilla.getImpuesto() * tirada; //El impuesto en servicios depende de la tirada.
+                    if(actual.getFortuna() >= impuesto) {
+                        return true; //Tiene dinero para pagar el alquiler.
+                    } else {
+                        return false; //No tiene dinero para pagar el alquiler.
+                    }
+                }
+                else if(casilla.getDuenho() == actual) {
+                    return true; //No pasa nada, es su casilla.
+                }
+                break;
 
+            case "Impuesto":
+                float impuesto = casilla.getImpuesto();
+                if(actual.getFortuna() >= impuesto) {
+                    return true; //Tiene dinero para pagar el impuesto.
+                } else {
+                    return false; //No tiene dinero para pagar el impuesto.
+                }
+            case "Comunidad":
+            case "Suerte":
+                return true; //No pasa nada, se roba carta.
+            case "Especial":
+                return true; //SE NECESITA HACER EL CODIGO PARA "ESPECIAL"
+        }          
+        System.err.println("\nError al evaluarCasilla().\n");
         return true;
     }
 
     /*Método usado para comprar una casilla determinada. Parámetros:
     * - Jugador que solicita la compra de la casilla.
     * - Banca del monopoly (es el dueño de las casillas no compradas aún).*/
-    public void comprarCasilla(Jugador solicitante, Jugador banca) {
+    public void comprarCasilla(Jugador solicitante, Jugador banca, int tirada) {
+        if(evaluarCasilla(solicitante, banca, tirada)){
+            Casilla casilla = solicitante.getAvatar().getCasilla();
+            if(casilla.getDuenho() == banca) { //Si la casilla no tiene dueño, se ofrece comprarla.
+                float valor = casilla.getValor();
+                solicitante.sumarFortuna(-valor); //Se resta el valor de la casilla a la fortuna del jugador.
+                banca.sumarFortuna(valor); //Se añade el valor de la casilla a la fortuna de la banca.
+                casilla.setDuenho(solicitante); //El dueño de la casilla pasa a ser el jugador solicitante.
+                solicitante.añadirPropiedad(casilla); //Se añade la casilla al arraylist de propiedades del jugador.
+                System.out.println("\n" + Valor.GREEN + "¡Compra realizada con éxito!" + Valor.RESET);
+            } else {
+                System.out.println("\n" + Valor.RED + "Error: La casilla ya tiene dueño." + Valor.RESET);
+            }
+        } else {
+            System.out.println("\n" + Valor.RED + "Error: No tienes suficiente dinero para comprar esta casilla." + Valor.RESET);
+        }
     }
 
     /*Método para añadir valor a una casilla. Utilidad:

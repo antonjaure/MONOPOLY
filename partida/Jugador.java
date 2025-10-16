@@ -87,6 +87,9 @@ public class Jugador {
     //Como parámetro se pide el valor a añadir. Si hay que restar fortuna, se pasaría un valor negativo.
     public void sumarFortuna(float valor) {
         this.fortuna += valor;
+        if(valor < 0) {
+            sumarGastos(-valor);
+        }
     }
 
     //Método para sumar gastos a un jugador.

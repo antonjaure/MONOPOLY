@@ -74,8 +74,19 @@ public class Menu {
     }
 
     //Metodo que ejecuta todas las acciones relacionadas con el comando 'salir carcel'.
-    private void salirCarcel() {
+    private void salirCarcel(Jugador jugador) {
+        float fortuna = jugador.getFortuna();
+        float precio_carcel = 500000f;
+        
+        if(fortuna >= precio_carcel){
+                jugador.sumarFortuna(-precio_carcel);
+                System.out.println(jugador.getNombre() + "paga 500.000€ y sale de la cárcel. Puede lanzar los dados.\n");
+        }
+        else{
+            System.out.println(jugador.getNombre() + "no posee suficiente dinero para pagar la salida. Debe lanzar los dados.\n");
+        }
     }
+    
 
     // Metodo que realiza las acciones asociadas al comando 'listar enventa'.
     private void listarVenta() {
