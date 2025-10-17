@@ -336,7 +336,28 @@ public class Casilla {
      */
     public String casEnVenta() {
 
-        return "";
-    }
+        String tipo = this.getTipo();
 
+        switch(tipo){
+            
+            case "Solar":
+                return "\nTipo: " + this.tipo + "\n" +
+                "Grupo: " + this.grupo + "\n" +
+                "Valor: " + this.valor + "€\n";
+
+            case "Transporte":
+                return "\nTipo: " + this.tipo + "\n" +
+                "Valor: " + this.valor + "€\n"; 
+
+            case "Servicios":
+                return "\nTipo: " + this.tipo + "\n" +
+                "Valor: " + this.valor + "€\n";
+            case "Impuesto":
+            case "Comunidad":
+            case "Suerte":
+                return "\nEsta casilla no está en venta.\n";
+            default:
+                return "\nError al mostrar casEnVenta().\n";
+        }
+    }
 }

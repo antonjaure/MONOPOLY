@@ -101,6 +101,18 @@ public class Jugador {
     /*Método para establecer al jugador en la cárcel. 
     * Se requiere disponer de las casillas del tablero para ello (por eso se pasan como parámetro).*/
     public void encarcelar(ArrayList<ArrayList<Casilla>> pos) {
+
+        Avatar avatar = this.getAvatar();
+
+        Casilla carcel = tablero.encontrar_casilla("Cárcel");
+
+        avatar.getCasilla().eliminarAvatar(avatar);
+        avatar.setLugar(carcel);
+        carcel.anhadirAvatar(avatar);
+        this.setEnCarcel(true);
+        this.setTiradasCarcel(0);
+        System.out.println(this.getNombre() + " ha sido enviado a la cárcel.\n");
+        return;
     }
 
     public String getNombre() {
