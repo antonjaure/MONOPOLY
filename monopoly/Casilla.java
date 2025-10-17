@@ -153,6 +153,30 @@ public class Casilla {
         String tipo = casilla.getTipo();
 
         switch(tipo) {
+            case "Impuesto":
+                if(casilla.getDuenho() != banca && casilla.getDuenho() != actual) {
+                    float impuesto = casilla.getImpuesto() * tirada;
+                    if(actual.getFortuna() >= impuesto) {
+                        return true; //Tiene dinero para pagar el impuesto.
+                    } else {
+                        return false; //No tiene dinero para pagar el impuesto.
+                    }
+                }
+                else{
+                    return evaluarCasilla(actual, banca);
+                }
+
+            default:
+                return evaluarCasilla(actual, banca);
+        }          
+    }
+
+    public boolean evaluarCasilla(Jugador actual, Jugador banca) {
+        Avatar avatar = actual.getAvatar();
+        Casilla casilla = avatar.getCasilla();
+        String tipo = casilla.getTipo();
+
+        switch(tipo) {
             case "Solar": 
             case "Transporte":
                 if(casilla.getDuenho() == banca) { //Si la casilla no tiene dueño, se ofrece comprarla.
@@ -180,14 +204,11 @@ public class Casilla {
                     } else {
                         return false; //No tiene dinero para comprarla.
                     }
-                }else if(casilla.getDuenho() != actual) {
-                    float impuesto = casilla.getImpuesto() * tirada; //El impuesto en servicios depende de la tirada.
-                    if(actual.getFortuna() >= impuesto) {
-                        return true; //Tiene dinero para pagar el alquiler.
-                    } else {
-                        return false; //No tiene dinero para pagar el alquiler.
-                    }
                 }
+
+                    //El caso de duenho != actual se maneja con la llamada a evaluarCasilla con tirada.
+
+
                 else if(casilla.getDuenho() == actual) {
                     return true; //No pasa nada, es su casilla.
                 }
@@ -205,14 +226,17 @@ public class Casilla {
                 return true; //No pasa nada, se roba carta.
             case "Especial":
                 return true; //SE NECESITA HACER EL CODIGO PARA "ESPECIAL"
+            default:
+                System.err.println("\nError al evaluarCasilla().\n");
+                return true;
         }          
-        System.err.println("\nError al evaluarCasilla().\n");
-        return true;
+        return true;   
     }
 
     /*Método usado para comprar una casilla determinada. Parámetros:
     * - Jugador que solicita la compra de la casilla.
-    * - Banca del monopoly (es el dueño de las casillas no compradas aún).*/
+    * - Banca del monopoly (es el dueño de las casillas no compradas aún).
+    * - Se añade tirada para poder pasarla como parametro a evaluar casilla.*/
     public void comprarCasilla(Jugador solicitante, Jugador banca, int tirada) {
         if(evaluarCasilla(solicitante, banca, tirada)){
             Casilla casilla = solicitante.getAvatar().getCasilla();
@@ -224,10 +248,10 @@ public class Casilla {
                 solicitante.añadirPropiedad(casilla); //Se añade la casilla al arraylist de propiedades del jugador.
                 System.out.println("\n" + Valor.GREEN + "¡Compra realizada con éxito!" + Valor.RESET);
             } else {
-                System.out.println("\n" + Valor.RED + "Error: La casilla ya tiene dueño." + Valor.RESET);
+                System.out.println("\n" + Valor.RED + "Error: La casilla ya tiene dueño." + Valor.RESET); //No es necesario, pero se deja para manejar errores.
             }
         } else {
-            System.out.println("\n" + Valor.RED + "Error: No tienes suficiente dinero para comprar esta casilla." + Valor.RESET);
+            System.out.println("\n" + Valor.RED + "Error: La casilla ya tiene dueño o no tiene suficiente dinero para comprarla." + Valor.RESET);
         }
     }
 
@@ -236,21 +260,81 @@ public class Casilla {
     * - Sumar valor a las casillas de solar al no comprarlas tras cuatro vueltas de todos los jugadores.
     * Este método toma como argumento la cantidad a añadir del valor de la casilla.*/
     public void sumarValor(float suma) {
+
     }
 
     /*Método para mostrar información sobre una casilla.
-    * Devuelve una cadena con información específica de cada tipo de casilla.*/
+    * Devuelve una cadena con información específica de cada tipo de casilla.
+    * HAY QUE TB IMPRIMIR EL VALOR/ALQUILER SI TIENE CASA, HOTEL, PISCINA, PISTA...*/
     public String infoCasilla() {
 
+        String tipo = this.getTipo();
 
-        return "";
+        switch(tipo){
+
+            case "Solar":
+                return "\ntipo: " + this.tipo + "\n" +
+                "grupo: " + this.grupo + "\n" +
+                "propietario: " + (this.duenho.getNombre()) + "\n" +
+                "valor: " + this.valor + "€\n" +
+                "alquiler: " + this.impuesto + "€\n" +
+                "hipoteca: " + this.hipoteca + "€\n";
+
+            case "Transporte":
+            case "Servicios":
+                return "\ntipo: " + this.tipo + "\n" +
+                "grupo: " + this.grupo + "\n" +
+                "propietario: " + (this.duenho.getNombre()) + "\n" +
+                "valor: " + this.valor + "€\n" +
+                "alquiler: " + this.impuesto + "€\n" +
+                "hipoteca: " + this.hipoteca + "€\n";
+            
+
+            case "Impuesto":
+                return "\ntipo: " + this.tipo + "\n" +
+                "impuesto: " + this.impuesto + "€\n";
+
+            case "Comunidad":
+            case "Suerte":
+                return "\nNo hay información adicional para esta casilla.\n";
+            
+            case "Especial":
+                if(this.nombre.equals("Cárcel")){
+                    ArrayList<Avatar> avatares = this.getAvatares();
+                    String jugadoresEnCarcel = new String();
+
+                    for(Avatar av : avatares) {
+                        jugadoresEnCarcel += av.getJugador().getNombre();
+                    }
+
+                    return "\ntipo: " + this.tipo + "\n" +
+                    "salida carcel: " + this.impuesto + "€\n" +
+                    "Jugadores en carcel: " + jugadoresEnCarcel + "\n";
+                }
+                else if(this.nombre.equals("Parking")){
+
+                    //EN EL PDF PONE QUE HAY QUE MOSTRAR JUGADORES EN EL PARKING,
+                    //PERO NO SE SI SON LOS QUE PAGARON IMPUESTOS O LOS QUE ESTAN EN EL PARKING.
+
+                    return "\ntipo: " + this.tipo + "\n" +
+                    "bote actual: " + this.valor + "€\n";
+                }
+                else if(this.nombre.equals("Salida")){
+                    return "\ntipo: " + this.tipo + "\n" +
+                    "premio por pasar: " + Valor.SUMA_VUELTA + "€\n";
+                }
+                else{
+                    return "\nNo hay información adicional para esta casilla.\n";
+                }
+            default:
+                return "\nError al mostrar infoCasilla().\n";
+        }
     }
 
     /* Método para mostrar información de una casilla en venta.
      * Valor devuelto: texto con esa información.
      */
     public String casEnVenta() {
-
 
         return "";
     }

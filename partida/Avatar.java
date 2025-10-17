@@ -25,6 +25,10 @@ public class Avatar {
         return id;
     }
 
+    public Jugador getJugador() {
+        return jugador; 
+    }
+
     public void setId(String id) {
         this.id = id;
     }
