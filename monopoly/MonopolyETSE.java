@@ -3,21 +3,46 @@ package monopoly;
 import partida.Jugador;
 
 public class MonopolyETSE {
+
     public static Menu menu = new Menu();
     public static Jugador banca = new Jugador();
     public static Tablero tablero = new Tablero(banca);
 
     public static void main(String[] args) {
+
         System.out.println(Valor.RED + "\nMonopoly ETSE\n" + Valor.RESET);
         System.out.println("Iniciando partida...\n");
-        System.out.println(tablero.toString()); // esto crea también las casillas, asi que primero se tiene que imprimir el tablero vacío para poder
-        // añadir los avatares y el resto de atributos
 
-        Jugador jugador1 = new Jugador("anton", "coche", tablero.encontrar_casilla("AVENIDA DE REINA VICTORIA"), menu.getAvatares());
-        Jugador jugador2 = new Jugador("dani", "avión", tablero.encontrar_casilla("AVENIDA DE REINA VICTORIA"), menu.getAvatares());
-
-        System.out.println("\nImprimiendo tablero...\n");
+        // Mostrar tablero vacío
         System.out.println(tablero.toString());
-    }
 
+        // Asignar el tablero al menú para que pueda gestionarlo
+        menu.setTablero(tablero);
+
+        // Crear jugadores y añadirlos al menú
+        Jugador jugador1 = new Jugador("anton", "coche", tablero.encontrar_casilla("Salida"), menu.getAvatares());
+        Jugador jugador2 = new Jugador("dani", "avión", tablero.encontrar_casilla("Salida"), menu.getAvatares());
+
+        menu.setJugador(jugador1);
+        menu.setJugador(jugador2);
+
+        // Mostrar tablero con jugadores colocados
+        System.out.println("\nTablero con jugadores:\n");
+        System.out.println(tablero.toString());
+
+        // -------------------------------
+        // PRUEBA DEL MENÚ CON SWITCH
+        // -------------------------------
+        System.out.println("\n=== Simulación de partida ===");
+
+        System.out.println("\nTurno de Anton:");
+        menu.ejecutarOpcion("lanzar dados");
+        menu.ejecutarOpcion("acabar turno");
+
+        System.out.println("\nTurno de Dani:");
+        menu.ejecutarOpcion("lanzar dados");
+        menu.ejecutarOpcion("acabar turno");
+
+        System.out.println("\n--- Fin de la simulación ---");
+    }
 }

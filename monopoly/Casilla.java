@@ -338,5 +338,68 @@ public class Casilla {
 
         return "";
     }
+    /**
+     * Método que gestiona los pagos al caer en esta casilla.
+     * Parámetros:
+     * - jugadorActual: jugador cuyo avatar ha caído en esta casilla.
+     * - banca: jugador banca.
+     * - tirada: valor de los dados (para calcular servicios).
+     */
+    public void gestionarPago(Jugador jugadorActual, Jugador banca, int tirada) {
+    
+        boolean solvente = evaluarCasilla(jugadorActual, banca, tirada);
+    
+        if (!solvente) {
+            System.out.println(jugadorActual.getNombre() + " no tiene dinero suficiente para pagar esta casilla.");
+            // Avisar que debe hipotecar o declararse en bancarrota
+            return;
+        }
+    
+        // Casillas con dueño distinto al jugador actual
+        if ((tipo.equals("Solar") || tipo.equals("Transporte") || tipo.equals("Servicios"))
+                && duenho != null && duenho != banca && duenho != jugadorActual) {
+    
+            float cantidad = 0;
+    
+            switch (tipo) {
+                case "Solar":
+                    // Antes: se usaba impuesto fijo de la casilla
+                    // Ahora: considerar si el grupo completo pertenece al dueño → se podría duplicar alquiler
+                    cantidad = impuesto; 
+                    break;
+                case "Transporte":
+                    cantidad = 250000f;
+                    break;
+                case "Servicios":
+                    cantidad = tirada * 4 * 50000f;
+                    break;
+            }
+    
+            jugadorActual.sumarFortuna(-cantidad);
+            duenho.sumarFortuna(cantidad);
+            System.out.println(jugadorActual.getNombre() + " paga " + cantidad + "€ a " + duenho.getNombre());
+    
+        } else if (tipo.equals("Impuesto")) {
+            float cantidad = 2000000f;
+            jugadorActual.sumarFortuna(-cantidad);
+            banca.sumarFortuna(cantidad);
+            System.out.println(jugadorActual.getNombre() + " paga " + cantidad + "€ que se depositan en el Parking");
+        } 
+        else if (tipo.equals("Comunidad") || tipo.equals("Suerte")) {
+            System.out.println(jugadorActual.getNombre() + " ha caído en " + nombre + ". Roba una carta.");
+        }
+        else if (tipo.equals("Especial")) {
+            if(nombre.equals("Parking")) {
+                System.out.println(jugadorActual.getNombre() + " recibe el bote de " + valor + "€");
+                jugadorActual.sumarFortuna(valor);
+                valor = 0; // Vaciar el bote
+            } else if(nombre.equals("Salida")) {
+                System.out.println(jugadorActual.getNombre() + " pasa por Salida y recibe 2.000.000€");
+                jugadorActual.sumarFortuna(2000000f);
+            }
+            // Ir a Cárcel se gestiona fuera en Menu.java
+        }
+    }
+
 
 }

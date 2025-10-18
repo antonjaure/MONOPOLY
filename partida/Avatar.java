@@ -60,8 +60,19 @@ public class Avatar {
     * EN ESTA VERSIÓN SUPONEMOS QUE valorTirada siempre es positivo.
      */
     public void moverAvatar(ArrayList<ArrayList<Casilla>> casillas, int valorTirada) {
+        Casilla origen = this.lugar;
+        Casilla destino = MonopolyETSE.tablero.avanzarCasillas(origen, valorTirada);
+    
+        // Mover avatar en las casillas
+        origen.eliminarAvatar(this);
+        destino.anhadirAvatar(this);
+        this.lugar = destino;
+    
+        // Mostrar movimiento
+        System.out.println("El avatar " + this.id + " avanza " + valorTirada +
+                " posiciones, desde " + origen.getNombre() + " hasta " + destino.getNombre() + ".");
     }
-
+    
     /*Método que permite generar un ID para un avatar. Sólo lo usamos en esta clase (por ello es privado).
     * El ID generado será una letra mayúscula. Parámetros:
     * - Un arraylist de los avatares ya creados, con el objetivo de evitar que se generen dos ID iguales.

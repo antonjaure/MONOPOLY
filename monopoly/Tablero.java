@@ -14,12 +14,20 @@ public class Tablero {
     public void setGrupos(String color, Grupo grupo) {
         this.grupos.put(color, grupo);
     }
-
+    public ArrayList<ArrayList<Casilla>> getCasillas() {
+        return this.casillas;
+    }
+    public Jugador getBanca() {
+        return this.banca;
+    }
+    
     public Tablero() {}
 
     //Constructor: únicamente le pasamos el jugador banca (que se creará desde el menú).
     public Tablero(Jugador banca) {
         this.banca = banca;
+        this.casillas = new ArrayList<>();
+        generarCasillas(); 
     }
     
     //Método para crear todas las casillas del tablero. Formado a su vez por cuatro métodos (1/lado).
@@ -430,5 +438,26 @@ public class Tablero {
 
     public ArrayList<ArrayList<Casilla>> getPosiciones() {
         return this.posiciones;
+    }
+    private ArrayList<ArrayList<Casilla>> casillas;
+    public Casilla avanzarCasillas(Casilla origen, int pasos) {
+        // Asegurar que las posiciones están generadas
+        if (posiciones == null) generarCasillas();
+    
+        int posActual = origen.getPosicion(); // asumo que es 0..39
+        // cálculo circular en base 0:
+        int nuevaPos = (posActual + pasos) % 40; // resultado 0..39
+    
+        // Buscar la casilla con esa posición dentro de "posiciones"
+        for (ArrayList<Casilla> fila : posiciones) {
+            for (Casilla c : fila) {
+                if (c.getPosicion() == nuevaPos) {
+                    return c;
+                }
+            }
+        }
+    
+        // Si no encuentra (fallback)
+        return origen;
     }
 }
