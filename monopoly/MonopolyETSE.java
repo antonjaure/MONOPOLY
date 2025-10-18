@@ -5,15 +5,17 @@ import partida.Jugador;
 public class MonopolyETSE {
 
     public static Menu menu = new Menu();
-    public static Jugador banca = new Jugador();
-    public static Tablero tablero = new Tablero(banca);
+    public static Tablero tablero = new Tablero(menu.getBanca());
 
     public static void main(String[] args) {
 
         System.out.println(Valor.RED + "\nMonopoly ETSE\n" + Valor.RESET);
         System.out.println("Iniciando partida...\n");
 
-        // Mostrar tablero vacío
+        Jugador jugador1 = new Jugador("anton", "coche", tablero.encontrar_casilla("Solar5"), menu.getAvatares());
+        Jugador jugador2 = new Jugador("dani", "avión", tablero.encontrar_casilla("Solar5"), menu.getAvatares());
+
+        System.out.println("\nImprimiendo tablero...\n");
         System.out.println(tablero.toString());
 
         // Asignar el tablero al menú para que pueda gestionarlo
