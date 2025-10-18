@@ -21,6 +21,7 @@ public class Jugador {
     private int tiradasCarcel; //Cuando está en la carcel, contará las tiradas sin éxito que ha hecho allí para intentar salir (se usa para limitar el numero de intentos).
     private int vueltas; //Cuenta las vueltas dadas al tablero.
     private ArrayList<Casilla> propiedades; //Propiedades que posee el jugador.
+    private ArrayList<Casilla> hipotecas;
 
     //Constructor vacío. Se usará para crear la banca.
     public Jugador() {
@@ -59,6 +60,7 @@ public class Jugador {
             }
         }
         if (tipo) avatar.setTipo(tipoAvatar);
+        else System.out.println("*** Avatar en uso. ***\n");
 
         setNombre(nombre);
 
@@ -115,6 +117,21 @@ public class Jugador {
         return;
     }
 
+    // Metodo para encontrar un jugador de la lista de jugadores activos
+    // parametro: cadena con el nombre del jugador
+    public static Jugador buscarJugador(String jugador) {
+        ArrayList<Jugador> jugadores = menu.getJugadores();
+        for  (Jugador j : jugadores) {
+            if (j.getNombre().equals(jugador)) {
+                return j;
+            }
+        }
+        System.out.println("*** Jugador '" + jugador + "' no registrado. ***\n");
+        return null;
+    };
+
+
+
     public String getNombre() {
         return this.nombre;
     }
@@ -127,6 +144,9 @@ public class Jugador {
         return this.fortuna;
     }
 
+    public ArrayList<Casilla> getPropiedades() {
+        return propiedades;
+    }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;

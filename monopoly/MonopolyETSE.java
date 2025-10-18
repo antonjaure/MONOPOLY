@@ -2,18 +2,29 @@ package monopoly;
 
 import partida.Jugador;
 
+import java.util.Scanner;
+
 public class MonopolyETSE {
 
     public static Menu menu = new Menu();
     public static Tablero tablero = new Tablero(menu.getBanca());
 
     public static void main(String[] args) {
+        System.out.println(Valor.RED + "Monopoly ETSE\n" + Valor.RESET);
+        System.out.println("\nIniciando partida...\n");
+        System.out.println(tablero.toString()); // esto también crea las casillas, si se quisiese crear las casillas
+        // sin imprimir el tablero habría que llamar a la función generarCasillas() de Tablero
+        Scanner sc = new Scanner(System.in);
+        String comando = "";
 
-        System.out.println(Valor.RED + "\nMonopoly ETSE\n" + Valor.RESET);
-        System.out.println("Iniciando partida...\n");
+        // Bucle para leer los comandos
+        do {
+            System.out.println("Escribe una acción: ");
+            comando = sc.nextLine();
+            menu.ejecutarComando(comando);
+        } while (!comando.equals("salir")); // comando para finalizar el programa
 
-        Jugador jugador1 = new Jugador("anton", "coche", tablero.encontrar_casilla("Solar5"), menu.getAvatares());
-        Jugador jugador2 = new Jugador("dani", "avión", tablero.encontrar_casilla("Solar5"), menu.getAvatares());
+/*  /////////////////    PRUEBA DE DANI    //////////////////
 
         System.out.println("\nImprimiendo tablero...\n");
         System.out.println(tablero.toString());
@@ -42,5 +53,8 @@ public class MonopolyETSE {
         menu.ejecutarOpcion("acabar turno");
 
         System.out.println("\n--- Fin de la simulación ---");
+*/
+
+        sc.close();
     }
 }

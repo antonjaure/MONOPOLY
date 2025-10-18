@@ -26,8 +26,8 @@ public class Tablero {
     //Constructor: únicamente le pasamos el jugador banca (que se creará desde el menú).
     public Tablero(Jugador banca) {
         this.banca = banca;
-        this.casillas = new ArrayList<>();
-        generarCasillas(); 
+
+        MonopolyETSE.menu.setTablero(this);
     }
     
     //Método para crear todas las casillas del tablero. Formado a su vez por cuatro métodos (1/lado).
@@ -296,7 +296,7 @@ public class Tablero {
             return new Casilla(nombre, tipo, pos, valor, banca);
         }
         if (SolServTrans.get(1).contains(pos)) { // Servicios
-            String nombre = "Serv" + SolServTrans.get(1).indexOf(pos);
+            String nombre = "Serv" + (SolServTrans.get(1).indexOf(pos) + 1);
             String tipo = "Servicios";
             float valor = 500000;
             return new Casilla(nombre, tipo, pos, valor, banca);
