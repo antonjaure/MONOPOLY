@@ -9,7 +9,7 @@ public class Tablero {
     //Atributos.
     private ArrayList<ArrayList<Casilla>> posiciones = null; //Posiciones del tablero: se define como un arraylist de arraylists de casillas (uno por cada lado del tablero).
     private HashMap<String, Grupo> grupos; //Grupos del tablero, almacenados como un HashMap con clave String (será el color del grupo).
-    private Jugador banca = new Jugador(); //Un jugador que será la banca.
+    private Jugador banca; //Un jugador que será la banca.
 
     public void setGrupos(String color, Grupo grupo) {
         this.grupos.put(color, grupo);
@@ -277,7 +277,7 @@ public class Tablero {
         }
 
         return tablero.toString();
-    } ///////////////////////////////////
+    }
 
     //Método para asignar el tipo de casilla
     private Casilla asignarCasilla(int pos) {
@@ -345,17 +345,17 @@ public class Tablero {
         for (String word : words) {
             StringBuilder currentLine = firstLine ? line1 : line2;
 
-            int spaceNeeded = (currentLine.length() == 0 ? 0 : 1) + word.length();
+            int spaceNeeded = (currentLine.isEmpty() ? 0 : 1) + word.length();
 
             if (currentLine.length() + spaceNeeded <= width) {
                 // cabe en la línea actual
-                if (currentLine.length() != 0) currentLine.append(" ");
+                if (!currentLine.isEmpty()) currentLine.append(" ");
                 currentLine.append(word);
             } else if (firstLine) {
                 // pasa a la segunda línea
                 firstLine = false;
                 currentLine = line2;
-                if (currentLine.length() != 0) currentLine.append(" ");
+                if (!currentLine.isEmpty()) currentLine.append(" ");
                 currentLine.append(word);
             } else {
                 // segunda línea ya llena, recortar si sobra
@@ -369,12 +369,6 @@ public class Tablero {
         String linea1 = String.format("%-20s", line1.toString());
         String linea2 = String.format("%-20s", line2.toString());
         return new String[]{linea1, linea2};
-    }
-
-    private static String padRight(String s, int width) {
-        if (s == null) s = "";
-        int padding = width - s.length();
-        return s + " ".repeat(Math.max(0, padding));
     }
 
     //Método usado para buscar la casilla con el nombre pasado como argumento:
@@ -404,28 +398,28 @@ public class Tablero {
 
     //////////////// CUIDADO CON LOS ESPACIOS, LOS NOMBRES TIENEN QUE SER IGUALES ARRIBA Y ABAJO
     private final List<List<Object>> Solares = Arrays.asList(
-            Arrays.asList("RONDA DE VALENCIA", 600000),
-            Arrays.asList("PLAZA LAVAPIÉS", 600000),
-            Arrays.asList("GLORIETA CUATRO CAMINOS", 1000000),
-            Arrays.asList("AVENIDA DE REINA VICTORIA", 1000000),
-            Arrays.asList("CALLE BRAVO MURILLO", 1200000),
-            Arrays.asList("GLORIETA DE BILBAO", 1400000),
-            Arrays.asList("CALLE ALBERTO AGUILERA", 1400000),
-            Arrays.asList("CALLE FUENCARRAL", 1600000),
-            Arrays.asList("AVENIDA FELIPE II", 1800000),
-            Arrays.asList("CALLE VELÁZQUEZ", 1800000),
-            Arrays.asList("CALLE SERRANO", 2200000),
-            Arrays.asList("AVENIDA DE AMÉRICA", 2200000),
-            Arrays.asList("CALLE MARÍA MOLINA", 2200000),
-            Arrays.asList("CALLE CEA BERMÚDEZ", 2400000),
-            Arrays.asList("AVENIDA DE LOS REYES CATÓLICOS", 2600000),
-            Arrays.asList("CALLE BAILÉN", 2600000),
-            Arrays.asList("PLAZA DE ESPAÑA", 2800000),
-            Arrays.asList("PUERTA DEL SOL", 3000000),
-            Arrays.asList("CALLE DE ALCALÁ", 3000000),
-            Arrays.asList("GRAN VÍA", 3200000),
-            Arrays.asList("PASEO DE LA CASTELLANA", 3500000),
-            Arrays.asList("PASEO DEL PRADO", 4000000)
+            Arrays.asList("Solar1", 600000),
+            Arrays.asList("Solar2", 600000),
+            Arrays.asList("Solar3", 1000000),
+            Arrays.asList("Solar4", 1000000),
+            Arrays.asList("Solar5", 1200000),
+            Arrays.asList("Solar6", 1400000),
+            Arrays.asList("Solar7", 1400000),
+            Arrays.asList("Solar8", 1600000),
+            Arrays.asList("Solar9", 1800000),
+            Arrays.asList("Solar10", 1800000),
+            Arrays.asList("Solar11", 2200000),
+            Arrays.asList("Solar12", 2200000),
+            Arrays.asList("Solar13", 2200000),
+            Arrays.asList("Solar14", 2400000),
+            Arrays.asList("Solar15", 2600000),
+            Arrays.asList("Solar16", 2600000),
+            Arrays.asList("Solar17", 2800000),
+            Arrays.asList("Solar18", 3000000),
+            Arrays.asList("Solar19", 3000000),
+            Arrays.asList("Solar20", 3200000),
+            Arrays.asList("Solar21", 3500000),
+            Arrays.asList("Solar22", 4000000)
     );
 
     public ArrayList<ArrayList<Casilla>> getPosiciones() {

@@ -35,7 +35,15 @@ public class Menu {
         return avatares;
     }
 
-    // Metodo para inciar una partida: crea los jugadores y avatares.
+    public Jugador getBanca() {
+        return banca;
+    }
+
+    public Menu() {
+        this.banca = new Jugador();
+    }
+
+    // Metodo para iniciar una partida: crea los jugadores y avatares.
     private void iniciarPartida() {
     }
 
@@ -43,12 +51,66 @@ public class Menu {
     * Parámetro: cadena de caracteres (el comando).
     */
     private void analizarComando(String comando) {
+        String[] palabras = comando.trim().split("\\s+");  // divide por uno o más espacios
+        int numPalabras = (comando.trim().isEmpty()) ? 0 : palabras.length;
+
+        if (comando.contains("describir jugador")) {
+            if (numPalabras != 3) {
+                System.out.println("*** Argumentos incorrectos. ***\n");
+                System.out.println("Uso: describir jugador <Nombre>\n");
+                return;
+            }
+            String nombre = comando.substring(17).trim();
+            descJugador(nombre);
+        }
+        else if (comando.contains("describir avatar")) {}
+        else if (comando.contains("describir")) {
+            if (numPalabras != 2) {
+                System.out.println("*** Argumentos incorrectos. ***\n");
+                System.out.println("Uso: describir <Nombre casilla>\n");
+                return;
+            }
+            String nombre = comando.substring(9).trim();
+            descCasilla(nombre);
+        }
+        else if (comando.contains("lanzar dados")) {
+            if (numPalabras == 2) lanzarDados();
+            else if (numPalabras == 3) {
+                int i = comando.indexOf("+");
+                char num1 = comando.charAt(i-1);
+                char num2 = comando.charAt(i+1);
+                int suma = Character.getNumericValue(num1) + Character.getNumericValue(num2);
+                lanzarDadosForzado(suma);
+            }
+            else {
+                System.out.println("*** Argumentos incorrectos. ***\n");
+                System.out.println("Uso: lanzar dados <Dado1>+<Dado2>\n");
+                return;
+            }
+        }
+        else if (comando.contains("comprar")) {
+            if (numPalabras != 2) {
+                System.out.println("*** Argumentos incorrectos. ***\n");
+                System.out.println("Uso: comprar <Nombre casilla>\n");
+                return;
+            }
+            String nombre = comando.substring(7).trim();
+            comprar(nombre);
+        }
+        else if (comando.equals("salir carcel")) salirCarcel();
+        else if (comando.equals("listar enventa")) listarVenta();
+        else if (comando.equals("listar jugadores")) listarJugadores();
+        else if (comando.equals("listar avatares")) {}
+        else if (comando.equals("acabar turno")) acabarTurno();
+        else {
+            System.out.println("*** Comando no registrado. ***\n");
+        }
     }
 
     /*Metodo que realiza las acciones asociadas al comando 'describir jugador'.
-    * Parámetro: comando introducido
+    * Parámetro: nombre del jugador a describir.
      */
-    private void descJugador(String[] partes) {
+    private void descJugador(String jugador) {
     }
 
     /*Metodo que realiza las acciones asociadas al comando 'describir avatar'.
@@ -67,6 +129,9 @@ public class Menu {
     private void lanzarDados() {
     }
 
+    private void lanzarDadosForzado(int tirada) {
+    }
+
     /*Metodo que ejecuta todas las acciones realizadas con el comando 'comprar nombre_casilla'.
     * Parámetro: cadena de caracteres con el nombre de la casilla.
      */
@@ -74,7 +139,8 @@ public class Menu {
     }
 
     //Metodo que ejecuta todas las acciones relacionadas con el comando 'salir carcel'.
-    private void salirCarcel(Jugador jugador) {
+    private void salirCarcel() {
+        Jugador jugador = jugadores.get(turno%jugadores.size());
         float fortuna = jugador.getFortuna();
         float precio_carcel = 500000f;
         
