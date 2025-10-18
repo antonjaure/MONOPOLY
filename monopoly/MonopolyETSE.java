@@ -21,10 +21,6 @@ public class MonopolyETSE {
         // Asignar el tablero al menú para que pueda gestionarlo
         menu.setTablero(tablero);
 
-        // Crear jugadores y añadirlos al menú
-        Jugador jugador1 = new Jugador("anton", "coche", tablero.encontrar_casilla("Salida"), menu.getAvatares());
-        Jugador jugador2 = new Jugador("dani", "avión", tablero.encontrar_casilla("Salida"), menu.getAvatares());
-
         menu.setJugador(jugador1);
         menu.setJugador(jugador2);
 

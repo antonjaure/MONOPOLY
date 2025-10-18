@@ -93,13 +93,13 @@ public class Menu {
             descCasilla(nombre);
         }
         else if (comando.contains("lanzar dados")) {
-            if (numPalabras == 2) lanzarDados();
+            if (numPalabras == 2) lanzarDados(0,false);
             else if (numPalabras == 3) {
                 int i = comando.indexOf("+");
                 char num1 = comando.charAt(i-1);
                 char num2 = comando.charAt(i+1);
                 int suma = Character.getNumericValue(num1) + Character.getNumericValue(num2);
-                lanzarDadosForzado(suma);
+                //lanzarDadosForzado(suma);
             }
             else {
                 System.out.println("*** Argumentos incorrectos. ***\n");
