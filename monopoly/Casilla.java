@@ -98,23 +98,15 @@ public class Casilla {
         Casilla casilla = avatar.getCasilla();
         String tipo = casilla.getTipo();
 
-        switch(tipo) {
-            case "Impuesto":
-                if(casilla.getDuenho() != banca && casilla.getDuenho() != actual) {
-                    float impuesto = casilla.getImpuesto() * tirada;
-                    if(actual.getFortuna() >= impuesto) {
-                        return true; //Tiene dinero para pagar el impuesto.
-                    } else {
-                        return false; //No tiene dinero para pagar el impuesto.
-                    }
-                }
-                else{
-                    return evaluarCasilla(actual, banca);
-                }
-
-            default:
+        if (tipo.equals("Impuesto")) {
+            if (casilla.getDuenho() != banca && casilla.getDuenho() != actual) {
+                float impuesto = casilla.getImpuesto() * tirada;
+                return actual.getFortuna() >= impuesto; // Si tiene dinero para el impuesto = true, else false
+            } else {
                 return evaluarCasilla(actual, banca);
-        }          
+            }
+        }
+        return evaluarCasilla(actual, banca);
     }
 
     public boolean evaluarCasilla(Jugador actual, Jugador banca) {
@@ -125,35 +117,23 @@ public class Casilla {
         switch(tipo) {
             case "Solar": 
             case "Transporte":
-                if(casilla.getDuenho() == banca) { //Si la casilla no tiene dueño, se ofrece comprarla.
-                    if(actual.getFortuna() >= casilla.getValor()) {
-                        return true;
-                    } else {
-                        return false; //No tiene dinero para comprarla.
-                    }
-                }else if(casilla.getDuenho() != actual) {
+                if(casilla.getDuenho() == banca) {
+                    return actual.getFortuna() >= casilla.getValor(); // Si tiene dinero comprarla = true, else false
+                }
+                else if(casilla.getDuenho() != actual) {
                     float impuesto = casilla.getImpuesto();
-                    if(actual.getFortuna() >= impuesto) {
-                        return true; //Tiene dinero para pagar el alquiler.
-                    } else {
-                        return false; //No tiene dinero para pagar el alquiler.
-                    }
+                    return actual.getFortuna() >= impuesto; // Si tiene dinero para el alquiler = true, else false
                 }
                 else if(casilla.getDuenho() == actual) {
                     return true; //No pasa nada, es su casilla.
                 }
                 break;
             case "Servicios":
-                if(casilla.getDuenho() == banca) { //Si la casilla no tiene dueño, se ofrece comprarla.
-                    if(actual.getFortuna() >= casilla.getValor()) {
-                        return true;
-                    } else {
-                        return false; //No tiene dinero para comprarla.
-                    }
+                if(casilla.getDuenho() == banca) {
+                    return actual.getFortuna() >= casilla.getValor(); // Si tiene dinero comprarla = true, else false
                 }
 
-                    //El caso de duenho != actual se maneja con la llamada a evaluarCasilla con tirada.
-
+                    //El caso de (duenho != actual) se maneja con la llamada a evaluarCasilla con tirada.
 
                 else if(casilla.getDuenho() == actual) {
                     return true; //No pasa nada, es su casilla.
@@ -162,11 +142,7 @@ public class Casilla {
 
             case "Impuesto":
                 float impuesto = casilla.getImpuesto();
-                if(actual.getFortuna() >= impuesto) {
-                    return true; //Tiene dinero para pagar el impuesto.
-                } else {
-                    return false; //No tiene dinero para pagar el impuesto.
-                }
+                return actual.getFortuna() >= impuesto; // Si tiene dinero para el impuesto = true, else false
             case "Comunidad":
             case "Suerte":
                 return true; //No pasa nada, se roba carta.
@@ -178,11 +154,7 @@ public class Casilla {
                 }
                 else if(nombre.equals("Cárcel")){
                     float salidaCarcel = casilla.getImpuesto();
-                    if(actual.getFortuna() >= salidaCarcel) {
-                        return true; //Tiene dinero para pagar la salida de la cárcel.
-                    } else {
-                        return false; //No tiene dinero para pagar la salida de la cárcel.
-                    }
+                    return actual.getFortuna() >= salidaCarcel; // Si tiene dinero para pagar la cárcel = true, else false
                 }
                 System.err.println("\nError al evaluarCasilla().\n");
                 return true;
@@ -196,7 +168,7 @@ public class Casilla {
     /*Método usado para comprar una casilla determinada. Parámetros:
     * - Jugador que solicita la compra de la casilla.
     * - Banca del monopoly (es el dueño de las casillas no compradas aún).
-    * - Se añade tirada para poder pasarla como parametro a evaluar casilla.*/
+    * - Se añade tirada para poder pasarla como parámetro a evaluar casilla.*/
     public void comprarCasilla(Jugador solicitante, Jugador banca, int tirada) {
         if(evaluarCasilla(solicitante, banca, tirada)){
             Casilla casilla = solicitante.getAvatar().getCasilla();
@@ -204,8 +176,10 @@ public class Casilla {
                 float valor = casilla.getValor();
                 solicitante.sumarFortuna(-valor); //Se resta el valor de la casilla a la fortuna del jugador.
                 banca.sumarFortuna(valor); //Se añade el valor de la casilla a la fortuna de la banca.
+
                 casilla.setDuenho(solicitante); //El dueño de la casilla pasa a ser el jugador solicitante.
                 solicitante.añadirPropiedad(casilla); //Se añade la casilla al arraylist de propiedades del jugador.
+
                 System.out.println("\n" + Valor.GREEN + "¡Compra realizada con éxito!" + Valor.RESET);
             } else {
                 System.out.println("\n" + Valor.RED + "Error: La casilla ya tiene dueño." + Valor.RESET); //No es necesario, pero se deja para manejar errores.
@@ -328,6 +302,7 @@ public class Casilla {
             return "\nLa casilla no está en venta.\n";
         }
     }
+
     /**
      * Método que gestiona los pagos al caer en esta casilla.
      * Parámetros:
@@ -373,7 +348,7 @@ public class Casilla {
             float cantidad = this.impuesto;
             jugadorActual.sumarFortuna(-cantidad);
             Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
-            parking.valor += cantidad;
+            parking.sumarValor(cantidad);
             System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ que se depositan en el Parking");
         } 
         else if (tipo.equals("Comunidad") || tipo.equals("Suerte")) {

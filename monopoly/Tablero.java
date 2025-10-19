@@ -19,7 +19,6 @@ public class Tablero {
     public Jugador getBanca() {
         return this.banca;
     }
-
     public ArrayList<ArrayList<Casilla>> getPosiciones() {
         return this.posiciones;
     }
@@ -50,7 +49,6 @@ public class Tablero {
 
         generarGrupos();
     }
-
     private void generarGrupos() {
         if (posiciones == null) generarCasillas();
         if (grupos == null) grupos = new HashMap<>();
@@ -111,7 +109,6 @@ public class Tablero {
         }
         posiciones.add(ladoNorte);
     }
-
     //Método para insertar las casillas del lado sur.
     private void insertarLadoSur() {
         ArrayList<Casilla> ladoSur = new ArrayList<>();
@@ -120,7 +117,6 @@ public class Tablero {
         }
         posiciones.add(ladoSur);
     }
-
     //Método que inserta casillas del lado oeste.
     private void insertarLadoOeste() {
         ArrayList<Casilla> ladoOeste = new ArrayList<>();
@@ -129,7 +125,6 @@ public class Tablero {
         }
         posiciones.add(ladoOeste);
     }
-
     //Método que inserta las casillas del lado este.
     private void insertarLadoEste() {
         ArrayList<Casilla> ladoEste = new ArrayList<>();
@@ -299,6 +294,7 @@ public class Tablero {
         return tablero.toString();
     }
 
+
     //Método para asignar el tipo de casilla
     private Casilla asignarCasilla(int pos) {
         if (SolServTrans.get(0).contains(pos)) { // Solares
@@ -360,7 +356,6 @@ public class Tablero {
 
         return new Casilla();
     }
-
     private void asignarPrecioEdificio(Casilla c, int pos) {
         float valorCasa =  (int) PreciosConstruccion.get(SolServTrans.get(0).indexOf(pos)).get(1);
         float valorHotel =  (int) PreciosConstruccion.get(SolServTrans.get(0).indexOf(pos)).get(2);
@@ -372,7 +367,6 @@ public class Tablero {
         c.setValorPiscina(valorPiscina);
         c.setValorPista(valorPista);
     }
-
     private void asignarAlquileres(Casilla c, int pos) {
         float impuesto = (int) Alquileres.get(SolServTrans.get(0).indexOf(pos)).get(1);
         float alquilerCasa =  (int) Alquileres.get(SolServTrans.get(0).indexOf(pos)).get(2);
@@ -386,6 +380,7 @@ public class Tablero {
         c.setAlquilerPiscina(alquilerPiscina);
         c.setAlquilerPista(alquilerPista);
     }
+
 
     private String avataresString(ArrayList<Avatar> avatares){
         StringBuilder avs = new StringBuilder();
@@ -432,6 +427,7 @@ public class Tablero {
         return new String[]{linea1, linea2};
     }
 
+
     //Método usado para buscar la casilla con el nombre pasado como argumento:
     public Casilla encontrar_casilla(String nombre){
         if (posiciones == null) generarCasillas();
@@ -465,6 +461,8 @@ public class Tablero {
         // Si no encuentra (fallback)
         return origen;
     }
+
+
 
     private final List<List<Integer>> SolServTrans = Arrays.asList(
             Arrays.asList(1,3,6,8,9,11,13,14,16,18,19,21,23,24,26,27,29,31,32,34,37,39), // Posición Solares
