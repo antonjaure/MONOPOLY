@@ -15,6 +15,14 @@ public class Casilla {
     private Grupo grupo; //Grupo al que pertenece la casilla (si es solar).
     private float impuesto; //Cantidad a pagar por caer en la casilla: el alquiler en solares/servicios/transportes o impuestos.
     private float hipoteca; //Valor otorgado por hipotecar una casilla
+    private float valorCasa; //Valor de las casas en caso de ser una casilla solar.
+    private float valorHotel; //Valor de los hoteles en caso de ser una casilla solar.  
+    private float valorPiscina; //Valor de las piscinas en caso de ser una casilla solar.
+    private float valorPista; //Valor de las pistas de tenis en caso de ser una casilla solar.
+    private float alquilerCasa; //Alquiler adicional por cada casa en caso de ser una casilla solar.
+    private float alquilerHotel; //Alquiler adicional por cada hotel en caso de ser una casilla solar.
+    private float alquilerPiscina; //Alquiler adicional por cada piscina en caso de ser una
+    private float alquilerPista; //Alquiler adicional por cada pista en caso de ser una casilla solar.
     private ArrayList<Avatar> avatares; //Avatares que están situados en la casilla.
 
     public String getNombre() {
@@ -144,7 +152,7 @@ public class Casilla {
     FALSE en caso contrario. La función ya tiene en cuenta si la casilla no tiene dueño (se ofrece comprarla)
      o si el dueño es el propio jugador (no pasa nada).
 
-    FALTA IMPLEMENTAR EL CÓDIGO PARA LAS CASILLAS ESPECIALES (COMUNIDAD, SUERTE, IR A CÁRCEL, PARKING Y SALIDA)
+    FALTA IMPLEMENTAR EL CÓDIGO PARA LAS CASILLAS ESPECIALES (IR A CÁRCEL, PARKING Y SALIDA)
     */
 
     public boolean evaluarCasilla(Jugador actual, Jugador banca, int tirada) {
@@ -225,7 +233,21 @@ public class Casilla {
             case "Suerte":
                 return true; //No pasa nada, se roba carta.
             case "Especial":
-                return true; //SE NECESITA HACER EL CODIGO PARA "ESPECIAL"
+                String nombre = casilla.getNombre();
+
+                if(nombre.equals("IrCarcel") || nombre.equals("Parking") || nombre.equals("Salida")){
+                    return true; //No pasa nada especial al caer en estas casillas.
+                }
+                else if(nombre.equals("Cárcel")){
+                    float salidaCarcel = casilla.getImpuesto();
+                    if(actual.getFortuna() >= salidaCarcel) {
+                        return true; //Tiene dinero para pagar la salida de la cárcel.
+                    } else {
+                        return false; //No tiene dinero para pagar la salida de la cárcel.
+                    }
+                }
+                System.err.println("\nError al evaluarCasilla().\n");
+                return true;
             default:
                 System.err.println("\nError al evaluarCasilla().\n");
                 return true;
@@ -258,14 +280,20 @@ public class Casilla {
     /*Método para añadir valor a una casilla. Utilidad:
     * - Sumar valor a la casilla de parking.
     * - Sumar valor a las casillas de solar al no comprarlas tras cuatro vueltas de todos los jugadores.
-    * Este método toma como argumento la cantidad a añadir del valor de la casilla.*/
+    * Este método toma como argumento la cantidad a añadir del valor de la casilla.
+    
+    
+    FALTA EL VALOR DEL SOLAR QUE NO SE CUANTO ES*/
     public void sumarValor(float suma) {
-
+        this.valor += suma;
     }
 
     /*Método para mostrar información sobre una casilla.
     * Devuelve una cadena con información específica de cada tipo de casilla.
-    * HAY QUE TB IMPRIMIR EL VALOR/ALQUILER SI TIENE CASA, HOTEL, PISCINA, PISTA...*/
+    
+
+    NO SE QUE HAY QUE PONER EN LA DESCRIPCION DE PARKIN
+    */
     public String infoCasilla() {
 
         String tipo = this.getTipo();
@@ -278,7 +306,15 @@ public class Casilla {
                 "propietario: " + (this.duenho.getNombre()) + "\n" +
                 "valor: " + this.valor + "€\n" +
                 "alquiler: " + this.impuesto + "€\n" +
-                "hipoteca: " + this.hipoteca + "€\n";
+                "hipoteca: " + this.hipoteca + "€\n" +
+                "valor casa " + this.valorCasa + "€\n" +
+                "valor hotel " + this.valorHotel + "€\n" +
+                "valor piscina " + this.valorPiscina + "€\n" +
+                "valor pista " + this.valorPista + "€\n" +
+                "alquiler casa " + this.alquilerCasa + "€\n" +
+                "alquiler hotel " + this.alquilerHotel + "€\n" +
+                "alquiler piscina " + this.alquilerPiscina + "€\n" +
+                "alquiler pista " + this.alquilerPista + "€\n";
 
             case "Transporte":
             case "Servicios":
@@ -336,7 +372,24 @@ public class Casilla {
      */
     public String casEnVenta() {
 
-        return "";
+        if (this.getDuenho().getNombre().equals("Banca")) {
+
+            if(this.getTipo().equals("Solar")) {
+                return "\nTipo" + ": " + this.getTipo() + "\n" +
+                "Grupo" + ": " + this.getGrupo().getColorGrupo() + "\n" +
+                "Valor" + ": " + this.getValor() + "€\n";
+            } else if (this.getTipo().equals("Transporte") || this.getTipo().equals("Servicios")) {
+                return "\nTipo" + ": " + this.getTipo() + "\n" +
+                "Valor" + ": " + this.getValor() + "€\n" +
+                "Impuesto" + ": " + this.getImpuesto() + "€\n";
+            }
+            else{
+                return "\nLa casilla no está en venta.\n";
+            }
+        }
+        else{
+            return "\nLa casilla no está en venta.\n";
+        }
     }
     /**
      * Método que gestiona los pagos al caer en esta casilla.

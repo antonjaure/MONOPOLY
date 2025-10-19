@@ -2,6 +2,8 @@ package monopoly;
 
 import java.awt.event.ComponentAdapter;
 import java.util.ArrayList;
+import java.util.Scanner;
+
 import partida.*;
 
 public class Menu {
@@ -13,7 +15,7 @@ public class Menu {
     private int lanzamientos; //Variable para contar el número de lanzamientos de un jugador en un turno.
     private Tablero tablero; //Tablero en el que se juega.
     private Dado dado1; //Dos dados para lanzar y avanzar casillas.
-    private Dado dado2;
+    private Dado dado2; 
     private Jugador banca; //El jugador banca.
     private boolean tirado; //Booleano para comprobar si el jugador que tiene el turno ha tirado o no.
     private boolean solvente; //Booleano para comprobar si el jugador que tiene el turno es solvente, es decir, si ha pagado sus deudas.
@@ -219,6 +221,12 @@ public class Menu {
     * Parámetros: nombre de la casilla a describir.
     */
     private void descCasilla(String nombre) {
+        Casilla casilla = tablero.encontrar_casilla(nombre);
+        if (casilla == null) {
+            System.out.println("*** Casilla '" + nombre + "' no encontrada. ***\n");
+            return;
+        }
+        System.out.println(casilla.infoCasilla());
     }
 
     //Metodo que ejecuta todas las acciones relacionadas con el comando 'lanzar dados'.
@@ -295,13 +303,54 @@ public class Menu {
         Jugador jugador = jugadores.get(turno%jugadores.size());
         float fortuna = jugador.getFortuna();
         float precio_carcel = 500000f;
+        int tiradasCarcel = jugador.getTiradasCarcel();
         
-        if(fortuna >= precio_carcel){
+        if(tiradasCarcel >= 3){
+            System.out.println(jugador.getNombre() + "ha superado el límite de tiradas en la cárcel. Debe pagar la fianza de 500.000€ para salir.\n");
+            if(fortuna >= precio_carcel){
                 jugador.sumarFortuna(-precio_carcel);
                 System.out.println(jugador.getNombre() + "paga 500.000€ y sale de la cárcel. Puede lanzar los dados.\n");
+                jugador.setEnCarcel(false);
+                jugador.setTiradasCarcel(0);
+            }
+            else{
+                System.out.println(jugador.getNombre() + "no posee suficiente dinero para pagar la salida. Debe esperar a su próximo turno.\n");
+            }
+            return;
         }
-        else{
-            System.out.println(jugador.getNombre() + "no posee suficiente dinero para pagar la salida. Debe lanzar los dados.\n");
+
+        else {
+            System.out.println("\nDesea salir de la cárcel pagando 500.000€? (sí/no)");
+            Scanner sc = new Scanner(System.in);
+            String respuesta = sc.nextLine();
+
+            if(respuesta.equalsIgnoreCase("sí")){
+                if(fortuna >= precio_carcel){
+                    jugador.sumarFortuna(-precio_carcel);
+                    System.out.println(jugador.getNombre() + "paga 500.000€ y sale de la cárcel. Puede lanzar los dados.\n");
+                    jugador.setEnCarcel(false);
+                    jugador.setTiradasCarcel(0);
+                }
+                else{
+                    System.out.println(jugador.getNombre() + "no posee suficiente dinero para pagar la salida. Debe esperar a su próximo turno.\n");
+                }
+            }
+            else{
+                System.out.println(jugador.getNombre() + "decide no pagar la fianza y tirar los dados.\n");
+                jugador.setTiradasCarcel(tiradasCarcel + 1);
+                dado1 = new Dado();
+                dado2 = new Dado();
+                int valorTirada = dado1.hacerTirada() + dado2.hacerTirada();
+                if(dado1.getValor() == dado2.getValor()){
+                    System.out.println(jugador.getNombre() + "ha sacado dobles y sale de la cárcel. Avanza " + valorTirada + " casillas.\n");
+                    jugador.setEnCarcel(false);
+                    jugador.setTiradasCarcel(0);
+                    jugador.getAvatar().moverAvatar(tablero.getPosiciones(), valorTirada);
+                }
+                else{
+                    System.out.println(jugador.getNombre() + "no ha sacado dobles y permanece en la cárcel.\n");
+                }
+            }
         }
     }
     

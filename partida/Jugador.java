@@ -148,6 +148,12 @@ public class Jugador {
         return propiedades;
     }
 
+    public int getTiradasCarcel() {
+        return tiradasCarcel;
+    }
+
+    
+
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
