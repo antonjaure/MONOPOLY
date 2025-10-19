@@ -172,6 +172,11 @@ public class Casilla {
     * - Banca del monopoly (es el dueño de las casillas no compradas aún).
     * - Se añade tirada para poder pasarla como parámetro a evaluar casilla.*/
     public void comprarCasilla(Jugador solicitante, Jugador banca) {
+        if (solicitante.getAvatar().getLugar() != this) {
+            System.out.println("\t" + Valor.RED + "Error: Debes estar sobre la casilla para comprarla." + Valor.RESET);
+            return;
+        }
+
         if(evaluarCasilla(solicitante, banca)){
             Casilla casilla = solicitante.getAvatar().getCasilla();
             if(casilla.getDuenho() == banca) { //Si la casilla no tiene dueño, se ofrece comprarla.

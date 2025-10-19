@@ -84,8 +84,10 @@ public class Menu {
             }
             String nombre = palabras[2];
             String tipo = palabras[3];
+            int numJ1 = (jugadores == null) ? 0 : jugadores.size();
             Jugador jugador = new Jugador(nombre, tipo, tablero.encontrar_casilla("Salida"), MonopolyETSE.menu.getAvatares());
-            descJugador(nombre);
+            int numJ2 = (jugadores == null) ? 0 : jugadores.size();
+            if (numJ2 > numJ1) descJugador(nombre);
         }
         // describe el jugador del turno actual
         else if (comando.equals("jugador")) {

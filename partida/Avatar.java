@@ -19,17 +19,17 @@ public class Avatar {
     public Casilla getCasilla() {
         return lugar;
     }
-
     public String getTipo() {
         return tipo;
     }
-
     public String getId() {
         return id;
     }
-
     public Jugador getJugador() {
         return jugador; 
+    }
+    public Casilla getLugar() {
+        return lugar;
     }
 
     public void setId(String id) {

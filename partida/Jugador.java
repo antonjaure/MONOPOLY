@@ -57,6 +57,11 @@ public class Jugador {
             if (av.getJugador().getNombre().equals(nombre)) nom = false;
         }
 
+        if (!tipo && !nom){
+            System.out.println("\t*** Jugador ya activo. ***");
+            return;
+        }
+
         if (!tipo) {
             System.out.println("\t*** Avatar en uso. ***");
             return;
@@ -67,7 +72,6 @@ public class Jugador {
             System.out.println("\t*** Nombre en uso. ***");
             return;
         }
-
 
         this.fortuna = Valor.FORTUNA_INICIAL;
 
