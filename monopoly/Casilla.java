@@ -91,7 +91,7 @@ public class Casilla {
      o si el dueño es el propio jugador (no pasa nada).
 
     FALTA IMPLEMENTAR EL CÓDIGO PARA LAS CASILLAS ESPECIALES (IR A CÁRCEL, PARKING Y SALIDA)
-    */
+
 
     public boolean evaluarCasilla(Jugador actual, Jugador banca, int tirada) {
         Avatar avatar = actual.getAvatar();
@@ -108,6 +108,8 @@ public class Casilla {
         }
         return evaluarCasilla(actual, banca);
     }
+    */
+
 
     public boolean evaluarCasilla(Jugador actual, Jugador banca) {
         Avatar avatar = actual.getAvatar();
@@ -169,8 +171,8 @@ public class Casilla {
     * - Jugador que solicita la compra de la casilla.
     * - Banca del monopoly (es el dueño de las casillas no compradas aún).
     * - Se añade tirada para poder pasarla como parámetro a evaluar casilla.*/
-    public void comprarCasilla(Jugador solicitante, Jugador banca, int tirada) {
-        if(evaluarCasilla(solicitante, banca, tirada)){
+    public void comprarCasilla(Jugador solicitante, Jugador banca) {
+        if(evaluarCasilla(solicitante, banca)){
             Casilla casilla = solicitante.getAvatar().getCasilla();
             if(casilla.getDuenho() == banca) { //Si la casilla no tiene dueño, se ofrece comprarla.
                 float valor = casilla.getValor();
@@ -180,12 +182,14 @@ public class Casilla {
                 casilla.setDuenho(solicitante); //El dueño de la casilla pasa a ser el jugador solicitante.
                 solicitante.añadirPropiedad(casilla); //Se añade la casilla al arraylist de propiedades del jugador.
 
-                System.out.println("\n" + Valor.GREEN + "¡Compra realizada con éxito!" + Valor.RESET);
-            } else {
-                System.out.println("\n" + Valor.RED + "Error: La casilla ya tiene dueño." + Valor.RESET); //No es necesario, pero se deja para manejar errores.
+                System.out.println("\t" + Valor.GREEN + "¡Compra realizada con éxito!" + Valor.RESET);
             }
-        } else {
-            System.out.println("\n" + Valor.RED + "Error: La casilla ya tiene dueño o no tiene suficiente dinero para comprarla." + Valor.RESET);
+            else {
+                System.out.println("\t" + Valor.RED + "Error: La casilla ya tiene dueño." + Valor.RESET); //No es necesario, pero se deja para manejar errores.
+            }
+        }
+        else {
+            System.out.println("\t" + Valor.RED + "Error: La casilla ya tiene dueño o no tiene suficiente dinero para comprarla." + Valor.RESET);
         }
     }
 
@@ -312,7 +316,7 @@ public class Casilla {
      */
     public void gestionarPago(Jugador jugadorActual, Jugador banca, int tirada) {
     
-        boolean solvente = evaluarCasilla(jugadorActual, banca, tirada);
+        boolean solvente = evaluarCasilla(jugadorActual, banca);
     
         if (!solvente) {
             System.out.println("\t" + jugadorActual.getNombre() + " no tiene dinero suficiente para pagar esta casilla.");
@@ -321,55 +325,52 @@ public class Casilla {
         }
     
         // Casillas con dueño distinto al jugador actual
-        if (tipo.equals("Solar") || tipo.equals("Transporte") || tipo.equals("Servicios")) {
+        switch (tipo) {
+            case "Solar", "Transporte", "Servicios" -> {
 
-            if (this.duenho == MonopolyETSE.menu.getBanca()) {
-                System.out.println("\tCasilla en venta.");
-                return;
-            }
-
-            float cantidad = switch (tipo) {
-                case "Solar" -> {
-                    boolean duenhoGrupo = this.grupo.esDuenhoGrupo(this.duenho);
-
-                    yield duenhoGrupo ? impuesto * 2 : impuesto;
+                if (this.duenho == MonopolyETSE.menu.getBanca()) {
+                    System.out.println("\tCasilla en venta.");
+                    return;
                 }
-                case "Transporte" -> this.impuesto;
-                case "Servicios" -> tirada * 4 * this.impuesto;
-                default -> 0;
-            };
 
-            jugadorActual.sumarFortuna(-cantidad);
-            duenho.sumarFortuna(cantidad);
-            System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ a " + duenho.getNombre());
+                float cantidad = switch (tipo) {
+                    case "Solar" -> {
+                        boolean duenhoGrupo = this.grupo.esDuenhoGrupo(this.duenho);
 
-        // Casillas sin dueño (o de la banca)
-        } else if (tipo.equals("Impuesto")) {
-            float cantidad = this.impuesto;
-            jugadorActual.sumarFortuna(-cantidad);
-            Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
-            parking.sumarValor(cantidad);
-            System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ que se depositan en el Parking");
-        } 
-        else if (tipo.equals("Comunidad") || tipo.equals("Suerte")) {
-            System.out.println("\t" + jugadorActual.getNombre() + " roba una carta.");
-        }
-        else if (tipo.equals("Especial")) {
-            if(nombre.equals("Parking")) {
-                System.out.println("\t" + jugadorActual.getNombre() + " recibe el bote de " + valor + "€");
-                jugadorActual.sumarFortuna(valor);
-                valor = 0; // Vaciar el bote
+                        yield duenhoGrupo ? impuesto * 2 : impuesto;
+                    }
+                    case "Transporte" -> this.impuesto;
+                    case "Servicios" -> tirada * 4 * this.impuesto;
+                    default -> 0;
+                };
+
+                jugadorActual.sumarFortuna(-cantidad);
+                duenho.sumarFortuna(cantidad);
+                System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ a " + duenho.getNombre());
+
+                // Casillas sin dueño (o de la banca)
             }
-            else if (nombre.equals("Salida") || this.posicion - tirada < 0) {
-                System.out.println("\t" + jugadorActual.getNombre() + " pasa por Salida y recibe 2.000.000€");
-                jugadorActual.sumarFortuna(2000000f);
+            case "Impuesto" -> {
+                float cantidad = this.impuesto;
+                jugadorActual.sumarFortuna(-cantidad);
+                Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
+                parking.sumarValor(cantidad);
+                System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ que se depositan en el Parking");
             }
-            else if (nombre.equals("IrCarcel")) {
-                jugadorActual.encarcelar();
+            case "Comunidad", "Suerte" -> System.out.println("\t" + jugadorActual.getNombre() + " roba una carta.");
+            case "Especial" -> {
+                if (nombre.equals("Parking")) {
+                    System.out.println("\t" + jugadorActual.getNombre() + " recibe el bote de " + valor + "€");
+                    jugadorActual.sumarFortuna(valor);
+                    valor = 0; // Vaciar el bote
+                } else if (nombre.equals("Salida") || this.posicion - tirada < 0) {
+                    System.out.println("\t" + jugadorActual.getNombre() + " pasa por Salida y recibe 2.000.000€");
+                    jugadorActual.sumarFortuna(2000000f);
+                } else if (nombre.equals("IrCarcel")) {
+                    jugadorActual.encarcelar();
+                }
             }
-        }
-        else {
-            System.out.println("\tCasilla de paso. No pasa nada.");
+            default -> System.out.println("\tCasilla de paso. No pasa nada.");
         }
     }
 

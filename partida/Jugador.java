@@ -34,46 +34,45 @@ public class Jugador {
     * que dos avatares tengan mismo ID). Desde este constructor también se crea el avatar.
      */
     public Jugador(String nombre, String tipoAvatar, Casilla inicio, ArrayList<Avatar> avCreados) {
-        Avatar avatar = new Avatar();
-        Random random = new Random();
-
         if (avCreados == null) {
             avCreados = new ArrayList<>();
         }
 
-        boolean tipo = true;
-        for (Avatar av : avCreados) {
-            if (av.getTipo().equals(tipoAvatar)) {
-                tipo = false;
+        boolean tipoValido = false;
+        for (String tipo : menu.getTipos()) {
+            if (tipo.equals(tipoAvatar)) {
+                tipoValido = true;
                 break;
             }
         }
-        if (tipo) avatar.setTipo(tipoAvatar);
-        else {
+        if (!tipoValido) {
+            System.out.println("\t*** Avatares disponibles: " + menu.getTipos() + " ***");
+            return;
+        }
+
+        boolean tipo = true;
+        boolean nom = true;
+        for (Avatar av : avCreados) {
+            if (av.getTipo().equals(tipoAvatar)) tipo = false;
+            if (av.getJugador().getNombre().equals(nombre)) nom = false;
+        }
+
+        if (!tipo) {
             System.out.println("\t*** Avatar en uso. ***");
             return;
         }
 
-        char ID = (char) ('A' + random.nextInt(26));
-        if (!avCreados.isEmpty()) {
-            inicio:
-            for (Avatar av : avCreados) {
-                if (Objects.equals(av.getId(), String.valueOf(ID))) {
-                    ID = (char) ('A' + random.nextInt(26));
-                    continue inicio;
-                }
-            }
+        if (nom) setNombre(nombre);
+        else {
+            System.out.println("\t*** Nombre en uso. ***");
+            return;
         }
-        avatar.setId(String.valueOf(ID));
 
-        setNombre(nombre);
-
-        avatar.setLugar(inicio);
-        inicio.anhadirAvatar(avatar);
 
         this.fortuna = Valor.FORTUNA_INICIAL;
 
-        avatar.setJugador(this);
+        Avatar avatar = new Avatar(tipoAvatar, this, inicio, avCreados);
+        inicio.anhadirAvatar(avatar);
         setAvatar(avatar);
 
         menu.setJugador(this);

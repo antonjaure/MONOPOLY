@@ -3,6 +3,9 @@ package partida;
 import monopoly.*;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 
 
 public class Avatar {
@@ -50,7 +53,28 @@ public class Avatar {
     * Tipo del avatar, jugador al que pertenece, lugar en el que estará ubicado, y un arraylist con los
     * avatares creados (usado para crear un ID distinto del de los demás avatares).
      */
+    ////////////////    cambiar el constructor de Jugador para darle uso a este     ////////////////
     public Avatar(String tipo, Jugador jugador, Casilla lugar, ArrayList<Avatar> avCreados) {
+        Random random = new Random();
+
+        if (avCreados == null) {
+            avCreados = new ArrayList<>();
+        }
+
+        char ID = (char) ('A' + random.nextInt(26));
+        if (!avCreados.isEmpty()) {
+            inicio:
+            for (Avatar av : avCreados) {
+                if (Objects.equals(av.getId(), String.valueOf(ID))) {
+                    ID = (char) ('A' + random.nextInt(26));
+                    continue inicio;
+                }
+            }
+        }
+        setId(String.valueOf(ID));
+        setTipo(tipo);
+        setJugador(jugador);
+        setLugar(lugar);
     }
 
     //A continuación, tenemos otros métodos útiles para el desarrollo del juego.
@@ -69,7 +93,7 @@ public class Avatar {
         this.lugar = destino;
     
         // Mostrar movimiento
-        System.out.println("El avatar " + this.id + " avanza " + valorTirada +
+        System.out.println("\tEl avatar " + this.id + " avanza " + valorTirada +
                 " posiciones, desde " + origen.getNombre() + " hasta " + destino.getNombre() + ".");
     }
     
