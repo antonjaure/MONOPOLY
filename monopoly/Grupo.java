@@ -71,9 +71,13 @@ class Grupo {
     * Valor devuelto: true si es dueño de todas las casillas del grupo, false en otro caso.
      */
     public boolean esDuenhoGrupo(Jugador jugador) {
-
-
-        return false;
+        ArrayList<Casilla> propiedades = jugador.getPropiedades();
+        int lenGrupo = miembros.size();
+        int count = 0;
+        for (Casilla casilla : propiedades) {
+            if (casilla.getGrupo() == this) count++;
+        }
+        return count == lenGrupo;
     }
 
 }

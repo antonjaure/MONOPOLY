@@ -41,6 +41,19 @@ public class Jugador {
             avCreados = new ArrayList<>();
         }
 
+        boolean tipo = true;
+        for (Avatar av : avCreados) {
+            if (av.getTipo().equals(tipoAvatar)) {
+                tipo = false;
+                break;
+            }
+        }
+        if (tipo) avatar.setTipo(tipoAvatar);
+        else {
+            System.out.println("\t*** Avatar en uso. ***");
+            return;
+        }
+
         char ID = (char) ('A' + random.nextInt(26));
         if (!avCreados.isEmpty()) {
             inicio:
@@ -53,20 +66,12 @@ public class Jugador {
         }
         avatar.setId(String.valueOf(ID));
 
-        boolean tipo = true;
-        for (Avatar av : avCreados) {
-            if (av.getTipo().equals(tipoAvatar)) {
-                tipo = false;
-                break;
-            }
-        }
-        if (tipo) avatar.setTipo(tipoAvatar);
-        else System.out.println("*** Avatar en uso. ***\n");
-
         setNombre(nombre);
 
         avatar.setLugar(inicio);
         inicio.anhadirAvatar(avatar);
+
+        this.fortuna = Valor.FORTUNA_INICIAL;
 
         avatar.setJugador(this);
         setAvatar(avatar);
@@ -103,31 +108,36 @@ public class Jugador {
 
     /*Método para establecer al jugador en la cárcel. 
     * Se requiere disponer de las casillas del tablero para ello (por eso se pasan como parámetro).*/
-    public void encarcelar(ArrayList<ArrayList<Casilla>> pos) {
-
+    public void encarcelar() {
         Avatar avatar = this.getAvatar();
-
         Casilla carcel = tablero.encontrar_casilla("Cárcel");
 
+        // Mover a la cárcel
         avatar.getCasilla().eliminarAvatar(avatar);
         avatar.setLugar(carcel);
         carcel.anhadirAvatar(avatar);
+
         this.setEnCarcel(true);
         this.setTiradasCarcel(0);
+
         System.out.println(this.getNombre() + " ha sido enviado a la cárcel.\n");
-        return;
     }
 
     // Metodo para encontrar un jugador de la lista de jugadores activos
     // parametro: cadena con el nombre del jugador
     public static Jugador buscarJugador(String jugador) {
         ArrayList<Jugador> jugadores = menu.getJugadores();
+        if (jugadores == null || jugadores.isEmpty()) {
+            System.out.println("\t*** No hay jugadores en la partida. ***");
+            return null;
+        }
+
         for  (Jugador j : jugadores) {
             if (j.getNombre().equals(jugador)) {
                 return j;
             }
         }
-        System.out.println("*** Jugador '" + jugador + "' no registrado. ***\n");
+        System.out.println("\t*** Jugador '" + jugador + "' no registrado. ***");
         return null;
     };
 
@@ -146,6 +156,7 @@ public class Jugador {
     }
 
     public ArrayList<Casilla> getPropiedades() {
+        if (propiedades == null) propiedades = new ArrayList<>();
         return propiedades;
     }
 

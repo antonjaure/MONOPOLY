@@ -25,112 +25,6 @@ public class Casilla {
     private float alquilerPista; //Alquiler adicional por cada pista en caso de ser una casilla solar.
     private ArrayList<Avatar> avatares; //Avatares que están situados en la casilla.
 
-
-    public String getNombre() {
-        return this.nombre;
-    }
-    public String getTipo() {
-        return this.tipo;
-    }
-    public float getValor() {
-        return this.valor;
-    }
-    public int getPosicion() {
-        return this.posicion;
-    }
-    public Jugador getDuenho() { 
-        return this.duenho;
-    }
-    public Grupo getGrupo() {
-        return this.grupo;
-    }
-    public float getImpuesto() {
-        return this.impuesto;
-    }
-    public float getHipoteca() {
-        return this.hipoteca;
-    }
-    public ArrayList<Avatar> getAvatares() {
-        return this.avatares;
-    }
-    public float getValorCasa() {
-        return valorCasa;
-    }
-    public float getValorHotel() {
-        return valorHotel;
-    }
-    public float getValorPiscina() {
-        return valorPiscina;
-    }
-    public float getValorPista() {
-        return valorPista;
-    }
-    public float getAlquilerCasa() {
-        return alquilerCasa;
-    }
-    public float getAlquilerHotel() {
-        return alquilerHotel;
-    }
-    public float getAlquilerPiscina() {
-        return alquilerPiscina;
-    }
-    public float getAlquilerPista() {
-        return alquilerPista;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-    public void setValor(float valor) {
-        this.valor = valor;
-    }
-    public void setPosicion(int posicion) {
-        this.posicion = posicion;
-    }
-    public void setDuenho(Jugador duenho) {
-        this.duenho = duenho;
-    }
-    public void setGrupo(Grupo grupo){
-        this.grupo = grupo;
-    }
-    public void setImpuesto(float impuesto){
-        this.impuesto = impuesto;
-    }
-    public void setHipoteca(float hipoteca){
-        this.hipoteca = hipoteca;
-    }
-    public void setAvatares(ArrayList<Avatar> avatares){
-        this.avatares = avatares;
-    }
-    public void setValorCasa(float valorCasa) {
-        this.valorCasa = valorCasa;
-    }
-    public void setValorHotel(float valorHotel) {
-        this.valorHotel = valorHotel;
-    }
-    public void setValorPiscina(float valorPiscina) {
-        this.valorPiscina = valorPiscina;
-    }
-    public void setValorPista(float valorPista) {
-        this.valorPista = valorPista;
-    }
-    public void setAlquilerCasa(float alquilerCasa) {
-        this.alquilerCasa = alquilerCasa;
-    }
-    public void setAlquilerHotel(float alquilerHotel) {
-        this.alquilerHotel = alquilerHotel;
-    }
-    public void setAlquilerPiscina(float alquilerPiscina) {
-        this.alquilerPiscina = alquilerPiscina;
-    }
-    public void setAlquilerPista(float alquilerPista) {
-        this.alquilerPista = alquilerPista;
-    }
-
-
     //Constructores:
     public Casilla() {
     }//Parámetros vacíos
@@ -143,7 +37,9 @@ public class Casilla {
         setTipo(tipo);
         setPosicion(posicion);
         setValor(valor);
+
         setDuenho(duenho);
+        duenho.getPropiedades().add(this);
 
         this.avatares = new ArrayList<>();
     }
@@ -334,7 +230,7 @@ public class Casilla {
     * Devuelve una cadena con información específica de cada tipo de casilla.
     
 
-    NO SE QUE HAY QUE PONER EN LA DESCRIPCION DE PARKIN
+    NO SE QUE HAY QUE PONER EN LA DESCRIPCIÓN DE PARKING
     */
     public String infoCasilla() {
 
@@ -349,14 +245,14 @@ public class Casilla {
                 "\tvalor: " + this.valor + "€\n" +
                 "\talquiler: " + this.impuesto + "€\n" +
                 "\thipoteca: " + this.hipoteca + "€\n" +
-                "\tvalor casa " + this.valorCasa + "€\n" +
-                "\tvalor hotel " + this.valorHotel + "€\n" +
-                "\tvalor piscina " + this.valorPiscina + "€\n" +
-                "\tvalor pista " + this.valorPista + "€\n" +
-                "\talquiler casa " + this.alquilerCasa + "€\n" +
-                "\talquiler hotel " + this.alquilerHotel + "€\n" +
-                "\talquiler piscina " + this.alquilerPiscina + "€\n" +
-                "\talquiler pista " + this.alquilerPista + "€";
+                "\tvalor casa: " + this.valorCasa + "€\n" +
+                "\tvalor hotel: " + this.valorHotel + "€\n" +
+                "\tvalor piscina: " + this.valorPiscina + "€\n" +
+                "\tvalor pista: " + this.valorPista + "€\n" +
+                "\talquiler casa: " + this.alquilerCasa + "€\n" +
+                "\talquiler hotel: " + this.alquilerHotel + "€\n" +
+                "\talquiler piscina: " + this.alquilerPiscina + "€\n" +
+                "\talquiler pista: " + this.alquilerPista + "€";
 
             case "Transporte":
             case "Servicios":
@@ -377,15 +273,15 @@ public class Casilla {
             case "Especial":
                 if(this.nombre.equals("Cárcel")){
                     ArrayList<Avatar> avatares = this.getAvatares();
-                    String jugadoresEnCarcel = new String();
+                    StringBuilder jugadoresEnCarcel = new StringBuilder();
 
                     for(Avatar av : avatares) {
-                        jugadoresEnCarcel += av.getJugador().getNombre();
+                        jugadoresEnCarcel.append(av.getJugador().getNombre()).append(", ");
                     }
 
                     return "\ttipo: " + this.tipo + "\n" +
                     "\tsalida carcel: " + this.impuesto + "€\n" +
-                    "\tJugadores en carcel: " + jugadoresEnCarcel + "";
+                    "\tJugadores en carcel: " + jugadoresEnCarcel;
                 }
                 else if(this.nombre.equals("Parking")){
 
@@ -410,6 +306,7 @@ public class Casilla {
     /* Método para mostrar información de una casilla en venta.
      * Valor devuelto: texto con esa información.
      */
+    ///////////////     HACE LO MISMO QUE descCasilla() de Menu     /////////////
     public String casEnVenta() {
 
         if (this.getDuenho().getNombre().equals("Banca")) {
@@ -443,56 +340,166 @@ public class Casilla {
         boolean solvente = evaluarCasilla(jugadorActual, banca, tirada);
     
         if (!solvente) {
-            System.out.println(jugadorActual.getNombre() + " no tiene dinero suficiente para pagar esta casilla.");
+            System.out.println("\t" + jugadorActual.getNombre() + " no tiene dinero suficiente para pagar esta casilla.");
             // Avisar que debe hipotecar o declararse en bancarrota
             return;
         }
     
         // Casillas con dueño distinto al jugador actual
-        if ((tipo.equals("Solar") || tipo.equals("Transporte") || tipo.equals("Servicios"))
-                && duenho != null && duenho != banca && duenho != jugadorActual) {
-    
-            float cantidad = 0;
-    
-            switch (tipo) {
-                case "Solar":
-                    // Antes: se usaba impuesto fijo de la casilla
-                    // Ahora: considerar si el grupo completo pertenece al dueño → se podría duplicar alquiler
-                    cantidad = impuesto; 
-                    break;
-                case "Transporte":
-                    cantidad = 250000f;
-                    break;
-                case "Servicios":
-                    cantidad = tirada * 4 * 50000f;
-                    break;
+        if (tipo.equals("Solar") || tipo.equals("Transporte") || tipo.equals("Servicios")) {
+
+            if (this.duenho == MonopolyETSE.menu.getBanca()) {
+                System.out.println("\tCasilla en venta.");
+                return;
             }
-    
+
+            float cantidad = switch (tipo) {
+                case "Solar" -> {
+                    boolean duenhoGrupo = this.grupo.esDuenhoGrupo(this.duenho);
+
+                    yield duenhoGrupo ? impuesto * 2 : impuesto;
+                }
+                case "Transporte" -> this.impuesto;
+                case "Servicios" -> tirada * 4 * this.impuesto;
+                default -> 0;
+            };
+
             jugadorActual.sumarFortuna(-cantidad);
             duenho.sumarFortuna(cantidad);
-            System.out.println(jugadorActual.getNombre() + " paga " + cantidad + "€ a " + duenho.getNombre());
-    
+            System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ a " + duenho.getNombre());
+
+        // Casillas sin dueño (o de la banca)
         } else if (tipo.equals("Impuesto")) {
-            float cantidad = 2000000f;
+            float cantidad = this.impuesto;
             jugadorActual.sumarFortuna(-cantidad);
-            banca.sumarFortuna(cantidad);
-            System.out.println(jugadorActual.getNombre() + " paga " + cantidad + "€ que se depositan en el Parking");
+            Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
+            parking.valor += cantidad;
+            System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ que se depositan en el Parking");
         } 
         else if (tipo.equals("Comunidad") || tipo.equals("Suerte")) {
-            System.out.println(jugadorActual.getNombre() + " ha caído en " + nombre + ". Roba una carta.");
+            System.out.println("\t" + jugadorActual.getNombre() + " roba una carta.");
         }
         else if (tipo.equals("Especial")) {
             if(nombre.equals("Parking")) {
-                System.out.println(jugadorActual.getNombre() + " recibe el bote de " + valor + "€");
+                System.out.println("\t" + jugadorActual.getNombre() + " recibe el bote de " + valor + "€");
                 jugadorActual.sumarFortuna(valor);
                 valor = 0; // Vaciar el bote
-            } else if(nombre.equals("Salida")) {
-                System.out.println(jugadorActual.getNombre() + " pasa por Salida y recibe 2.000.000€");
+            }
+            else if (nombre.equals("Salida") || this.posicion - tirada < 0) {
+                System.out.println("\t" + jugadorActual.getNombre() + " pasa por Salida y recibe 2.000.000€");
                 jugadorActual.sumarFortuna(2000000f);
             }
-            // Ir a Cárcel se gestiona fuera en Menu.java
+            else if (nombre.equals("IrCarcel")) {
+                jugadorActual.encarcelar();
+            }
+        }
+        else {
+            System.out.println("\tCasilla de paso. No pasa nada.");
         }
     }
 
 
+    public String getNombre() {
+        return this.nombre;
+    }
+    public String getTipo() {
+        return this.tipo;
+    }
+    public float getValor() {
+        return this.valor;
+    }
+    public int getPosicion() {
+        return this.posicion;
+    }
+    public Jugador getDuenho() {
+        return this.duenho;
+    }
+    public Grupo getGrupo() {
+        return this.grupo;
+    }
+    public float getImpuesto() {
+        return this.impuesto;
+    }
+    public float getHipoteca() {
+        return this.hipoteca;
+    }
+    public ArrayList<Avatar> getAvatares() {
+        return this.avatares;
+    }
+    public float getValorCasa() {
+        return valorCasa;
+    }
+    public float getValorHotel() {
+        return valorHotel;
+    }
+    public float getValorPiscina() {
+        return valorPiscina;
+    }
+    public float getValorPista() {
+        return valorPista;
+    }
+    public float getAlquilerCasa() {
+        return alquilerCasa;
+    }
+    public float getAlquilerHotel() {
+        return alquilerHotel;
+    }
+    public float getAlquilerPiscina() {
+        return alquilerPiscina;
+    }
+    public float getAlquilerPista() {
+        return alquilerPista;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
+    }
+    public void setValor(float valor) {
+        this.valor = valor;
+    }
+    public void setPosicion(int posicion) {
+        this.posicion = posicion;
+    }
+    public void setDuenho(Jugador duenho) {
+        this.duenho = duenho;
+    }
+    public void setGrupo(Grupo grupo){
+        this.grupo = grupo;
+    }
+    public void setImpuesto(float impuesto){
+        this.impuesto = impuesto;
+    }
+    public void setHipoteca(float hipoteca){
+        this.hipoteca = hipoteca;
+    }
+    public void setAvatares(ArrayList<Avatar> avatares){
+        this.avatares = avatares;
+    }
+    public void setValorCasa(float valorCasa) {
+        this.valorCasa = valorCasa;
+    }
+    public void setValorHotel(float valorHotel) {
+        this.valorHotel = valorHotel;
+    }
+    public void setValorPiscina(float valorPiscina) {
+        this.valorPiscina = valorPiscina;
+    }
+    public void setValorPista(float valorPista) {
+        this.valorPista = valorPista;
+    }
+    public void setAlquilerCasa(float alquilerCasa) {
+        this.alquilerCasa = alquilerCasa;
+    }
+    public void setAlquilerHotel(float alquilerHotel) {
+        this.alquilerHotel = alquilerHotel;
+    }
+    public void setAlquilerPiscina(float alquilerPiscina) {
+        this.alquilerPiscina = alquilerPiscina;
+    }
+    public void setAlquilerPista(float alquilerPista) {
+        this.alquilerPista = alquilerPista;
+    }
 }
