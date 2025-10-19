@@ -244,18 +244,8 @@ public class Menu {
         if (jugadorActual.isEnCarcel()) {
             System.out.println(jugadorActual.getNombre() + " está en la cárcel.");
 
-            // Llama al metodo salirCarcel() que maneja toda la lógica de pago o tirar dobles
-            salirCarcel();
-
-            // Si después de salirCarcel sigue en la cárcel → termina el turno
-            if (jugadorActual.isEnCarcel()) {
-                System.out.println("\t" + jugadorActual.getNombre() + " no ha podido salir de la cárcel.");
-                System.out.println("\tNo puede lanzar los dados hasta su próximo turno.");
-                acabarTurno();
-                return; // Finaliza el turno
-            } else {
-                System.out.println("\t" + jugadorActual.getNombre() + " ha salido de la cárcel y puede lanzar los dados.");
-            }
+            System.out.println("Debe usar el comando 'salir carcel' para intentar salir (pagando o sacando dobles).");
+            return; // Finaliza el turno
         }
 
         int dado1Val;
@@ -382,6 +372,7 @@ public class Menu {
                 jugador.setTiradasCarcel(0);
             } else {
                 System.out.println(jugador.getNombre() + " no posee suficinete dinero para pagar la salida. Debe esperar a su proximo turno.\n");
+                acabarTurno();
             }
         } else {
             jugador.setTiradasCarcel(tiradasCarcel + 1);
@@ -398,6 +389,7 @@ public class Menu {
                 jugador.getAvatar().moverAvatar(tablero.getPosiciones(), valorTirada);
             } else {
                 System.out.println(jugador.getNombre() + " no ha sacado dobles y permanece en la cárcel.\n");
+                acabarTurno();
             }
         }
     }
