@@ -25,40 +25,57 @@ public class Casilla {
     private float alquilerPista; //Alquiler adicional por cada pista en caso de ser una casilla solar.
     private ArrayList<Avatar> avatares; //Avatares que están situados en la casilla.
 
+
     public String getNombre() {
         return this.nombre;
     }
-    
     public String getTipo() {
         return this.tipo;
     }
-    
     public float getValor() {
         return this.valor;
     }
-
     public int getPosicion() {
         return this.posicion;
     }
-
     public Jugador getDuenho() { 
         return this.duenho;
     }
-
     public Grupo getGrupo() {
         return this.grupo;
     }
-
     public float getImpuesto() {
         return this.impuesto;
     }
-
     public float getHipoteca() {
         return this.hipoteca;
     }
-    
     public ArrayList<Avatar> getAvatares() {
         return this.avatares;
+    }
+    public float getValorCasa() {
+        return valorCasa;
+    }
+    public float getValorHotel() {
+        return valorHotel;
+    }
+    public float getValorPiscina() {
+        return valorPiscina;
+    }
+    public float getValorPista() {
+        return valorPista;
+    }
+    public float getAlquilerCasa() {
+        return alquilerCasa;
+    }
+    public float getAlquilerHotel() {
+        return alquilerHotel;
+    }
+    public float getAlquilerPiscina() {
+        return alquilerPiscina;
+    }
+    public float getAlquilerPista() {
+        return alquilerPista;
     }
 
     public void setNombre(String nombre) {
@@ -88,6 +105,31 @@ public class Casilla {
     public void setAvatares(ArrayList<Avatar> avatares){
         this.avatares = avatares;
     }
+    public void setValorCasa(float valorCasa) {
+        this.valorCasa = valorCasa;
+    }
+    public void setValorHotel(float valorHotel) {
+        this.valorHotel = valorHotel;
+    }
+    public void setValorPiscina(float valorPiscina) {
+        this.valorPiscina = valorPiscina;
+    }
+    public void setValorPista(float valorPista) {
+        this.valorPista = valorPista;
+    }
+    public void setAlquilerCasa(float alquilerCasa) {
+        this.alquilerCasa = alquilerCasa;
+    }
+    public void setAlquilerHotel(float alquilerHotel) {
+        this.alquilerHotel = alquilerHotel;
+    }
+    public void setAlquilerPiscina(float alquilerPiscina) {
+        this.alquilerPiscina = alquilerPiscina;
+    }
+    public void setAlquilerPista(float alquilerPista) {
+        this.alquilerPista = alquilerPista;
+    }
+
 
     //Constructores:
     public Casilla() {
@@ -301,38 +343,36 @@ public class Casilla {
         switch(tipo){
 
             case "Solar":
-                return "\ntipo: " + this.tipo + "\n" +
-                "grupo: " + this.grupo + "\n" +
-                "propietario: " + (this.duenho.getNombre()) + "\n" +
-                "valor: " + this.valor + "€\n" +
-                "alquiler: " + this.impuesto + "€\n" +
-                "hipoteca: " + this.hipoteca + "€\n" +
-                "valor casa " + this.valorCasa + "€\n" +
-                "valor hotel " + this.valorHotel + "€\n" +
-                "valor piscina " + this.valorPiscina + "€\n" +
-                "valor pista " + this.valorPista + "€\n" +
-                "alquiler casa " + this.alquilerCasa + "€\n" +
-                "alquiler hotel " + this.alquilerHotel + "€\n" +
-                "alquiler piscina " + this.alquilerPiscina + "€\n" +
-                "alquiler pista " + this.alquilerPista + "€\n";
+                return "\ttipo: " + this.tipo + "\n" +
+                "\tgrupo: " + this.grupo.getCodigoColor() + this.grupo.getColorGrupo() + Valor.RESET + "\n" +
+                "\tpropietario: " + (this.duenho.getNombre()) + "\n" +
+                "\tvalor: " + this.valor + "€\n" +
+                "\talquiler: " + this.impuesto + "€\n" +
+                "\thipoteca: " + this.hipoteca + "€\n" +
+                "\tvalor casa " + this.valorCasa + "€\n" +
+                "\tvalor hotel " + this.valorHotel + "€\n" +
+                "\tvalor piscina " + this.valorPiscina + "€\n" +
+                "\tvalor pista " + this.valorPista + "€\n" +
+                "\talquiler casa " + this.alquilerCasa + "€\n" +
+                "\talquiler hotel " + this.alquilerHotel + "€\n" +
+                "\talquiler piscina " + this.alquilerPiscina + "€\n" +
+                "\talquiler pista " + this.alquilerPista + "€";
 
             case "Transporte":
             case "Servicios":
-                return "\ntipo: " + this.tipo + "\n" +
-                "grupo: " + this.grupo + "\n" +
-                "propietario: " + (this.duenho.getNombre()) + "\n" +
-                "valor: " + this.valor + "€\n" +
-                "alquiler: " + this.impuesto + "€\n" +
-                "hipoteca: " + this.hipoteca + "€\n";
+                return "\ttipo: " + this.tipo + "\n" +
+                "\tpropietario: " + (this.duenho.getNombre()) + "\n" +
+                "\tvalor: " + this.valor + "€\n" +
+                "\talquiler: " + this.impuesto + "€";
             
 
             case "Impuesto":
-                return "\ntipo: " + this.tipo + "\n" +
-                "impuesto: " + this.impuesto + "€\n";
+                return "\ttipo: " + this.tipo + "\n" +
+                "\timpuesto: " + this.impuesto + "€";
 
             case "Comunidad":
             case "Suerte":
-                return "\nNo hay información adicional para esta casilla.\n";
+                return "\tNo hay información adicional para esta casilla.";
             
             case "Especial":
                 if(this.nombre.equals("Cárcel")){
@@ -343,27 +383,27 @@ public class Casilla {
                         jugadoresEnCarcel += av.getJugador().getNombre();
                     }
 
-                    return "\ntipo: " + this.tipo + "\n" +
-                    "salida carcel: " + this.impuesto + "€\n" +
-                    "Jugadores en carcel: " + jugadoresEnCarcel + "\n";
+                    return "\ttipo: " + this.tipo + "\n" +
+                    "\tsalida carcel: " + this.impuesto + "€\n" +
+                    "\tJugadores en carcel: " + jugadoresEnCarcel + "";
                 }
                 else if(this.nombre.equals("Parking")){
 
                     //EN EL PDF PONE QUE HAY QUE MOSTRAR JUGADORES EN EL PARKING,
-                    //PERO NO SE SI SON LOS QUE PAGARON IMPUESTOS O LOS QUE ESTAN EN EL PARKING.
+                    //PERO NO SE SI SON LOS QUE PAGARON IMPUESTOS O LOS QUE ESTÁN EN EL PARKING.
 
-                    return "\ntipo: " + this.tipo + "\n" +
-                    "bote actual: " + this.valor + "€\n";
+                    return "\ttipo: " + this.tipo + "\n" +
+                    "\tbote actual: " + this.valor + "€";
                 }
                 else if(this.nombre.equals("Salida")){
-                    return "\ntipo: " + this.tipo + "\n" +
-                    "premio por pasar: " + Valor.SUMA_VUELTA + "€\n";
+                    return "\ttipo: " + this.tipo + "\n" +
+                    "\tpremio por pasar: " + Valor.SUMA_VUELTA + "€";
                 }
                 else{
-                    return "\nNo hay información adicional para esta casilla.\n";
+                    return "\tNo hay información adicional para esta casilla.";
                 }
             default:
-                return "\nError al mostrar infoCasilla().\n";
+                return "\tError al mostrar infoCasilla().";
         }
     }
 

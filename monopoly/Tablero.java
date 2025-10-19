@@ -11,16 +11,20 @@ public class Tablero {
     private HashMap<String, Grupo> grupos; //Grupos del tablero, almacenados como un HashMap con clave String (será el color del grupo).
     private Jugador banca; //Un jugador que será la banca.
 
+
     public void setGrupos(String color, Grupo grupo) {
         this.grupos.put(color, grupo);
     }
-    public ArrayList<ArrayList<Casilla>> getCasillas() {
-        return this.casillas;
-    }
+
     public Jugador getBanca() {
         return this.banca;
     }
-    
+
+    public ArrayList<ArrayList<Casilla>> getPosiciones() {
+        return this.posiciones;
+    }
+
+
     public Tablero() {}
 
     //Constructor: únicamente le pasamos el jugador banca (que se creará desde el menú).
@@ -29,7 +33,8 @@ public class Tablero {
 
         MonopolyETSE.menu.setTablero(this);
     }
-    
+
+
     //Método para crear todas las casillas del tablero. Formado a su vez por cuatro métodos (1/lado).
     private void generarCasillas() {
         posiciones = new ArrayList<>();
@@ -46,47 +51,54 @@ public class Tablero {
         generarGrupos();
     }
 
-    /////////////////// AÑADIR PRECAUCION SI NO ENCUENTRA LA CASILLA (null)
     private void generarGrupos() {
         if (posiciones == null) generarCasillas();
         if (grupos == null) grupos = new HashMap<>();
 
-        Grupo negro =  new Grupo(encontrar_casilla((String) Solares.get(0).get(0)),
-                encontrar_casilla((String) Solares.get(1).get(0)),
+        Grupo negro =  new Grupo(encontrar_casilla((String) Solares.get(0).getFirst()),
+                encontrar_casilla((String) Solares.get(1).getFirst()),
+                "negro",
                 Valor.BLACK);
         setGrupos("negro", negro);
-        Grupo cian =  new Grupo(encontrar_casilla((String) Solares.get(2).get(0)),
-                encontrar_casilla((String) Solares.get(3).get(0)),
-                encontrar_casilla((String) Solares.get(4).get(0)),
+        Grupo cian =  new Grupo(encontrar_casilla((String) Solares.get(2).getFirst()),
+                encontrar_casilla((String) Solares.get(3).getFirst()),
+                encontrar_casilla((String) Solares.get(4).getFirst()),
+                "cian",
                 Valor.CYAN);
         setGrupos("cian", cian);
-        Grupo morado =  new Grupo(encontrar_casilla((String) Solares.get(5).get(0)),
-                encontrar_casilla((String) Solares.get(6).get(0)),
-                encontrar_casilla((String) Solares.get(7).get(0)),
+        Grupo morado =  new Grupo(encontrar_casilla((String) Solares.get(5).getFirst()),
+                encontrar_casilla((String) Solares.get(6).getFirst()),
+                encontrar_casilla((String) Solares.get(7).getFirst()),
+                "morado",
                 Valor.PURPLE);
         setGrupos("morado", morado);
-        Grupo amarillo =  new Grupo(encontrar_casilla((String) Solares.get(8).get(0)),
-                encontrar_casilla((String) Solares.get(9).get(0)),
-                encontrar_casilla((String) Solares.get(10).get(0)),
+        Grupo amarillo =  new Grupo(encontrar_casilla((String) Solares.get(8).getFirst()),
+                encontrar_casilla((String) Solares.get(9).getFirst()),
+                encontrar_casilla((String) Solares.get(10).getFirst()),
+                "amarillo",
                 Valor.YELLOW);
         setGrupos("amarillo", amarillo);
-        Grupo rojo =  new Grupo(encontrar_casilla((String) Solares.get(11).get(0)),
-                encontrar_casilla((String) Solares.get(12).get(0)),
-                encontrar_casilla((String) Solares.get(13).get(0)),
+        Grupo rojo =  new Grupo(encontrar_casilla((String) Solares.get(11).getFirst()),
+                encontrar_casilla((String) Solares.get(12).getFirst()),
+                encontrar_casilla((String) Solares.get(13).getFirst()),
+                "rojo",
                 Valor.RED);
         setGrupos("rojo", rojo);
-        Grupo blanco =  new Grupo(encontrar_casilla((String) Solares.get(14).get(0)),
-                encontrar_casilla((String) Solares.get(15).get(0)),
-                encontrar_casilla((String) Solares.get(16).get(0)),
+        Grupo blanco =  new Grupo(encontrar_casilla((String) Solares.get(14).getFirst()),
+                encontrar_casilla((String) Solares.get(15).getFirst()),
+                encontrar_casilla((String) Solares.get(16).getFirst()),
+                "blanco",
                 Valor.WHITE);
         setGrupos("blanco", blanco);
-        Grupo verde =  new Grupo(encontrar_casilla((String) Solares.get(17).get(0)),
-                encontrar_casilla((String) Solares.get(18).get(0)),
-                encontrar_casilla((String) Solares.get(19).get(0)),
+        Grupo verde =  new Grupo(encontrar_casilla((String) Solares.get(17).getFirst()),
+                encontrar_casilla((String) Solares.get(18).getFirst()),
+                encontrar_casilla((String) Solares.get(19).getFirst()),
+                "verde",
                 Valor.GREEN);
         setGrupos("verde", verde);
-        Grupo azul =  new Grupo(encontrar_casilla((String) Solares.get(20).get(0)),
-                encontrar_casilla((String) Solares.get(21).get(0)),
+        Grupo azul =  new Grupo(encontrar_casilla((String) Solares.get(20).getFirst()),
+                encontrar_casilla((String) Solares.get(21).getFirst()),
+                "azul",
                 Valor.BLUE);
         setGrupos("azul", azul);
     }
@@ -161,7 +173,7 @@ public class Tablero {
             String nombre = norte.get(j).getNombre();
 
             if (norte.get(j).getTipo().equals("Solar")) {
-                String color = norte.get(j).getGrupo().getColorGrupo();
+                String color = norte.get(j).getGrupo().getCodigoColor();
                 nombre = color + nombre + Valor.RESET;
             }
             contenidoTexto = nombre;
@@ -179,7 +191,7 @@ public class Tablero {
             String nombre = sur.get(j).getNombre();
 
             if (sur.get(j).getTipo().equals("Solar")) {
-                String color = sur.get(j).getGrupo().getColorGrupo();
+                String color = sur.get(j).getGrupo().getCodigoColor();
                 nombre = color + nombre + Valor.RESET;
             }
             contenidoTexto = nombre;
@@ -197,7 +209,7 @@ public class Tablero {
             String nombre = oeste.get(j).getNombre();
 
             if (oeste.get(j).getTipo().equals("Solar")) {
-                String color = oeste.get(j).getGrupo().getColorGrupo();
+                String color = oeste.get(j).getGrupo().getCodigoColor();
                 nombre = color + nombre + Valor.RESET;
             }
             contenidoTexto = nombre;
@@ -214,7 +226,7 @@ public class Tablero {
             String nombre = este.get(j-1).getNombre();
 
             if (este.get(j-1).getTipo().equals("Solar")) {
-                String color = este.get(j-1).getGrupo().getColorGrupo();
+                String color = este.get(j-1).getGrupo().getCodigoColor();
                 nombre = color + nombre + Valor.RESET;
             }
             contenidoTexto = nombre;
@@ -293,19 +305,31 @@ public class Tablero {
             String nombre =  Solares.get(SolServTrans.get(0).indexOf(pos)).get(0).toString();
             String tipo = "Solar";
             float valor = (int) Solares.get(SolServTrans.get(0).indexOf(pos)).get(1);
-            return new Casilla(nombre, tipo, pos, valor, banca);
+
+            Casilla casilla = new Casilla(nombre, tipo, pos, valor, banca);
+            float hipoteca = (int) Solares.get(SolServTrans.get(0).indexOf(pos)).get(2);
+
+            casilla.setHipoteca(hipoteca);
+            asignarPrecioEdificio(casilla, pos);
+            asignarAlquileres(casilla, pos);
+
+            return casilla;
         }
         if (SolServTrans.get(1).contains(pos)) { // Servicios
             String nombre = "Serv" + (SolServTrans.get(1).indexOf(pos) + 1);
             String tipo = "Servicios";
             float valor = 500000;
-            return new Casilla(nombre, tipo, pos, valor, banca);
+            Casilla casilla = new Casilla(nombre, tipo, pos, valor, banca);
+            casilla.setImpuesto(50000);
+            return casilla;
         }
         if (SolServTrans.get(2).contains(pos)) { // Transporte
             String nombre = "Trans" + (SolServTrans.get(2).indexOf(pos) + 1);
             String tipo = "Transporte";
             float valor = 500000;
-            return new Casilla(nombre, tipo, pos, valor, banca);
+            Casilla casilla = new Casilla(nombre, tipo, pos, valor, banca);
+            casilla.setImpuesto(250000);
+            return casilla;
         }
 
         if (impuestos.contains(pos)) { // Impuestos
@@ -321,17 +345,46 @@ public class Tablero {
         }
         if (SuCajEsp.get(2).contains(pos)) { // Especial
             int n = SuCajEsp.get(2).indexOf(pos);
-            String nombre = "";
-            switch (n) {
-                case 0: nombre = "Salida"; break;
-                case 1: nombre = "Cárcel"; break;
-                case 2: nombre = "Parking"; break;
-                case 3: nombre = "IrCarcel"; break;
-            }
-            return new Casilla(nombre, "Especial", pos, banca);
+            String nombre = switch (n) {
+                case 0 -> "Salida";
+                case 1 -> "Cárcel";
+                case 2 -> "Parking";
+                case 3 -> "IrCarcel";
+                default -> "";
+            };
+            Casilla casilla = new Casilla(nombre, "Especial", pos, banca);
+            if (n == 1) casilla.setImpuesto(500000);
+            else if (n == 2) casilla.setValor(0);
+            return casilla;
         }
 
         return new Casilla();
+    }
+
+    private void asignarPrecioEdificio(Casilla c, int pos) {
+        float valorCasa =  (int) PreciosConstruccion.get(SolServTrans.get(0).indexOf(pos)).get(1);
+        float valorHotel =  (int) PreciosConstruccion.get(SolServTrans.get(0).indexOf(pos)).get(2);
+        float valorPiscina =   (int) PreciosConstruccion.get(SolServTrans.get(0).indexOf(pos)).get(3);
+        float valorPista = (int) PreciosConstruccion.get(SolServTrans.get(0).indexOf(pos)).get(4);
+
+        c.setValorCasa(valorCasa);
+        c.setValorHotel(valorHotel);
+        c.setValorPiscina(valorPiscina);
+        c.setValorPista(valorPista);
+    }
+
+    private void asignarAlquileres(Casilla c, int pos) {
+        float impuesto = (int) Alquileres.get(SolServTrans.get(0).indexOf(pos)).get(1);
+        float alquilerCasa =  (int) Alquileres.get(SolServTrans.get(0).indexOf(pos)).get(2);
+        float alquilerHotel =  (int) Alquileres.get(SolServTrans.get(0).indexOf(pos)).get(3);
+        float alquilerPiscina =   (int) Alquileres.get(SolServTrans.get(0).indexOf(pos)).get(4);
+        float alquilerPista = (int) Alquileres.get(SolServTrans.get(0).indexOf(pos)).get(5);
+
+        c.setImpuesto(impuesto);
+        c.setAlquilerCasa(alquilerCasa);
+        c.setAlquilerHotel(alquilerHotel);
+        c.setAlquilerPiscina(alquilerPiscina);
+        c.setAlquilerPista(alquilerPista);
     }
 
     private String avataresString(ArrayList<Avatar> avatares){
@@ -392,6 +445,27 @@ public class Tablero {
         return null;
     }
 
+    public Casilla avanzarCasillas(Casilla origen, int pasos) {
+        // Asegurar que las posiciones están generadas
+        if (posiciones == null) generarCasillas();
+
+        int posActual = origen.getPosicion(); // asumo que es 0..39
+        // cálculo circular en base 0:
+        int nuevaPos = (posActual + pasos) % 40; // resultado 0..39
+
+        // Buscar la casilla con esa posición dentro de "posiciones"
+        for (ArrayList<Casilla> fila : posiciones) {
+            for (Casilla c : fila) {
+                if (c.getPosicion() == nuevaPos) {
+                    return c;
+                }
+            }
+        }
+
+        // Si no encuentra (fallback)
+        return origen;
+    }
+
     private final List<List<Integer>> SolServTrans = Arrays.asList(
             Arrays.asList(1,3,6,8,9,11,13,14,16,18,19,21,23,24,26,27,29,31,32,34,37,39), // Posición Solares
             Arrays.asList(12,28), // Posición Servicios
@@ -404,54 +478,81 @@ public class Tablero {
             Arrays.asList(0,10,20,30)
     );
 
-    //////////////// CUIDADO CON LOS ESPACIOS, LOS NOMBRES TIENEN QUE SER IGUALES ARRIBA Y ABAJO
+    // Lista con Solar, Precio e Hipoteca
     private final List<List<Object>> Solares = Arrays.asList(
-            Arrays.asList("Solar1", 600000),
-            Arrays.asList("Solar2", 600000),
-            Arrays.asList("Solar3", 1000000),
-            Arrays.asList("Solar4", 1000000),
-            Arrays.asList("Solar5", 1200000),
-            Arrays.asList("Solar6", 1400000),
-            Arrays.asList("Solar7", 1400000),
-            Arrays.asList("Solar8", 1600000),
-            Arrays.asList("Solar9", 1800000),
-            Arrays.asList("Solar10", 1800000),
-            Arrays.asList("Solar11", 2200000),
-            Arrays.asList("Solar12", 2200000),
-            Arrays.asList("Solar13", 2200000),
-            Arrays.asList("Solar14", 2400000),
-            Arrays.asList("Solar15", 2600000),
-            Arrays.asList("Solar16", 2600000),
-            Arrays.asList("Solar17", 2800000),
-            Arrays.asList("Solar18", 3000000),
-            Arrays.asList("Solar19", 3000000),
-            Arrays.asList("Solar20", 3200000),
-            Arrays.asList("Solar21", 3500000),
-            Arrays.asList("Solar22", 4000000)
+            Arrays.asList("Solar1", 600000, 300000),
+            Arrays.asList("Solar2", 600000, 300000),
+            Arrays.asList("Solar3", 1000000, 500000),
+            Arrays.asList("Solar4", 1000000, 500000),
+            Arrays.asList("Solar5", 1200000, 600000),
+            Arrays.asList("Solar6", 1400000, 700000),
+            Arrays.asList("Solar7", 1400000, 700000),
+            Arrays.asList("Solar8", 1600000, 800000),
+            Arrays.asList("Solar9", 1800000, 900000),
+            Arrays.asList("Solar10", 1800000, 900000),
+            Arrays.asList("Solar11", 2200000, 1100000),
+            Arrays.asList("Solar12", 2200000, 1100000),
+            Arrays.asList("Solar13", 2200000, 1100000),
+            Arrays.asList("Solar14", 2400000, 1200000),
+            Arrays.asList("Solar15", 2600000, 1300000),
+            Arrays.asList("Solar16", 2600000, 1300000),
+            Arrays.asList("Solar17", 2800000, 1400000),
+            Arrays.asList("Solar18", 3000000, 1500000),
+            Arrays.asList("Solar19", 3000000, 1500000),
+            Arrays.asList("Solar20", 3200000, 1600000),
+            Arrays.asList("Solar21", 3500000, 1750000),
+            Arrays.asList("Solar22", 4000000, 2000000)
     );
 
-    public ArrayList<ArrayList<Casilla>> getPosiciones() {
-        return this.posiciones;
-    }
-    private ArrayList<ArrayList<Casilla>> casillas;
-    public Casilla avanzarCasillas(Casilla origen, int pasos) {
-        // Asegurar que las posiciones están generadas
-        if (posiciones == null) generarCasillas();
-    
-        int posActual = origen.getPosicion(); // asumo que es 0..39
-        // cálculo circular en base 0:
-        int nuevaPos = (posActual + pasos) % 40; // resultado 0..39
-    
-        // Buscar la casilla con esa posición dentro de "posiciones"
-        for (ArrayList<Casilla> fila : posiciones) {
-            for (Casilla c : fila) {
-                if (c.getPosicion() == nuevaPos) {
-                    return c;
-                }
-            }
-        }
-    
-        // Si no encuentra (fallback)
-        return origen;
-    }
+    // Lista con Precio casa, Precio hotel, Precio de piscina, Precio de pista de deporte
+    private final List<List<Object>> PreciosConstruccion = Arrays.asList(
+            Arrays.asList("Solar1", 500000, 500000, 100000, 200000),
+            Arrays.asList("Solar2", 500000, 500000, 100000, 200000),
+            Arrays.asList("Solar3", 500000, 500000, 100000, 200000),
+            Arrays.asList("Solar4", 500000, 500000, 100000, 200000),
+            Arrays.asList("Solar5", 500000, 500000, 100000, 200000),
+            Arrays.asList("Solar6", 1000000, 1000000, 200000, 400000),
+            Arrays.asList("Solar7", 1000000, 1000000, 200000, 400000),
+            Arrays.asList("Solar8", 1000000, 1000000, 200000, 400000),
+            Arrays.asList("Solar9", 1000000, 1000000, 200000, 400000),
+            Arrays.asList("Solar10", 1000000, 1000000, 200000, 400000),
+            Arrays.asList("Solar11", 1000000, 1000000, 200000, 400000),
+            Arrays.asList("Solar12", 1500000, 1500000, 300000, 600000),
+            Arrays.asList("Solar13", 1500000, 1500000, 300000, 600000),
+            Arrays.asList("Solar14", 1500000, 1500000, 300000, 600000),
+            Arrays.asList("Solar15", 1500000, 1500000, 300000, 600000),
+            Arrays.asList("Solar16", 1500000, 1500000, 300000, 600000),
+            Arrays.asList("Solar17", 1500000, 1500000, 300000, 600000),
+            Arrays.asList("Solar18", 2000000, 2000000, 400000, 800000),
+            Arrays.asList("Solar19", 2000000, 2000000, 400000, 800000),
+            Arrays.asList("Solar20", 2000000, 2000000, 400000, 800000),
+            Arrays.asList("Solar21", 2000000, 2000000, 400000, 800000),
+            Arrays.asList("Solar22", 2000000, 2000000, 400000, 800000)
+    );
+
+    // Lista con todos los alquileres
+    private final List<List<Object>> Alquileres = Arrays.asList(
+            Arrays.asList("Solar1", 20000, 400000, 2500000, 500000, 500000),
+            Arrays.asList("Solar2", 40000, 800000, 4500000, 900000, 900000),
+            Arrays.asList("Solar3", 60000, 1000000, 5500000, 1100000, 1100000),
+            Arrays.asList("Solar4", 60000, 1000000, 5500000, 1100000, 1100000),
+            Arrays.asList("Solar5", 80000, 1250000, 6000000, 1200000, 1200000),
+            Arrays.asList("Solar6", 100000, 1500000, 7500000, 1500000, 1500000),
+            Arrays.asList("Solar7", 100000, 1500000, 7500000, 1500000, 1500000),
+            Arrays.asList("Solar8", 120000, 1750000, 9000000, 1800000, 1800000),
+            Arrays.asList("Solar9", 140000, 1850000, 9500000, 1900000, 1900000),
+            Arrays.asList("Solar10", 140000, 1850000, 9500000, 1900000, 1900000),
+            Arrays.asList("Solar11", 160000, 2000000, 10000000, 2000000, 2000000),
+            Arrays.asList("Solar12", 180000, 2200000, 10500000, 2100000, 2100000),
+            Arrays.asList("Solar13", 180000, 2200000, 10500000, 2100000, 2100000),
+            Arrays.asList("Solar14", 200000, 2325000, 11000000, 2200000, 2200000),
+            Arrays.asList("Solar15", 220000, 2450000, 11500000, 2300000, 2300000),
+            Arrays.asList("Solar16", 220000, 2450000, 11500000, 2300000, 2300000),
+            Arrays.asList("Solar17", 240000, 2600000, 12000000, 2400000, 2400000),
+            Arrays.asList("Solar18", 260000, 2750000, 12750000, 2550000, 2550000),
+            Arrays.asList("Solar19", 260000, 2750000, 12750000, 2550000, 2550000),
+            Arrays.asList("Solar20", 280000, 3000000, 14000000, 2800000, 2800000),
+            Arrays.asList("Solar21", 350000, 3250000, 17000000, 3400000, 3400000),
+            Arrays.asList("Solar22", 500000, 4250000, 20000000, 4000000, 4000000)
+    );
 }

@@ -10,6 +10,7 @@ class Grupo {
     //Atributos
     private ArrayList<Casilla> miembros; //Casillas miembros del grupo.
     private String colorGrupo; //Color del grupo
+    private String codigoColor;
     private int numCasillas; //Número de casillas del grupo.
 
 
@@ -18,6 +19,10 @@ class Grupo {
     }
     public String getColorGrupo() {
         return colorGrupo;
+    }
+
+    public String getCodigoColor() {
+        return codigoColor;
     }
 
     public int numCasillas() {
@@ -36,19 +41,21 @@ class Grupo {
     /*Constructor para cuando el grupo está formado por DOS CASILLAS:
     * Requiere como parámetros las dos casillas miembro y el color del grupo.
      */
-    public Grupo(Casilla cas1, Casilla cas2, String colorGrupo) {
+    public Grupo(Casilla cas1, Casilla cas2, String colorGrupo, String codigoColor) {
         this.miembros = new ArrayList<>(Arrays.asList(cas1, cas2));
         cas1.setGrupo(this); cas2.setGrupo(this);
         this.colorGrupo = colorGrupo;
+        this.codigoColor = codigoColor;
     }
 
     /*Constructor para cuando el grupo está formado por TRES CASILLAS:
     * Requiere como parámetros las tres casillas miembro y el color del grupo.
      */
-    public Grupo(Casilla cas1, Casilla cas2, Casilla cas3, String colorGrupo) {
+    public Grupo(Casilla cas1, Casilla cas2, Casilla cas3, String colorGrupo, String codigoColor) {
         this.miembros = new ArrayList<>(Arrays.asList(cas1, cas2, cas3));
         cas1.setGrupo(this); cas2.setGrupo(this); cas3.setGrupo(this);
         this.colorGrupo = colorGrupo;
+        this.codigoColor = codigoColor;
     }
 
     /* Método que añade una casilla al array de casillas miembro de un grupo.

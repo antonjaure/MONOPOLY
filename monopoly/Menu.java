@@ -48,20 +48,6 @@ public class Menu {
     public ArrayList<Avatar> getAvatares() {
         return avatares;
     }
-    public void ejecutarOpcion(String comando) {
-        switch (comando.toLowerCase()) {
-            case "lanzar dados":
-                lanzarDados(0, false);
-                break;
-    
-            case "acabar turno":
-                acabarTurno();
-                break;
-            default:
-                System.out.println("Comando no reconocido: " + comando);
-                break;
-        }
-    }
 
     public Jugador getBanca() {
         return banca;
@@ -70,6 +56,7 @@ public class Menu {
 
     public Menu() {
         this.banca = new Jugador();
+        banca.setNombre("Banca");
     }
 
 
