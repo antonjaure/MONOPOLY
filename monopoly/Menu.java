@@ -52,8 +52,6 @@ public class Menu {
     public Jugador getBanca() {
         return banca;
     }
-
-
     public Menu() {
         this.banca = new Jugador();
         banca.setNombre("Banca");
@@ -119,14 +117,21 @@ public class Menu {
         // hace una tirada de dados
         else if (comando.contains("lanzar dados")) {
             // tirada aleatoria
-            if (numPalabras == 2) lanzarDados(0,false);
+            if (numPalabras == 2) lanzarDados(0,0,false);
             // tirada forzada con el valor pasado por la línea de comandos
             else if (numPalabras == 3) {
-                int i = comando.indexOf("+");
-                char num1 = comando.charAt(i-1);
-                char num2 = comando.charAt(i+1);
-                int suma = Character.getNumericValue(num1) + Character.getNumericValue(num2);
-                lanzarDados(suma,true);
+                String[] dados = palabras[2].split("\\+"); // separar por el '+'
+                if (dados.length != 2) {
+                    System.out.println("*** Formato incorrecto. Uso: lanzar dados <Dado1>+<Dado2>");
+                    return;
+                }
+                try {
+                    int d1 = Integer.parseInt(dados[0].trim()); // primer dado
+                    int d2 = Integer.parseInt(dados[1].trim()); // segundo dado
+                    lanzarDados(d1, d2, true); // lanzada forzada
+                } catch (NumberFormatException e) {
+                    System.out.println("*** Valores de dados incorrectos. Deben ser números del 1 al 6.");
+                }
             }
             else {
                 System.out.println("*** Argumentos incorrectos. ***");
@@ -217,9 +222,7 @@ public class Menu {
     }
 
     //Metodo que ejecuta todas las acciones relacionadas con el comando 'lanzar dados'.
-    private int doblesConsecutivos = 0; // variable de clase para contar dobles
-
-    private void lanzarDados(int valorForzado, boolean forzado) {
+    private void lanzarDados(int dado1Forzado, int dado2Forzado, boolean forzado) {
         if (jugadores == null || jugadores.isEmpty()) {
             System.out.println("No hay jugadores en la partida.");
             return;
@@ -227,18 +230,36 @@ public class Menu {
     
         Jugador jugadorActual = jugadores.get(turno);
         Avatar avatarActual = jugadorActual.getAvatar();
+        // --- COMPROBAR SI EL JUGADOR ESTÁ EN LA CÁRCEL ---
+        if (jugadorActual.isEnCarcel()) {
+            System.out.println(jugadorActual.getNombre() + " está en la cárcel.");
+
+            // Llama al método salirCarcel() que maneja toda la lógica de pago o tirar dobles
+            salirCarcel();
+
+            // Si después de salirCarcel sigue en la cárcel → termina el turno
+            if (jugadorActual.isEnCarcel()) {
+                System.out.println(jugadorActual.getNombre() + " no ha podido salir de la cárcel.");
+                System.out.println("No puede lanzar los dados hasta su próximo turno.");
+                acabarTurno();
+                return; // Finaliza el turno
+            } else {
+                System.out.println(jugadorActual.getNombre() + " ha salido de la cárcel y puede lanzar los dados.");
+            }
+}
+
     
-        int total = 0;
-        int dado1Val = 0;
-        int dado2Val = 0;
-        int doblesContador = 0;
+        int dado1Val;
+        int dado2Val;
+        int total;
         boolean volverATirar = true;
     
         while (volverATirar) {
+            // Determinar tirada
             if (forzado) {
-                total = valorForzado;
-                dado1Val = total / 2; // solo efecto visual
-                dado2Val = total - dado1Val;
+                dado1Val = dado1Forzado;
+                dado2Val = dado2Forzado;
+                total = dado1Val + dado2Val;
             } else {
                 dado1Val = new Dado().hacerTirada();
                 dado2Val = new Dado().hacerTirada();
@@ -249,35 +270,56 @@ public class Menu {
     
             // Verificar dobles
             if (dado1Val == dado2Val) {
-                doblesContador++;
-                if (doblesContador == 3) {
-                    System.out.println("¡Tres dobles! " + avatarActual.getJugador().getNombre() + " va a la cárcel.");
+                jugadorActual.setDoblesConsecutivos(jugadorActual.getDoblesConsecutivos() + 1);
+            
+                if (jugadorActual.getDoblesConsecutivos() == 3) {
+                    System.out.println(jugadorActual.getNombre() + " va a la cárcel.");
                     Casilla carcel = tablero.encontrar_casilla("Cárcel");
                     avatarActual.moverAvatar(tablero.getPosiciones(), carcel.getPosicion() - avatarActual.getCasilla().getPosicion());
-                    volverATirar = false;
-                    break;
+                    jugadorActual.setEnCarcel(true);
+                    jugadorActual.setDoblesConsecutivos(0);
+                    
+                    System.out.println(tablero.toString());
+                    
+                    // Terminar el turno inmediatamente
+                    acabarTurno(); // <-- Aquí es clave
+                    return;
                 } else {
-                    System.out.println("¡Dobles! " + avatarActual.getJugador().getNombre() + " vuelve a tirar.");
+                    System.out.println("¡Dobles! " + jugadorActual.getNombre() + " vuelve a tirar.");
                 }
             } else {
-                volverATirar = false;
+                jugadorActual.setDoblesConsecutivos(0); // Reiniciar si no es doble
             }
-    
+            
             // Mover avatar
             avatarActual.moverAvatar(tablero.getPosiciones(), total);
-    
-            // Gestionar pagos en la casilla donde cayó
+            
+            // Gestionar IrCarcel y otras casillas
             Casilla destino = avatarActual.getCasilla();
-            destino.gestionarPago(jugadorActual, tablero.getBanca(), total);
+            if (destino.getNombre().equals("IrCarcel")) {
+                System.out.println(jugadorActual.getNombre() + " va a la cárcel por caer en IrCarcel.");
+                Casilla carcel = tablero.encontrar_casilla("Cárcel");
+                avatarActual.moverAvatar(tablero.getPosiciones(), carcel.getPosicion() - destino.getPosicion());
+                jugadorActual.setEnCarcel(true);
+                jugadorActual.setDoblesConsecutivos(0);
+                System.out.println(tablero.toString());
+                acabarTurno();
+                return; // Terminar turno
+            } else {
+                // Gestionar pagos normales
+                destino.gestionarPago(jugadorActual, tablero.getBanca(), total);
+            }
     
             // Mostrar tablero actualizado
             System.out.println(tablero.toString());
     
             if (forzado) break; // solo una tirada si es forzada
+            if (dado1Val != dado2Val) volverATirar = false; // No seguir tirando si no es doble
         }
     
         tirado = true; // marcar que el jugador ya tiró
     }
+    
 
     /*Metodo que ejecuta todas las acciones realizadas con el comando 'comprar nombre_casilla'.
     * Parámetro: cadena de caracteres con el nombre de la casilla.
@@ -287,59 +329,52 @@ public class Menu {
 
     //Metodo que ejecuta todas las acciones relacionadas con el comando 'salir carcel'.
     private void salirCarcel() {
-        Jugador jugador = jugadores.get(turno%jugadores.size());
+        Jugador jugador = jugadores.get(turno % jugadores.size());
         float fortuna = jugador.getFortuna();
         float precio_carcel = 500000f;
         int tiradasCarcel = jugador.getTiradasCarcel();
-        
-        if(tiradasCarcel >= 3){
-            System.out.println(jugador.getNombre() + "ha superado el límite de tiradas en la cárcel. Debe pagar la fianza de 500.000€ para salir.\n");
+    
+        if (tiradasCarcel >= 3) {
             if(fortuna >= precio_carcel){
                 jugador.sumarFortuna(-precio_carcel);
-                System.out.println(jugador.getNombre() + "paga 500.000€ y sale de la cárcel. Puede lanzar los dados.\n");
                 jugador.setEnCarcel(false);
                 jugador.setTiradasCarcel(0);
+            } else {
             }
-            else{
-                System.out.println(jugador.getNombre() + "no posee suficiente dinero para pagar la salida. Debe esperar a su próximo turno.\n");
-            }
-            return;
         }
-
-        else {
-            System.out.println("\nDesea salir de la cárcel pagando 500.000€? (sí/no)");
-            Scanner sc = new Scanner(System.in);
-            String respuesta = sc.nextLine();
-
-            if(respuesta.equalsIgnoreCase("sí")){
-                if(fortuna >= precio_carcel){
-                    jugador.sumarFortuna(-precio_carcel);
-                    System.out.println(jugador.getNombre() + "paga 500.000€ y sale de la cárcel. Puede lanzar los dados.\n");
-                    jugador.setEnCarcel(false);
-                    jugador.setTiradasCarcel(0);
-                }
-                else{
-                    System.out.println(jugador.getNombre() + "no posee suficiente dinero para pagar la salida. Debe esperar a su próximo turno.\n");
-                }
+    
+        // Preguntar al jugador
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Desea salir de la cárcel pagando 500.000€? (sí/no)");
+        String respuesta = sc.nextLine();
+    
+        if(respuesta.equalsIgnoreCase("sí")) {
+            if(fortuna >= precio_carcel){
+                jugador.sumarFortuna(-precio_carcel);
+                jugador.setEnCarcel(false);
+                jugador.setTiradasCarcel(0);
+            } else {
+                System.out.println(jugador.getNombre() + " no posee suficinete dinero para pagar la salida. Debe esperar a su proximo turno.\n");
             }
-            else{
-                System.out.println(jugador.getNombre() + "decide no pagar la fianza y tirar los dados.\n");
-                jugador.setTiradasCarcel(tiradasCarcel + 1);
-                dado1 = new Dado();
-                dado2 = new Dado();
-                int valorTirada = dado1.hacerTirada() + dado2.hacerTirada();
-                if(dado1.getValor() == dado2.getValor()){
-                    System.out.println(jugador.getNombre() + "ha sacado dobles y sale de la cárcel. Avanza " + valorTirada + " casillas.\n");
-                    jugador.setEnCarcel(false);
-                    jugador.setTiradasCarcel(0);
-                    jugador.getAvatar().moverAvatar(tablero.getPosiciones(), valorTirada);
-                }
-                else{
-                    System.out.println(jugador.getNombre() + "no ha sacado dobles y permanece en la cárcel.\n");
-                }
+        } else {
+            jugador.setTiradasCarcel(tiradasCarcel + 1);
+            Dado dado1 = new Dado();
+            Dado dado2 = new Dado();
+            int valorDado1 = dado1.hacerTirada();
+            int valorDado2 = dado2.hacerTirada();
+            int valorTirada = valorDado1 + valorDado2;
+
+            if (valorDado1 == valorDado2) {
+                System.out.println(jugador.getNombre() + " ha sacado dobles y sale de la cárcel. Avanza " + valorTirada + " casillas.\n");
+                jugador.setEnCarcel(false);
+                jugador.setTiradasCarcel(0);
+                jugador.getAvatar().moverAvatar(tablero.getPosiciones(), valorTirada);
+            } else {
+                System.out.println(jugador.getNombre() + " no ha sacado dobles y permanece en la cárcel.\n");
             }
         }
     }
+    
     
 
     // Metodo que realiza las acciones asociadas al comando 'listar enventa'.

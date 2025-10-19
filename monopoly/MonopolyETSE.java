@@ -24,37 +24,6 @@ public class MonopolyETSE {
             menu.ejecutarComando(comando);
         } while (!comando.equals("salir")); // comando para finalizar el programa
 
-/*  /////////////////    PRUEBA DE DANI    //////////////////
-
-        System.out.println("\nImprimiendo tablero...\n");
-        System.out.println(tablero.toString());
-
-        // Asignar el tablero al menú para que pueda gestionarlo
-        menu.setTablero(tablero);
-
-        menu.setJugador(jugador1);
-        menu.setJugador(jugador2);
-
-        // Mostrar tablero con jugadores colocados
-        System.out.println("\nTablero con jugadores:\n");
-        System.out.println(tablero.toString());
-
-        // -------------------------------
-        // PRUEBA DEL MENÚ CON SWITCH
-        // -------------------------------
-        System.out.println("\n=== Simulación de partida ===");
-
-        System.out.println("\nTurno de Anton:");
-        menu.ejecutarOpcion("lanzar dados");
-        menu.ejecutarOpcion("acabar turno");
-
-        System.out.println("\nTurno de Dani:");
-        menu.ejecutarOpcion("lanzar dados");
-        menu.ejecutarOpcion("acabar turno");
-
-        System.out.println("\n--- Fin de la simulación ---");
-*/
-
         sc.close();
     }
 }

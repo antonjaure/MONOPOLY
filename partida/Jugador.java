@@ -22,6 +22,7 @@ public class Jugador {
     private int vueltas; //Cuenta las vueltas dadas al tablero.
     private ArrayList<Casilla> propiedades; //Propiedades que posee el jugador.
     private ArrayList<Casilla> hipotecas;
+    private int doblesConsecutivos = 0; // variable de clase para contar dobles
 
     //Constructor vacío. Se usará para crear la banca.
     public Jugador() {
@@ -151,8 +152,16 @@ public class Jugador {
     public int getTiradasCarcel() {
         return tiradasCarcel;
     }
+    public int getDoblesConsecutivos() {
+        return doblesConsecutivos;
+    }
+    public boolean isEnCarcel() { //getter para saber si esta en la carcel
+        return this.enCarcel;
+    }
 
-    
+    public void setDoblesConsecutivos(int doblesConsecutivos) {
+        this.doblesConsecutivos = doblesConsecutivos;
+    }
 
     public void setNombre(String nombre) {
         this.nombre = nombre;

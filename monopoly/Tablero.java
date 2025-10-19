@@ -55,49 +55,49 @@ public class Tablero {
         if (posiciones == null) generarCasillas();
         if (grupos == null) grupos = new HashMap<>();
 
-        Grupo negro =  new Grupo(encontrar_casilla((String) Solares.get(0).getFirst()),
-                encontrar_casilla((String) Solares.get(1).getFirst()),
+        Grupo negro =  new Grupo(encontrar_casilla((String) Solares.get(0).get(0)),
+                encontrar_casilla((String) Solares.get(1).get(0)),
                 "negro",
                 Valor.BLACK);
         setGrupos("negro", negro);
-        Grupo cian =  new Grupo(encontrar_casilla((String) Solares.get(2).getFirst()),
-                encontrar_casilla((String) Solares.get(3).getFirst()),
-                encontrar_casilla((String) Solares.get(4).getFirst()),
+        Grupo cian =  new Grupo(encontrar_casilla((String) Solares.get(2).get(0)),
+                encontrar_casilla((String) Solares.get(3).get(0)),
+                encontrar_casilla((String) Solares.get(4).get(0)),
                 "cian",
                 Valor.CYAN);
         setGrupos("cian", cian);
-        Grupo morado =  new Grupo(encontrar_casilla((String) Solares.get(5).getFirst()),
-                encontrar_casilla((String) Solares.get(6).getFirst()),
-                encontrar_casilla((String) Solares.get(7).getFirst()),
+        Grupo morado =  new Grupo(encontrar_casilla((String) Solares.get(5).get(0)),
+                encontrar_casilla((String) Solares.get(6).get(0)),
+                encontrar_casilla((String) Solares.get(7).get(0)),
                 "morado",
                 Valor.PURPLE);
         setGrupos("morado", morado);
-        Grupo amarillo =  new Grupo(encontrar_casilla((String) Solares.get(8).getFirst()),
-                encontrar_casilla((String) Solares.get(9).getFirst()),
-                encontrar_casilla((String) Solares.get(10).getFirst()),
+        Grupo amarillo =  new Grupo(encontrar_casilla((String) Solares.get(8).get(0)),
+                encontrar_casilla((String) Solares.get(9).get(0)),
+                encontrar_casilla((String) Solares.get(10).get(0)),
                 "amarillo",
                 Valor.YELLOW);
         setGrupos("amarillo", amarillo);
-        Grupo rojo =  new Grupo(encontrar_casilla((String) Solares.get(11).getFirst()),
-                encontrar_casilla((String) Solares.get(12).getFirst()),
-                encontrar_casilla((String) Solares.get(13).getFirst()),
+        Grupo rojo =  new Grupo(encontrar_casilla((String) Solares.get(11).get(0)),
+                encontrar_casilla((String) Solares.get(12).get(0)),
+                encontrar_casilla((String) Solares.get(13).get(0)),
                 "rojo",
                 Valor.RED);
         setGrupos("rojo", rojo);
-        Grupo blanco =  new Grupo(encontrar_casilla((String) Solares.get(14).getFirst()),
-                encontrar_casilla((String) Solares.get(15).getFirst()),
-                encontrar_casilla((String) Solares.get(16).getFirst()),
+        Grupo blanco =  new Grupo(encontrar_casilla((String) Solares.get(14).get(0)),
+                encontrar_casilla((String) Solares.get(15).get(0)),
+                encontrar_casilla((String) Solares.get(16).get(0)),
                 "blanco",
                 Valor.WHITE);
         setGrupos("blanco", blanco);
-        Grupo verde =  new Grupo(encontrar_casilla((String) Solares.get(17).getFirst()),
-                encontrar_casilla((String) Solares.get(18).getFirst()),
-                encontrar_casilla((String) Solares.get(19).getFirst()),
+        Grupo verde =  new Grupo(encontrar_casilla((String) Solares.get(17).get(0)),
+                encontrar_casilla((String) Solares.get(18).get(0)),
+                encontrar_casilla((String) Solares.get(19).get(0)),
                 "verde",
                 Valor.GREEN);
         setGrupos("verde", verde);
-        Grupo azul =  new Grupo(encontrar_casilla((String) Solares.get(20).getFirst()),
-                encontrar_casilla((String) Solares.get(21).getFirst()),
+        Grupo azul =  new Grupo(encontrar_casilla((String) Solares.get(20).get(0)),
+                encontrar_casilla((String) Solares.get(21).get(0)),
                 "azul",
                 Valor.BLUE);
         setGrupos("azul", azul);
