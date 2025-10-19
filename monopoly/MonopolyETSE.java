@@ -24,6 +24,8 @@ public class MonopolyETSE {
             menu.ejecutarComando(comando);
         } while (!comando.equals("salir")); // comando para finalizar el programa
 
+        sc.close();
+
 /*  /////////////////    PRUEBA DE DANI    //////////////////
 
         System.out.println("\nImprimiendo tablero...\n");
@@ -54,7 +56,5 @@ public class MonopolyETSE {
 
         System.out.println("\n--- Fin de la simulación ---");
 */
-
-        sc.close();
     }
 }
