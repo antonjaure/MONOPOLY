@@ -142,7 +142,7 @@ public class Casilla {
                 }
                 break;
 
-            case "Impuesto":
+            case "Impuestos":
                 float impuesto = casilla.getImpuesto();
                 return actual.getFortuna() >= impuesto; // Si tiene dinero para el impuesto = true, else false
             case "Comunidad":
@@ -159,12 +159,12 @@ public class Casilla {
                     return actual.getFortuna() >= salidaCarcel; // Si tiene dinero para pagar la cárcel = true, else false
                 }
                 System.err.println("\nError al evaluarCasilla().\n");
-                return true;
+                return false;
             default:
                 System.err.println("\nError al evaluarCasilla().\n");
-                return true;
+                return false;
         }          
-        return true;   
+        return false;
     }
 
     /*Método usado para comprar una casilla determinada. Parámetros:
@@ -245,7 +245,7 @@ public class Casilla {
                 "\talquiler: " + this.impuesto + "€";
             
 
-            case "Impuesto":
+            case "Impuestos":
                 return "\ttipo: " + this.tipo + "\n" +
                 "\timpuesto: " + this.impuesto + "€";
 

@@ -14,6 +14,8 @@ public class MonopolyETSE {
         System.out.println("Iniciando partida...\n");
         System.out.println(tablero.toString()); // esto también crea las casillas, si se quisiese crear las casillas
         // sin imprimir el tablero habría que llamar a la función generarCasillas() de Tablero
+        menu.analizarArchivo(args);
+
         Scanner sc = new Scanner(System.in);
         String comando = "";
 
