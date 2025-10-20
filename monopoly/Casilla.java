@@ -355,7 +355,7 @@ public class Casilla {
 
                 // Casillas sin dueño (o de la banca)
             }
-            case "Impuesto" -> {
+            case "Impuestos" -> {
                 float cantidad = this.impuesto;
                 jugadorActual.sumarFortuna(-cantidad);
                 Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
