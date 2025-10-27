@@ -208,4 +208,6 @@ public class Jugador {
     public void setPropiedades(ArrayList<Casilla> propiedades) {
         this.propiedades = propiedades;
     }
+
+
 }

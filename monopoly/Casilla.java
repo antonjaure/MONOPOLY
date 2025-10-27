@@ -186,6 +186,7 @@ public class Casilla {
 
                 casilla.setDuenho(solicitante); //El dueño de la casilla pasa a ser el jugador solicitante.
                 solicitante.añadirPropiedad(casilla); //Se añade la casilla al arraylist de propiedades del jugador.
+                banca.eliminarPropiedad(casilla); //Se elimina la casilla del arraylist de propiedades de la banca.
 
                 System.out.println("\t" + Valor.GREEN + "¡Compra realizada con éxito!" + Valor.RESET);
             }
@@ -320,6 +321,10 @@ public class Casilla {
      * - tirada: valor de los dados (para calcular servicios).
      */
     public void gestionarPago(Jugador jugadorActual, Jugador banca, int tirada) {
+        if (this.posicion - tirada < 0) {
+            System.out.println("\t" + jugadorActual.getNombre() + " pasa por Salida y recibe 2.000.000€");
+            jugadorActual.sumarFortuna(2000000f);
+        }
     
         boolean solvente = evaluarCasilla(jugadorActual, banca);
     
@@ -369,8 +374,8 @@ public class Casilla {
                     jugadorActual.sumarFortuna(valor);
                     valor = 0; // Vaciar el bote
                 } else if (nombre.equals("Salida") || this.posicion - tirada < 0) {
-                    System.out.println("\t" + jugadorActual.getNombre() + " pasa por Salida y recibe 2.000.000€");
-                    jugadorActual.sumarFortuna(2000000f);
+                    System.out.println("\t" + jugadorActual.getNombre() + " cayó en la salida.");
+                    // jugadorActual.sumarFortuna(2000000f);
                 } else if (nombre.equals("IrCarcel")) {
                     jugadorActual.encarcelar();
                 }
