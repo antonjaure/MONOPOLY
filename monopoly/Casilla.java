@@ -15,6 +15,7 @@ public class Casilla {
     private Grupo grupo; //Grupo al que pertenece la casilla (si es solar).
     private float impuesto; //Cantidad a pagar por caer en la casilla: el alquiler en solares/servicios/transportes o impuestos.
     private float hipoteca; //Valor otorgado por hipotecar una casilla
+    private ArrayList<Edificio> edificios;
     private float valorCasa; //Valor de las casas en caso de ser una casilla solar.
     private float valorHotel; //Valor de los hoteles en caso de ser una casilla solar.  
     private float valorPiscina; //Valor de las piscinas en caso de ser una casilla solar.
@@ -382,6 +383,66 @@ public class Casilla {
             }
             default -> System.out.println("\tCasilla de paso. No pasa nada.");
         }
+    }
+
+    public void edificar(String tipo) {
+        Jugador propietario = this.duenho;
+        int tamGrupo = grupo.numCasillas();
+        ArrayList<Casilla> prop = propietario.getPropiedades();
+        int count = 0;
+        for (Casilla casilla : prop) {
+            if (casilla.getGrupo() == grupo) {
+                count += 1;
+            }
+        }
+        if (count < tamGrupo) {
+            System.out.println("\t*** No se puede edificar. Necesitas adquirir todo el grupo primero. ***");
+            return;
+        }
+
+        switch (tipo) {
+            case "casa":
+                if (this.valorCasa > propietario.getFortuna()) {
+                    System.out.println("\t*** No tienes suficiente liquidez. Coste: " + valorCasa + " ***");
+                    return;
+                }
+                String Cnom = "casa-" + (MonopolyETSE.tablero.getCasas().size()+1);
+                Edificio casa = new Edificio(Cnom, this, tipo);
+                edificios.add(casa);
+                MonopolyETSE.tablero.getCasas().add(casa);
+                break;
+            case "hotel":
+                if (this.valorHotel > propietario.getFortuna()) {
+                    System.out.println("\t*** No tienes suficiente liquidez. Coste: " + valorHotel + " ***");
+                    return;
+                }
+                if (!construirHotel()) return;
+                String Hnom = "hotel-" + (MonopolyETSE.tablero.getHoteles().size()+1);
+                Edificio hotel = new Edificio(Hnom, this, tipo);
+                edificios.add(hotel);
+                MonopolyETSE.tablero.getHoteles().add(hotel);
+                break;
+            case "piscina":
+                //////////////////////////
+                //////////////////////////
+                String Pnom = "piscina-" + (MonopolyETSE.tablero.getPiscinas().size()+1);
+                Edificio piscina = new Edificio(Pnom, this, tipo);
+                edificios.add(piscina);
+                MonopolyETSE.tablero.getPiscinas().add(piscina);
+                break;
+            case "pista":
+        }
+
+    }
+
+    private boolean construirHotel() {
+        int count = 0;
+        for (Edificio ed : this.edificios) {
+            if (ed.getTipo().equals("casa")) {
+                count += 1;
+            };
+        }
+        return count == 4;
     }
 
 

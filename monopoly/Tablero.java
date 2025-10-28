@@ -8,20 +8,43 @@ import java.util.*;
 public class Tablero {
     //Atributos.
     private ArrayList<ArrayList<Casilla>> posiciones = null; //Posiciones del tablero: se define como un arraylist de arraylists de casillas (uno por cada lado del tablero).
+    private ArrayList<Edificio> casas;
+    private ArrayList<Edificio> hoteles;
+    private ArrayList<Edificio> piscinas;
+    private ArrayList<Edificio> pistas;
     private HashMap<String, Grupo> grupos; //Grupos del tablero, almacenados como un HashMap con clave String (será el color del grupo).
     private Jugador banca; //Un jugador que será la banca.
 
 
+    public ArrayList<Edificio> getCasas() {
+        return casas;
+    }
+
+    public ArrayList<Edificio> getHoteles() {
+        return hoteles;
+    }
+
+    public ArrayList<Edificio> getPiscinas() {
+        return piscinas;
+    }
+
+    public ArrayList<Edificio> getPistas() {
+        return pistas;
+    }
+
     public void setGrupos(String color, Grupo grupo) {
         this.grupos.put(color, grupo);
     }
-
     public Jugador getBanca() {
         return this.banca;
     }
     public ArrayList<ArrayList<Casilla>> getPosiciones() {
         return this.posiciones;
     }
+    public HashMap<String, Grupo> getGrupos() {
+        return grupos;
+    }
+
 
 
     public Tablero() {}
@@ -56,7 +79,7 @@ public class Tablero {
         Grupo negro =  new Grupo(encontrar_casilla((String) Solares.get(0).get(0)),
                 encontrar_casilla((String) Solares.get(1).get(0)),
                 "negro",
-                Valor.BLACK);
+                Valor.GREY);
         setGrupos("negro", negro);
         Grupo cian =  new Grupo(encontrar_casilla((String) Solares.get(2).get(0)),
                 encontrar_casilla((String) Solares.get(3).get(0)),

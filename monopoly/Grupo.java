@@ -46,6 +46,7 @@ class Grupo {
         cas1.setGrupo(this); cas2.setGrupo(this);
         this.colorGrupo = colorGrupo;
         this.codigoColor = codigoColor;
+        this.numCasillas = 2;
     }
 
     /*Constructor para cuando el grupo está formado por TRES CASILLAS:
@@ -56,6 +57,7 @@ class Grupo {
         cas1.setGrupo(this); cas2.setGrupo(this); cas3.setGrupo(this);
         this.colorGrupo = colorGrupo;
         this.codigoColor = codigoColor;
+        this.numCasillas = 3;
     }
 
     /* Método que añade una casilla al array de casillas miembro de un grupo.

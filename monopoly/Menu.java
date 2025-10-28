@@ -67,7 +67,6 @@ public class Menu {
         banca.setNombre("Banca");
     }
 
-
     // Metodo para iniciar una partida: crea los jugadores y avatares.
     private void iniciarPartida() {
     }
@@ -99,6 +98,11 @@ public class Menu {
         }
         // describe el jugador del turno actual
         else if (comando.equals("jugador")) {
+            if (jugadores == null || jugadores.isEmpty()) {
+                System.out.println("\t*** Ningún jugador registrado. ***");
+                System.out.println("}\n");
+                return;
+            }
             Jugador jActual = jugadores.get(turno % jugadores.size());
             descJugador(jActual.getNombre());
         }
@@ -141,7 +145,8 @@ public class Menu {
             else if (numPalabras == 3) {
                 String[] dados = palabras[2].split("\\+"); // separar por el '+'
                 if (dados.length != 2) {
-                    System.out.println("*** Formato incorrecto. Uso: lanzar dados <Dado1>+<Dado2>");
+                    System.out.println("\t*** Formato incorrecto. Uso: lanzar dados <Dado1>+<Dado2> ***");
+                    System.out.println("}\n");
                     return;
                 }
                 try {
@@ -149,7 +154,8 @@ public class Menu {
                     int d2 = Integer.parseInt(dados[1].trim()); // segundo dado
                     lanzarDados(d1, d2, true); // lanzada forzada
                 } catch (NumberFormatException e) {
-                    System.out.println("*** Valores de dados incorrectos. Deben ser números del 1 al 6.");
+                    System.out.println("\t*** Valores de dados incorrectos. Deben ser números del 1 al 6.");
+                    System.out.println("}\n");
                 }
             } else {
                 System.out.println("\t*** Argumentos incorrectos. ***");
@@ -172,7 +178,20 @@ public class Menu {
         // saca al jugador actual de la carcel si puede
         else if (comando.equals("salir cárcel")) salirCarcel();
             // lista las casillas en venta
-        else if (comando.equals("listar enventa")) listarVenta();
+        else if (comando.contains("listar enventa")) {
+            if (numPalabras == 3) {
+                Grupo grupo = tablero.getGrupos().get(palabras[2]);
+                listarVenta(grupo);
+            }
+            else if (numPalabras == 2) listarVenta();
+            else {
+                System.out.println("\t*** Argumentos incorrectos. ***");
+                System.out.println("\tUso: listar enventa <color grupo>");
+                System.out.println("}\n");
+                return;
+            }
+
+        }
             // lista los jugadores activos
         else if (comando.equals("listar jugadores")) listarJugadores();
             // lista los avatares de los jugadores activos, tmp hay que hacer para la entrega 1 (CREO)
@@ -438,6 +457,28 @@ public class Menu {
                 enVenta.add(c);
             }
         }
+        for (Casilla c : enVenta) {
+            String nombre = c.getNombre();
+            descCasilla(nombre);
+            System.out.println("},\n{");
+        }
+    }
+
+    private void listarVenta(Grupo g) {
+        ArrayList<Casilla> sinDuenho = banca.getPropiedades();
+        ArrayList<Casilla> enVenta = new ArrayList<>();
+
+        for (Casilla c : sinDuenho) {
+            if (c.getTipo().equals("Solar") && c.getGrupo().equals(g)) {
+                enVenta.add(c);
+            }
+        }
+
+        if (enVenta.isEmpty()) {
+            System.out.println("\t*** Grupo no encontrado. ***");
+            return;
+        }
+
         for (Casilla c : enVenta) {
             String nombre = c.getNombre();
             descCasilla(nombre);
