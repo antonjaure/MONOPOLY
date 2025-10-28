@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 import partida.*;
@@ -90,9 +91,10 @@ public class Menu {
                 return;
             }
             String nombre = palabras[2];
-            String tipo = palabras[3];
+            String tipo = palabras[3].toLowerCase(Locale.ROOT);
             int numJ1 = (jugadores == null) ? 0 : jugadores.size();
             Jugador jugador = new Jugador(nombre, tipo, tablero.encontrar_casilla("Salida"), getAvatares());
+            // si se pudo crear el jugador => numJ2 sera numJ1 + 1
             int numJ2 = (jugadores == null) ? 0 : jugadores.size();
             if (numJ2 > numJ1) descJugador(nombre);
         }
@@ -175,6 +177,28 @@ public class Menu {
             String nombre = palabras[1].trim();
             comprar(nombre);
         }
+        // construye un edificio
+        else if (comando.contains("edificar")) {
+            if (numPalabras != 2) {
+                System.out.println("\t*** Argumentos incorrectos. ***");
+                System.out.println("\tUso: comprar <tipo edificio>");
+                System.out.println("}\n");
+                return;
+            }
+            String tipo = palabras[1].trim().toLowerCase(Locale.ROOT);
+            if (jugadores == null || jugadores.isEmpty()) {
+                System.out.println("\t *** No hay jugadores en la partida. ***");
+                System.out.println("}\n");
+                return;
+            }
+            Casilla cas = jugadores.get(turno).getAvatar().getCasilla();
+            if (!cas.getTipo().equals("Solar")) {
+                System.out.println("\t*** Solo se puede edificar en solares. ***");
+                System.out.println("}\n");
+                return;
+            }
+            cas.edificar(tipo);
+        }
         // saca al jugador actual de la carcel si puede
         else if (comando.equals("salir cárcel")) salirCarcel();
             // lista las casillas en venta
@@ -233,14 +257,23 @@ public class Menu {
         if (jugador.getPropiedades() != null) {
             for (Casilla c : jugador.getPropiedades()) propiedades.add(c.getNombre());
         }
+        ArrayList<String> edificios = new ArrayList<>();
+        for (Casilla c : jugador.getPropiedades()) {
+            if (c.getEdificios() != null && !c.getEdificios().isEmpty()) {
+                for (Edificio ed : c.getEdificios()) {
+                    edificios.add(ed.getNombre());
+                }
+            }
+        }
+
         // hipotecas
-        // edificios
+
         System.out.println("\tNombre: " + nombre);
         System.out.println("\tAvatar: " + avatar);
         System.out.println("\tFortuna: " + fortuna);
         System.out.println("\tPropiedades: " + propiedades);
+        System.out.println("\tEdificios: " + edificios);
         // sout(hipotecas)
-        // sout(edificios)
     }
 
     /*Metodo que realiza las acciones asociadas al comando 'describir avatar'.

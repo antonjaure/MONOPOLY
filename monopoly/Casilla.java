@@ -2,6 +2,8 @@ package monopoly;
 
 import partida.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 
 public class Casilla {
@@ -16,14 +18,8 @@ public class Casilla {
     private float impuesto; //Cantidad a pagar por caer en la casilla: el alquiler en solares/servicios/transportes o impuestos.
     private float hipoteca; //Valor otorgado por hipotecar una casilla
     private ArrayList<Edificio> edificios;
-    private float valorCasa; //Valor de las casas en caso de ser una casilla solar.
-    private float valorHotel; //Valor de los hoteles en caso de ser una casilla solar.  
-    private float valorPiscina; //Valor de las piscinas en caso de ser una casilla solar.
-    private float valorPista; //Valor de las pistas de tenis en caso de ser una casilla solar.
-    private float alquilerCasa; //Alquiler adicional por cada casa en caso de ser una casilla solar.
-    private float alquilerHotel; //Alquiler adicional por cada hotel en caso de ser una casilla solar.
-    private float alquilerPiscina; //Alquiler adicional por cada piscina en caso de ser una
-    private float alquilerPista; //Alquiler adicional por cada pista en caso de ser una casilla solar.
+    private HashMap<String, Float> valores = new HashMap<>();
+    private HashMap<String, Float> alquileres = new HashMap<>();
     private ArrayList<Avatar> avatares; //Avatares que están situados en la casilla.
 
     //Constructores:
@@ -113,6 +109,11 @@ public class Casilla {
 
 
     public boolean evaluarCasilla(Jugador actual, Jugador banca) {
+
+
+        ////////////////    las casillas de impuestos no se deberian poder comprar
+
+
         Avatar avatar = actual.getAvatar();
         Casilla casilla = avatar.getCasilla();
         String tipo = casilla.getTipo();
@@ -136,14 +137,16 @@ public class Casilla {
                     return actual.getFortuna() >= casilla.getValor(); // Si tiene dinero comprarla = true, else false
                 }
 
-                    //El caso de (duenho != actual) se maneja con la llamada a evaluarCasilla con tirada.
+                    // El caso de (duenho != actual) se maneja con la llamada a evaluarCasilla con tirada.
 
                 else if(casilla.getDuenho() == actual) {
-                    return true; //No pasa nada, es su casilla.
+                    return true; // No pasa nada, es su casilla.
                 }
                 break;
 
-            case "Impuestos":
+
+            case "Impuestos":   /////////////    *** esto hace que pague el impuesto, pero también permite que compre la casilla ***
+
                 float impuesto = casilla.getImpuesto();
                 return actual.getFortuna() >= impuesto; // Si tiene dinero para el impuesto = true, else false
             case "Comunidad":
@@ -224,20 +227,23 @@ public class Casilla {
         switch(tipo){
 
             case "Solar":
+                ArrayList<String> edif = (edificios == null) ? new ArrayList<>() : new ArrayList<>(edificios.stream().map(Edificio::getNombre).toList());
                 return "\ttipo: " + this.tipo + "\n" +
                 "\tgrupo: " + this.grupo.getCodigoColor() + this.grupo.getColorGrupo() + Valor.RESET + "\n" +
                 "\tpropietario: " + (this.duenho.getNombre()) + "\n" +
                 "\tvalor: " + this.valor + "€\n" +
                 "\talquiler: " + this.impuesto + "€\n" +
                 "\thipoteca: " + this.hipoteca + "€\n" +
-                "\tvalor casa: " + this.valorCasa + "€\n" +
-                "\tvalor hotel: " + this.valorHotel + "€\n" +
-                "\tvalor piscina: " + this.valorPiscina + "€\n" +
-                "\tvalor pista: " + this.valorPista + "€\n" +
-                "\talquiler casa: " + this.alquilerCasa + "€\n" +
-                "\talquiler hotel: " + this.alquilerHotel + "€\n" +
-                "\talquiler piscina: " + this.alquilerPiscina + "€\n" +
-                "\talquiler pista: " + this.alquilerPista + "€";
+                "\tedificios: " + edif + "\n" +
+                "\tvalor casa: " + this.valores.get("casa") + "€\n" +
+                "\tvalor hotel: " + this.valores.get("hotel") + "€\n" +
+                "\tvalor piscina: " + this.valores.get("piscina") + "€\n" +
+                "\tvalor pista: " + this.valores.get("pista") + "€\n" +
+                "\talquiler casa: " + this.alquileres.get("casa") + "€\n" +
+                "\talquiler hotel: " + this.alquileres.get("hotel") + "€\n" +
+                "\talquiler piscina: " + this.alquileres.get("piscina") + "€\n" +
+                "\talquiler pista: " + this.alquileres.get("pista") + "€";
+
 
             case "Transporte":
             case "Servicios":
@@ -399,50 +405,146 @@ public class Casilla {
             System.out.println("\t*** No se puede edificar. Necesitas adquirir todo el grupo primero. ***");
             return;
         }
+        if (edificios == null) edificios = new ArrayList<>();
 
         switch (tipo) {
             case "casa":
-                if (this.valorCasa > propietario.getFortuna()) {
-                    System.out.println("\t*** No tienes suficiente liquidez. Coste: " + valorCasa + " ***");
+                if (this.valores.get("casa") > propietario.getFortuna()) {
+                    System.out.println("\t*** No tienes suficiente liquidez. Coste por casa: " + valores.get("casa") + " ***");
                     return;
                 }
+                if (!construirCasa()) return;
                 String Cnom = "casa-" + (MonopolyETSE.tablero.getCasas().size()+1);
                 Edificio casa = new Edificio(Cnom, this, tipo);
+                Jugador actual1 = this.avatares.getLast().getJugador();
+                actual1.sumarFortuna(-getValorCasa());
+
                 edificios.add(casa);
                 MonopolyETSE.tablero.getCasas().add(casa);
                 break;
             case "hotel":
-                if (this.valorHotel > propietario.getFortuna()) {
-                    System.out.println("\t*** No tienes suficiente liquidez. Coste: " + valorHotel + " ***");
+                if (this.valores.get("hotel") > propietario.getFortuna()) {
+                    System.out.println("\t*** No tienes suficiente liquidez. Coste por hotel: " + valores.get("hotel") + " ***");
                     return;
                 }
                 if (!construirHotel()) return;
                 String Hnom = "hotel-" + (MonopolyETSE.tablero.getHoteles().size()+1);
                 Edificio hotel = new Edificio(Hnom, this, tipo);
+                Jugador actual2 = this.avatares.getLast().getJugador();
+                actual2.sumarFortuna(-getValorHotel());
+
+                // se sustituyen las casas por el hotel
                 edificios.add(hotel);
                 MonopolyETSE.tablero.getHoteles().add(hotel);
+                Iterator<Edificio> it = edificios.iterator();
+                while (it.hasNext()) {
+                    Edificio ed = it.next();
+                    if (ed.getTipo().equals("casa")) {
+                        it.remove();
+                        MonopolyETSE.tablero.getCasas().remove(ed);
+                    }
+                }
+
                 break;
             case "piscina":
-                //////////////////////////
-                //////////////////////////
+                if (this.valores.get("piscina") > propietario.getFortuna()) {
+                    System.out.println("\t*** No tienes suficiente liquidez. Coste por piscina:  " + valores.get("piscina") + " ***");
+                    return;
+                }
+                if (!construirPiscina()) return;
                 String Pnom = "piscina-" + (MonopolyETSE.tablero.getPiscinas().size()+1);
                 Edificio piscina = new Edificio(Pnom, this, tipo);
+                Jugador actual3 = this.avatares.getLast().getJugador();
+                actual3.sumarFortuna(-getValorPiscina());
+
                 edificios.add(piscina);
                 MonopolyETSE.tablero.getPiscinas().add(piscina);
                 break;
             case "pista":
-        }
+                if (this.valores.get("pista") > propietario.getFortuna()) {
+                    System.out.println("\t*** No tienes suficiente liquidez. Coste por pista: " + valores.get("pista") + " ***");
+                    return;
+                }
+                if (!construirPista()) return;
+                String Pinom = "pista-" + (MonopolyETSE.tablero.getPistas().size()+1);
+                Edificio pista = new Edificio(Pinom, this, tipo);
+                Jugador actual4 = this.avatares.getLast().getJugador();
+                actual4.sumarFortuna(-getValorPista());
 
+                edificios.add(pista);
+                MonopolyETSE.tablero.getPistas().add(pista);
+                break;
+            default:
+                System.out.println("\t*** Tipo de edificio no registrado. ***");
+                return;
+        }
+        System.out.println("\t" + Valor.GREEN + "Edificio (" + tipo + ") construido en " + this.nombre + Valor.RESET);
+    }
+
+    private boolean construirCasa() {
+        int count = 0;
+        for (Edificio ed : this.edificios) {
+            if (ed.getTipo().equals("casa")) count += 1;
+        }
+        if (count == 4) {
+            System.out.println("\t*** Máximo de 4 casas alcanzado. ***");
+            return false;
+        }
+        System.out.println("\tSe pueden construir " + (4 - count - 1) + " casas más.");
+        return true;
     }
 
     private boolean construirHotel() {
         int count = 0;
         for (Edificio ed : this.edificios) {
-            if (ed.getTipo().equals("casa")) {
-                count += 1;
-            };
+            if (ed.getTipo().equals("hotel")) {
+                System.out.println("\t" + Valor.RED + "Ya hay un hotel construido." + Valor.RESET);
+                return false;
+            }
+            if (ed.getTipo().equals("casa")) count += 1;
         }
-        return count == 4;
+        if (count != 4) {
+            System.out.println("\t*** Se necesitan 4 casas para construir un hotel. ***");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean construirPiscina() {
+        boolean hayHotel = false;
+        for (Edificio ed : this.edificios) {
+            if (ed.getTipo().equals("piscina")) {
+                System.out.println("\t" + Valor.RED + "Ya hay una piscina construida." + Valor.RESET);
+                return false;
+            }
+            if (ed.getTipo().equals("hotel")) {
+                hayHotel = true;
+            }
+        }
+        if (!hayHotel) {
+            System.out.println("\t*** Se necesita un hotel para construir una piscina. ***");
+            return false;
+        }
+        return true;
+    }
+
+
+    private boolean construirPista() {
+        boolean hayPiscina = false;
+        for (Edificio ed : this.edificios) {
+            if (ed.getTipo().equals("pista")) {
+                System.out.println("\t" + Valor.RED + "Ya hay una pista construida." + Valor.RESET);
+                return false;
+            }
+            if (ed.getTipo().equals("piscina")) {
+                hayPiscina = true;
+            }
+        }
+        if (!hayPiscina) {
+            System.out.println("\t*** Se necesita una piscina para construir una pista de deporte. ***");
+            return false;
+        }
+        return true;
     }
 
 
@@ -474,29 +576,41 @@ public class Casilla {
         return this.avatares;
     }
     public float getValorCasa() {
-        return valorCasa;
+        return valores.get("casa");
     }
     public float getValorHotel() {
-        return valorHotel;
+        return valores.get("hotel");
     }
     public float getValorPiscina() {
-        return valorPiscina;
+        return valores.get("piscina");
     }
     public float getValorPista() {
-        return valorPista;
+        return valores.get("pista");
     }
     public float getAlquilerCasa() {
-        return alquilerCasa;
+        return alquileres.get("casa");
     }
     public float getAlquilerHotel() {
-        return alquilerHotel;
+        return alquileres.get("hotel");
     }
     public float getAlquilerPiscina() {
-        return alquilerPiscina;
+        return alquileres.get("piscina");
     }
     public float getAlquilerPista() {
-        return alquilerPista;
+        return alquileres.get("pista");
     }
+    public ArrayList<Edificio> getEdificios() {
+        return edificios;
+    }
+    public HashMap<String, Float> getValores() {
+        return valores;
+    }
+    public HashMap<String, Float> getAlquileres() {
+        return alquileres;
+    }
+
+
+
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -526,27 +640,27 @@ public class Casilla {
         this.avatares = avatares;
     }
     public void setValorCasa(float valorCasa) {
-        this.valorCasa = valorCasa;
+        this.valores.put("casa", valorCasa);
     }
     public void setValorHotel(float valorHotel) {
-        this.valorHotel = valorHotel;
+        this.valores.put("hotel", valorHotel);
     }
     public void setValorPiscina(float valorPiscina) {
-        this.valorPiscina = valorPiscina;
+        this.valores.put("piscina", valorPiscina);
     }
     public void setValorPista(float valorPista) {
-        this.valorPista = valorPista;
+        this.valores.put("pista", valorPista);
     }
     public void setAlquilerCasa(float alquilerCasa) {
-        this.alquilerCasa = alquilerCasa;
+        this.alquileres.put("casa", alquilerCasa);
     }
     public void setAlquilerHotel(float alquilerHotel) {
-        this.alquilerHotel = alquilerHotel;
+        this.alquileres.put("hotel", alquilerHotel);
     }
     public void setAlquilerPiscina(float alquilerPiscina) {
-        this.alquilerPiscina = alquilerPiscina;
+        this.alquileres.put("piscina", alquilerPiscina);
     }
     public void setAlquilerPista(float alquilerPista) {
-        this.alquilerPista = alquilerPista;
+        this.alquileres.put("pista", alquilerPista);
     }
 }

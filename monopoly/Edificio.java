@@ -7,11 +7,18 @@ public class Edificio {
     private int coste;
     private int alquiler;
 
-    // cambiar atributos de valores en Casilla por un Hashmap
     public Edificio(String nombre, Casilla terreno, String tipo) {
         this.nombre = nombre;
         this.terreno = terreno;
         this.tipo = tipo;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
     public Casilla getTerreno() {
