@@ -390,7 +390,6 @@ public class Casilla {
             default -> System.out.println("\tCasilla de paso. No pasa nada.");
         }
     }
-
     public void edificar(String tipo) {
         Jugador propietario = this.duenho;
         int tamGrupo = grupo.numCasillas();
