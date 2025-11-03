@@ -23,6 +23,8 @@ public class Jugador {
     private ArrayList<Casilla> propiedades; //Propiedades que posee el jugador.
     private ArrayList<Casilla> hipotecas;
     private int doblesConsecutivos = 0; // variable de clase para contar dobles
+    private int cartaComunidadId = 0; // id de la carta de comunidad actual
+    private int cartaSuerteId = 0; // id de la carta de suerte actual
 
     //Constructor vacío. Se usará para crear la banca.
     public Jugador() {
@@ -169,6 +171,14 @@ public class Jugador {
     public int getDoblesConsecutivos() {
         return doblesConsecutivos;
     }
+
+    public int getCartaComunidadId() {
+        return cartaComunidadId;
+    }
+    public int getCartaSuerteId() {
+        return cartaSuerteId;
+    }
+
     public boolean isEnCarcel() { //getter para saber si esta en la carcel
         return this.enCarcel;
     }
@@ -207,6 +217,14 @@ public class Jugador {
 
     public void setPropiedades(ArrayList<Casilla> propiedades) {
         this.propiedades = propiedades;
+    }
+
+    public void setCartaComunidadId(int cartaComunidadId) {
+        this.cartaComunidadId = cartaComunidadId;
+    }
+
+    public void setCartaSuerteId(int cartaSuerteId) {
+        this.cartaSuerteId = cartaSuerteId;
     }
 
 

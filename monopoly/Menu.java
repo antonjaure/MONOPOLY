@@ -68,6 +68,10 @@ public class Menu {
         banca.setNombre("Banca");
     }
 
+    public int getTurno() {
+        return turno;
+    }
+
     // Metodo para iniciar una partida: crea los jugadores y avatares.
     private void iniciarPartida() {
     }
