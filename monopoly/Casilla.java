@@ -420,6 +420,7 @@ public class Casilla {
                 actual1.sumarFortuna(-getValorCasa());
 
                 edificios.add(casa);
+                this.impuesto += getAlquilerCasa();
                 MonopolyETSE.tablero.getCasas().add(casa);
                 break;
             case "hotel":
@@ -435,6 +436,7 @@ public class Casilla {
 
                 // se sustituyen las casas por el hotel
                 edificios.add(hotel);
+                this.impuesto +=  getAlquilerHotel();
                 MonopolyETSE.tablero.getHoteles().add(hotel);
                 Iterator<Edificio> it = edificios.iterator();
                 while (it.hasNext()) {
@@ -458,6 +460,7 @@ public class Casilla {
                 actual3.sumarFortuna(-getValorPiscina());
 
                 edificios.add(piscina);
+                this.impuesto += getAlquilerPiscina();
                 MonopolyETSE.tablero.getPiscinas().add(piscina);
                 break;
             case "pista":
@@ -472,6 +475,7 @@ public class Casilla {
                 actual4.sumarFortuna(-getValorPista());
 
                 edificios.add(pista);
+                this.impuesto += getAlquilerPista();
                 MonopolyETSE.tablero.getPistas().add(pista);
                 break;
             default:
@@ -600,6 +604,7 @@ public class Casilla {
         return alquileres.get("pista");
     }
     public ArrayList<Edificio> getEdificios() {
+        if (edificios == null) edificios = new ArrayList<>();
         return edificios;
     }
     public HashMap<String, Float> getValores() {

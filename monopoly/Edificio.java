@@ -21,7 +21,7 @@ public class Edificio {
         this.nombre = nombre;
     }
 
-    public Casilla getTerreno() {
+    public Casilla getCasilla() {
         return terreno;
     }
 
