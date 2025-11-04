@@ -26,7 +26,6 @@ public class CartaComunidad {
         ArrayList<Jugador> jugadores = MonopolyETSE.menu.getJugadores();
         Jugador jugadorActual = jugadores.get(turno % jugadores.size());
         Avatar avatarActual = jugadorActual.getAvatar();
-        int posicionActual = avatarActual.getCasilla().getPosicion();
         int id = jugadorActual.getCartaComunidadId();
 
 
