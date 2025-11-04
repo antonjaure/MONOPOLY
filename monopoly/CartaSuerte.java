@@ -3,17 +3,14 @@ package monopoly;
 import partida.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class CartaSuerte {
     private ArrayList<String> cartasSuerte;
     
 
 
-    /*HAY QUE METER SACARCARTAS SUERTE Y COMUNIDAD EN GESTIONAR PAGO
-     * 
-     * 
-     * 
+    /*HAY QUE METER SACARCARTAS SUERTE Y COMUNIDAD AL CAER EN LA CASILLAS
+     * EN MENU O DONDE SEA.
      */
     public CartaSuerte() {
         cartasSuerte = new ArrayList<>();
@@ -27,7 +24,7 @@ public class CartaSuerte {
         cartasSuerte.add("Avanza hasta la casilla de transporte más cercana. Si no tiene dueño, puedes comprarla. Si tiene dueño, paga al dueño el doble de la operación indicada.");
     }
 
-    public void sacarCarta(CartaSuerte cartaSuerte) {
+    public void sacarCartaSuerte() {
 
         //OBTENEMOS EL JUGADOR ACTUAL CON SU ID DE CARTA DE SUERTE
         int turno = MonopolyETSE.menu.getTurno();
@@ -71,6 +68,7 @@ public class CartaSuerte {
             case 2:
                 System.out.println(cartasSuerte.get(2));
                 jugadorActual.sumarFortuna(1000000);
+                System.out.println(jugadorActual.getNombre() + "recibe 1.000.000€");
                 break;
 
             case 3:
@@ -78,6 +76,11 @@ public class CartaSuerte {
                 ArrayList<Jugador> jugadoresActivos = MonopolyETSE.menu.getJugadores();
                 for (Jugador j : jugadoresActivos) {
                     if (j != jugadorActual) {
+                        if(jugadorActual.getFortuna() < 250000){
+                            //HIPOTECA
+                            System.out.println("\nNo tienes suficiente dinero para pagar, debes hipotecar para continuar\n");
+                            break;//QUITAR BREAK CUANDO SE HAGA HIPOTECAR
+                        }
                         j.sumarFortuna(250000);
                         System.out.println(j.getNombre() + " ha recibido 250.000€ de " + jugadorActual.getNombre() + ".\n");  
                         jugadorActual.sumarFortuna(-250000);
@@ -97,6 +100,11 @@ public class CartaSuerte {
 
             case 5:
                 System.out.println(cartasSuerte.get(5));
+                if(jugadorActual.getFortuna() < 150000){
+                    //HIPOTECA
+                    System.out.println("\nNo tienes suficiente dinero para pagar, debes hipotecar para continuar\n");
+                    break;//QUITAR BREAK CUANDO SE HAGA HIPOTECAR
+                }
                 jugadorActual.sumarFortuna(-150000);
                 Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
                 parking.sumarValor(150000);
@@ -135,34 +143,24 @@ public class CartaSuerte {
                         return;
                     }else{
                         float pago = siguienteTransporte.getImpuesto() * 2;
-                        if(siguienteTransporte.evaluarCasilla(jugadorActual, siguienteTransporte.getDuenho())){
-                            jugadorActual.sumarFortuna(-pago);
-                            if(!(siguienteTransporte.evaluarCasilla(jugadorActual, siguienteTransporte.getDuenho()))){
-                                System.out.println(jugadorActual.getNombre() + " no tiene suficiente fortuna para pagar el impuesto duplicado de " + siguienteTransporte.getNombre() + ".\n");
-                                return;
-                            }
-                            else{
-                                jugadorActual.sumarFortuna(-pago);
-                                siguienteTransporte.getDuenho().sumarFortuna(pago * 2);
-                                System.out.println(jugadorActual.getNombre() + " ha pagado " + pago + "€ a " + siguienteTransporte.getDuenho().getNombre() + ".\n");
-                                break;
-                            }
 
+                        if(jugadorActual.getFortuna() < pago){
+                            //HIPOTECA
+                            System.out.println("\nNo tienes suficiente dinero para pagar, debes hipotecar para continuar\n");
+                            break;//QUITAR BREAK CUANDO SE HAGA HIPOTECAR
                         }
-                        else{
-                            System.out.println(jugadorActual.getNombre() + " no tiene suficiente fortuna para pagar el impuesto duplicado de " + siguienteTransporte.getNombre() + ".\n");
-                            return;
-                        }
+                        jugadorActual.sumarFortuna(-pago);
+                        siguienteTransporte.getDuenho().sumarFortuna(pago);
+                        System.out.println(jugadorActual.getNombre() + " ha pagado " + pago + "€ a " + siguienteTransporte.getDuenho().getNombre() + ".\n");
+                        break;
                     }
+
                 }
                 break;
         }
+        
         //ACTUALIZAMOS EL ID DE LA CARTA DE SUERTE DEL JUGADOR
         jugadorActual.setCartaSuerteId(id + 1);
         return;
     }
-
-
-
-
 }
