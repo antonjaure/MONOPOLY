@@ -4,6 +4,7 @@ import partida.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Scanner;
 
 
 public class Casilla {
@@ -21,6 +22,11 @@ public class Casilla {
     private HashMap<String, Float> valores = new HashMap<>();
     private HashMap<String, Float> alquileres = new HashMap<>();
     private ArrayList<Avatar> avatares; //Avatares que están situados en la casilla.
+    // Nuevo atributo para la hipoteca
+    protected boolean hipotecada = false;
+
+    // Para bloquear alquileres y edificaciones
+    protected boolean puedeCobrarAlquiler = true;
 
     //Constructores:
     public Casilla() {
@@ -87,26 +93,7 @@ public class Casilla {
     FALSE en caso contrario. La función ya tiene en cuenta si la casilla no tiene dueño (se ofrece comprarla)
      o si el dueño es el propio jugador (no pasa nada).
 
-    FALTA IMPLEMENTAR EL CÓDIGO PARA LAS CASILLAS ESPECIALES (IR A CÁRCEL, PARKING Y SALIDA)
-
-
-    public boolean evaluarCasilla(Jugador actual, Jugador banca, int tirada) {
-        Avatar avatar = actual.getAvatar();
-        Casilla casilla = avatar.getCasilla();
-        String tipo = casilla.getTipo();
-
-        if (tipo.equals("Impuesto")) {
-            if (casilla.getDuenho() != banca && casilla.getDuenho() != actual) {
-                float impuesto = casilla.getImpuesto() * tirada;
-                return actual.getFortuna() >= impuesto; // Si tiene dinero para el impuesto = true, else false
-            } else {
-                return evaluarCasilla(actual, banca);
-            }
-        }
-        return evaluarCasilla(actual, banca);
-    }
-    */
-
+    FALTA IMPLEMENTAR EL CÓDIGO PARA LAS CASILLAS ESPECIALES (IR A CÁRCEL, PARKING Y SALIDA)*/
 
     public boolean evaluarCasilla(Jugador actual, Jugador banca) {
 
@@ -549,6 +536,69 @@ public class Casilla {
         }
         return true;
     }
+
+    public void hipotecar(Jugador jugadorActual) {
+        // Verificar dueño
+        if (this.duenho != jugadorActual) {
+            System.out.println("\t" + Valor.RED + "Error: Solo el dueño puede hipotecar esta casilla." + Valor.RESET);
+            return;
+        }
+    
+        // Verificar si ya está hipotecada
+        if (this.hipotecada) {
+            System.out.println("\t" + Valor.RED + "Error: La propiedad ya está hipotecada." + Valor.RESET);
+            return;
+        }
+    
+        // Verificar si hay edificios
+        if (this.edificios != null && !this.edificios.isEmpty()) {
+            System.out.println("\t" + Valor.YELLOW + "El dueño tiene edificios en esta casilla. Debe venderlos antes de hipotecar." + Valor.RESET);
+            Scanner sc = new Scanner(System.in);
+            System.out.println("\t¿Quieres vender los edificios ahora? (s/n)");
+            String respuesta = sc.nextLine();
+            if (respuesta.equalsIgnoreCase("s")) {
+                venderEdificios(jugadorActual); // Método para vender edificios
+                this.edificios.clear(); // Por seguridad
+            } else {
+                System.out.println("\t" + Valor.RED + "No se han vendido los edificios. No se puede hipotecar la casilla." + Valor.RESET);
+                return;
+            }
+        }
+    
+        // Hipotecar
+        this.hipotecada = true; // Marca la casilla como hipotecada
+        this.puedeCobrarAlquiler = false; // Bloquear alquileres
+        jugadorActual.sumarFortuna(this.hipoteca); // Entregar dinero
+        System.out.println("\t" + Valor.GREEN + "Casilla hipotecada con éxito. Se han recibido " + this.hipoteca + "€." + Valor.RESET);
+    }
+
+    public void deshipotecar(Jugador jugadorActual){
+        // Verificar dueño
+        if (this.duenho != jugadorActual) {
+            System.out.println("\t" + Valor.RED + "Error: Solo el dueño puede deshipotecar esta casilla." + Valor.RESET);
+            return;
+        }
+    
+        // Verificar si está hipotecada
+        if (!this.hipotecada) {
+            System.out.println("\t" + Valor.RED + "Error: La propiedad no está hipotecada." + Valor.RESET);
+            return;
+        }
+    
+        // Verificar si el jugador tiene suficiente dinero
+        float costoDeshipotecar = this.hipoteca ;
+        if (jugadorActual.getFortuna() < costoDeshipotecar) {
+            System.out.println("\t" + Valor.RED + "Error: No tienes suficiente dinero para deshipotecar esta casilla." + Valor.RESET);
+            return;
+        }
+    
+        // Deshipotecar
+        this.hipotecada = false; // Marca la casilla como no hipotecada
+        this.puedeCobrarAlquiler = true; // Permitir alquileres
+        jugadorActual.sumarFortuna(-costoDeshipotecar); // Cobrar al jugador
+        System.out.println("\t" + Valor.GREEN + "Casilla deshipotecada con éxito. Se han pagado " + costoDeshipotecar + "€." + Valor.RESET);
+    }
+    
 
 
     public String getNombre() {

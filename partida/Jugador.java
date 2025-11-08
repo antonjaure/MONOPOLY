@@ -25,6 +25,14 @@ public class Jugador {
     private int doblesConsecutivos = 0; // variable de clase para contar dobles
     private int cartaComunidadId = 0; // id de la carta de comunidad actual
     private int cartaSuerteId = 0; // id de la carta de suerte actual
+    // --- Atributos adicionales para estadísticas ---
+    private float dineroInvertido = 0;           // Dinero invertido en compra de propiedades y edificaciones
+    private float pagoTasasEImpuestos = 0;      // Dinero pagado en tasas e impuestos
+    private float pagoDeAlquileres = 0;         // Dinero pagado en alquileres
+    private float cobroDeAlquileres = 0;        // Dinero cobrado por alquileres
+    private float pasarPorCasillaDeSalida = 0;  // Dinero recibido al pasar por Salida
+    private float premiosInversionesOBote = 0;   // Dinero recibido por premios o el bote de Parking
+    private int vecesEnLaCarcel = 0;            // Veces que ha estado en la cárcel
 
     //Constructor vacío. Se usará para crear la banca.
     public Jugador() {
@@ -146,7 +154,27 @@ public class Jugador {
         return null;
     };
 
+    // --- Métodos para actualizar estas estadísticas ---
+    public void agregarDineroInvertido(float valor) { dineroInvertido += valor; }
+    public void agregarPagoTasasEImpuestos(float valor) { pagoTasasEImpuestos += valor; }
+    public void agregarPagoDeAlquileres(float valor) { pagoDeAlquileres += valor; }
+    public void agregarCobroDeAlquileres(float valor) { cobroDeAlquileres += valor; }
+    public void agregarPasarPorSalida(float valor) { pasarPorCasillaDeSalida += valor; }
+    public void agregarPremiosInversionesOBote(float valor) { premiosInversionesOBote += valor; }
+    public void incrementarVecesEnCarcel() { vecesEnLaCarcel++; }
 
+    // --- Método para mostrar estadísticas ---
+    public String mostrarEstadisticas() {
+        return "{\n" +
+            "dineroInvertido: " + (int)dineroInvertido + ",\n" +
+            "pagoTasasEImpuestos: " + (int)pagoTasasEImpuestos + ",\n" +
+            "pagoDeAlquileres: " + (int)pagoDeAlquileres + ",\n" +
+            "cobroDeAlquileres: " + (int)cobroDeAlquileres + ",\n" +
+            "pasarPorCasillaDeSalida: " + (int)pasarPorCasillaDeSalida + ",\n" +
+            "premiosInversionesOBote: " + (int)premiosInversionesOBote + ",\n" +
+            "vecesEnLaCarcel: " + vecesEnLaCarcel + "\n" +
+            "}";
+    }
 
     public String getNombre() {
         return this.nombre;
