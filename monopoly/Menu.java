@@ -245,6 +245,61 @@ public class Menu {
             System.out.println("Imprimiendo tablero...\n");
             System.out.println(tablero.toString());
         }
+        // hipotecar una propiedad
+        else if (palabras[0].equalsIgnoreCase("hipotecar")) {
+            if (numPalabras != 2) {
+                System.out.println("\t*** Argumentos incorrectos. ***");
+                System.out.println("\tUso: hipotecar <Nombre casilla>");
+                System.out.println("}\n");
+                return;
+            }
+
+            Jugador jugadorActual = jugadores.get(turno % jugadores.size());
+            String nombreCasilla = palabras[1].trim();
+            Casilla casilla = tablero.encontrar_casilla(nombreCasilla);
+
+            if (casilla == null) {
+                System.out.println("\t*** La casilla " + nombreCasilla + " no existe. ***");
+                System.out.println("}\n");
+                return;
+            }
+
+            casilla.hipotecar(jugadorActual);
+        }
+
+        // deshipotecar una propiedad
+        else if (palabras[0].equalsIgnoreCase("deshipotecar")) {
+            if (numPalabras != 2) {
+                System.out.println("\t*** Argumentos incorrectos. ***");
+                System.out.println("\tUso: deshipotecar <Nombre casilla>");
+                System.out.println("}\n");
+                return;
+            }
+
+            Jugador jugadorActual = jugadores.get(turno % jugadores.size());
+            String nombreCasilla = palabras[1].trim();
+            Casilla casilla = tablero.encontrar_casilla(nombreCasilla);
+
+            if (casilla == null) {
+                System.out.println("\t*** La casilla " + nombreCasilla + " no existe. ***");
+                System.out.println("}\n");
+                return;
+            }
+
+            casilla.deshipotecar(jugadorActual);
+        }
+
+        
+        // mostrar las estadísticas del jugador actual
+        else if (comando.equals("estadisticas")) {
+            if (jugadores == null || jugadores.isEmpty()) {
+                System.out.println("\t*** No hay jugadores activos. ***");
+                System.out.println("}\n");
+                return;
+            }
+            Jugador jActual = jugadores.get(turno % jugadores.size());
+            jActual.mostrarEstadisticas();
+        }
     
         // finaliza el programa
         else if (comando.equals("salir")) System.out.println("\tSaliendo del programa...");
@@ -362,7 +417,6 @@ public class Menu {
                     avatarActual.moverAvatar(tablero.getPosiciones(), carcel.getPosicion() - avatarActual.getCasilla().getPosicion());
                     jugadorActual.setEnCarcel(true);
                     jugadorActual.setDoblesConsecutivos(0);
-
                     System.out.println(tablero.toString());
 
                     // Terminar el turno inmediatamente
@@ -395,7 +449,6 @@ public class Menu {
             jugadorActual.setEnCarcel(true);
 
             jugadorActual.setDoblesConsecutivos(0);
-
             System.out.println("\t" + jugadorActual.getNombre() + " va a la cárcel.");
             System.out.println(tablero.toString());
             // acabarTurno();

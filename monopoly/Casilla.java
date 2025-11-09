@@ -173,6 +173,7 @@ public class Casilla {
             if(casilla.getDuenho() == banca) { //Si la casilla no tiene dueño, se ofrece comprarla.
                 float valor = casilla.getValor();
                 solicitante.sumarFortuna(-valor); //Se resta el valor de la casilla a la fortuna del jugador.
+                solicitante.agregarDineroInvertido(valor);
                 banca.sumarFortuna(valor); //Se añade el valor de la casilla a la fortuna de la banca.
 
                 casilla.setDuenho(solicitante); //El dueño de la casilla pasa a ser el jugador solicitante.
@@ -318,6 +319,7 @@ public class Casilla {
         if (this.posicion - tirada < 0) {
             System.out.println("\t" + jugadorActual.getNombre() + " pasa por Salida y recibe 2.000.000€");
             jugadorActual.sumarFortuna(2000000f);
+            jugadorActual.agregarPasarPorSalida(2000000f);
         }
     
         boolean solvente = evaluarCasilla(jugadorActual, banca);
@@ -351,7 +353,9 @@ public class Casilla {
                 jugadorActual.sumarFortuna(-cantidad);
                 duenho.sumarFortuna(cantidad);
                 System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ a " + duenho.getNombre());
-
+                // Actualizar estadísticas
+                jugadorActual.agregarPagoDeAlquileres(cantidad);
+                duenho.agregarCobroDeAlquileres(cantidad);
                 // Casillas sin dueño (o de la banca)
             }
             case "Impuestos" -> {
@@ -360,18 +364,22 @@ public class Casilla {
                 Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
                 parking.sumarValor(cantidad);
                 System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ que se depositan en el Parking");
+                // Actualizar estadísticas
+                jugadorActual.agregarPagoTasasEImpuestos(cantidad);
             }
             case "Comunidad", "Suerte" -> System.out.println("\t" + jugadorActual.getNombre() + " roba una carta.");
             case "Especial" -> {
                 if (nombre.equals("Parking")) {
                     System.out.println("\t" + jugadorActual.getNombre() + " recibe el bote de " + valor + "€");
                     jugadorActual.sumarFortuna(valor);
+                    jugadorActual.agregarPremiosInversionesOBote(valor);
                     valor = 0; // Vaciar el bote
                 } else if (nombre.equals("Salida") || this.posicion - tirada < 0) {
                     System.out.println("\t" + jugadorActual.getNombre() + " cayó en la salida.");
                     // jugadorActual.sumarFortuna(2000000f);
                 } else if (nombre.equals("IrCarcel")) {
                     jugadorActual.encarcelar();
+                    jugadorActual.incrementarVecesEnCarcel();
                 }
             }
             default -> System.out.println("\tCasilla de paso. No pasa nada.");
@@ -404,7 +412,7 @@ public class Casilla {
                 Edificio casa = new Edificio(Cnom, this, tipo);
                 Jugador actual1 = this.avatares.getLast().getJugador();
                 actual1.sumarFortuna(-getValorCasa());
-
+                actual1.agregarDineroInvertido(getValorCasa());
                 edificios.add(casa);
                 this.impuesto += getAlquilerCasa();
                 MonopolyETSE.tablero.getCasas().add(casa);
@@ -419,7 +427,7 @@ public class Casilla {
                 Edificio hotel = new Edificio(Hnom, this, tipo);
                 Jugador actual2 = this.avatares.getLast().getJugador();
                 actual2.sumarFortuna(-getValorHotel());
-
+                actual2.agregarDineroInvertido(getValorHotel());
                 // se sustituyen las casas por el hotel
                 edificios.add(hotel);
                 this.impuesto +=  getAlquilerHotel();
@@ -444,7 +452,7 @@ public class Casilla {
                 Edificio piscina = new Edificio(Pnom, this, tipo);
                 Jugador actual3 = this.avatares.getLast().getJugador();
                 actual3.sumarFortuna(-getValorPiscina());
-
+                actual3.agregarDineroInvertido(getValorPiscina()); 
                 edificios.add(piscina);
                 this.impuesto += getAlquilerPiscina();
                 MonopolyETSE.tablero.getPiscinas().add(piscina);
@@ -459,7 +467,7 @@ public class Casilla {
                 Edificio pista = new Edificio(Pinom, this, tipo);
                 Jugador actual4 = this.avatares.getLast().getJugador();
                 actual4.sumarFortuna(-getValorPista());
-
+                actual4.agregarDineroInvertido(getValorPista());
                 edificios.add(pista);
                 this.impuesto += getAlquilerPista();
                 MonopolyETSE.tablero.getPistas().add(pista);
@@ -557,7 +565,7 @@ public class Casilla {
             System.out.println("\t¿Quieres vender los edificios ahora? (s/n)");
             String respuesta = sc.nextLine();
             if (respuesta.equalsIgnoreCase("s")) {
-                venderEdificios(jugadorActual); // Método para vender edificios
+                //venderEdificios(jugadorActual); // Método para vender edificios
                 this.edificios.clear(); // Por seguridad
             } else {
                 System.out.println("\t" + Valor.RED + "No se han vendido los edificios. No se puede hipotecar la casilla." + Valor.RESET);

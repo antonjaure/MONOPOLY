@@ -164,16 +164,16 @@ public class Jugador {
     public void incrementarVecesEnCarcel() { vecesEnLaCarcel++; }
 
     // --- Método para mostrar estadísticas ---
-    public String mostrarEstadisticas() {
-        return "{\n" +
-            "dineroInvertido: " + (int)dineroInvertido + ",\n" +
-            "pagoTasasEImpuestos: " + (int)pagoTasasEImpuestos + ",\n" +
-            "pagoDeAlquileres: " + (int)pagoDeAlquileres + ",\n" +
-            "cobroDeAlquileres: " + (int)cobroDeAlquileres + ",\n" +
-            "pasarPorCasillaDeSalida: " + (int)pasarPorCasillaDeSalida + ",\n" +
-            "premiosInversionesOBote: " + (int)premiosInversionesOBote + ",\n" +
-            "vecesEnLaCarcel: " + vecesEnLaCarcel + "\n" +
-            "}";
+    public void mostrarEstadisticas() {
+        System.out.println("{");
+        System.out.println("\tdineroInvertido: " + (int)dineroInvertido);
+        System.out.println("\tpagoTasasEImpuestos: " + (int)pagoTasasEImpuestos);
+        System.out.println("\tpagoDeAlquileres: " + (int)pagoDeAlquileres);
+        System.out.println("\tcobroDeAlquileres: " + (int)cobroDeAlquileres);
+        System.out.println("\tpasarPorCasillaDeSalida: " + (int)pasarPorCasillaDeSalida);
+        System.out.println("\tpremiosInversionesOBote: " + (int)premiosInversionesOBote);
+        System.out.println("\tvecesEnLaCarcel: " + vecesEnLaCarcel);
+        System.out.println("}");
     }
 
     public String getNombre() {
