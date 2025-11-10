@@ -54,7 +54,6 @@ public class CartaSuerte {
                 break;
 
             case 1:
-            //?¿?¿ HAY QUE GESTIONAR PAGO O ALGO PARECIDO AL IR A LA CARCEL?¿?¿?¿
                 System.out.println(cartasSuerte.get(1));
                 Casilla carcel = MonopolyETSE.tablero.encontrar_casilla("Cárcel");
                 avatarActual.getCasilla().eliminarAvatar(avatarActual);
