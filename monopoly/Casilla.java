@@ -395,16 +395,132 @@ public class Casilla {
         }
     }
 
-    public void venderEdificio(Casilla casilla, String tipoEd, int n) {
-        if (casilla.getDuenho() != MonopolyETSE.menu.getJugadores().get(MonopolyETSE.menu.getTurno())) {
-            System.out.println("\tNo puedes vender. Esta casilla no es tuya.");
+    public void venderEdificio(String tipoEd, int n) {
+        if (this.getDuenho() != MonopolyETSE.menu.getJugadores().get(MonopolyETSE.menu.getTurno())) {
+            System.out.println("\t*** No puedes vender. La casilla '" + this.getNombre() + "' no es tuya. ***");
             System.out.println("}\n");
             return;
         }
-        if (!tipoEd.equals("casa") && !tipoEd.equals("hotel") && !tipoEd.equals("piscina") && !tipoEd.equals("pista")) {
-            System.out.println("No puedes vender. Tipo de edificio no registrado.");
+        if (n < 1) {
+            System.out.println("\t*** Debes vender al menos 1 propiedad. ***");
             System.out.println("}\n");
             return;
+        }
+        Jugador j = MonopolyETSE.menu.getJugadores().get(MonopolyETSE.menu.getTurno());
+        if (edificios == null || edificios.isEmpty()) edificios = new ArrayList<>();
+        int count = 0;
+        switch (tipoEd) {
+            case "casa":
+                for (Edificio ed : this.getEdificios()) {
+                    if (ed.getTipo().equals("casa")) count++;
+                }
+                if (count < n) {
+                    System.out.println("\t*** No puedes vender " + n + " casas. Solo tienes " + count + ". ***");
+                    System.out.println("}\n");
+                    return;
+                }
+                int i = 0;
+                Iterator<Edificio> it = this.getEdificios().iterator();
+                while (it.hasNext()) {
+                    Edificio ed = it.next();
+                    if (ed.getTipo().equals("casa")) {
+                        if (i >= count - n) {
+                            it.remove();
+                            MonopolyETSE.tablero.getCasas().remove(ed);
+                            this.impuesto -= getAlquilerCasa();
+                            j.sumarFortuna(getValorCasa());
+                        }
+                        i++;
+                    }
+                }
+                System.out.println("\t" + j.getNombre() + " ha vendido " + n + " casas en " + this.getNombre() + ", recibiendo " + (n*getValorCasa())
+                        + "€. En la propiedad queda(n) " + (count - n) + " casas.");
+                break;
+            case "hotel":
+                for (Edificio ed : this.getEdificios()) {
+                    if (ed.getTipo().equals("hotel")) count++;
+                }
+                if (count == 0) {
+                    System.out.println("\t*** No tienes ningún hotel construído. ***");
+                    System.out.println("}\n");
+                    return;
+                }
+                Iterator<Edificio> it2 = this.getEdificios().iterator();
+                while (it2.hasNext()) {
+                    Edificio ed = it2.next();
+                    if (ed.getTipo().equals("hotel")) {
+                        it2.remove();
+                        MonopolyETSE.tablero.getHoteles().remove(ed);
+                        this.impuesto -= getAlquilerHotel();
+                        j.sumarFortuna(getValorHotel());
+                        break;
+                    }
+                }
+                String print = ", recibiendo " + getValorHotel() + "€.";
+                if (n > 1) {
+                    print = "\tSolo se puede vender un hotel" + print;
+                }
+                else print = "\t" + j.getNombre() + " ha vendido 1 hotel en " + this.getNombre() + print;
+                System.out.println(print);
+                break;
+            case "piscina":
+                for (Edificio ed : this.getEdificios()) {
+                    if (ed.getTipo().equals("piscina")) count++;
+                }
+                if (count == 0) {
+                    System.out.println("\t*** No tienes ninguna piscina construída. ***");
+                    System.out.println("}\n");
+                    return;
+                }
+                Iterator<Edificio> it3 = this.getEdificios().iterator();
+                while (it3.hasNext()) {
+                    Edificio ed = it3.next();
+                    if (ed.getTipo().equals("piscina")) {
+                        it3.remove();
+                        MonopolyETSE.tablero.getPiscinas().remove(ed);
+                        this.impuesto -= getAlquilerPiscina();
+                        j.sumarFortuna(getValorPiscina());
+                        break;
+                    }
+                }
+                String print2 = ", recibiendo " + getValorPiscina() + "€.";
+                if (n > 1) {
+                    print2 = "\tSolo se puede vender una piscina" + print2;
+                }
+                else print2 = "\t" + j.getNombre() + " ha vendido 1 piscina en " + this.getNombre() + print2;
+                System.out.println(print2);
+                break;
+            case "pista":
+                for (Edificio ed : this.getEdificios()) {
+                    if (ed.getTipo().equals("pista")) count++;
+                }
+                if (count == 0) {
+                    System.out.println("\t*** No tienes ninguna pista construída. ***");
+                    System.out.println("}\n");
+                    return;
+                }
+                Iterator<Edificio> it4 = this.getEdificios().iterator();
+                while (it4.hasNext()) {
+                    Edificio ed = it4.next();
+                    if (ed.getTipo().equals("pista")) {
+                        it4.remove();
+                        MonopolyETSE.tablero.getPistas().remove(ed);
+                        this.impuesto -= getAlquilerPista();
+                        j.sumarFortuna(getValorPista());
+                        break;
+                    }
+                }
+                String print3 = ", recibiendo " + getValorPista() + "€.";
+                if (n > 1) {
+                    print3 = "\tSolo se puede vender una pista" + print3;
+                }
+                else print3 = "\t" + j.getNombre() + " ha vendido 1 pista en " + this.getNombre() + print3;
+                System.out.println(print3);
+                break;
+            default:
+                System.out.println("\t*** No puedes vender. Tipo de edificio no registrado. ***");
+                System.out.println("}\n");
+                return;
         }
     }
 
@@ -453,7 +569,7 @@ public class Casilla {
                 actual2.agregarDineroInvertido(getValorHotel());
                 // se sustituyen las casas por el hotel
                 edificios.add(hotel);
-                this.impuesto +=  getAlquilerHotel();
+                this.impuesto += getAlquilerHotel();
                 MonopolyETSE.tablero.getHoteles().add(hotel);
                 Iterator<Edificio> it = edificios.iterator();
                 while (it.hasNext()) {

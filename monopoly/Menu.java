@@ -193,7 +193,10 @@ public class Menu {
                 System.out.println("}\n");
                 return;
             }
-
+            String tipo = palabras[1].trim();
+            int n = Integer.parseInt(palabras[3].trim());
+            Casilla cas = tablero.encontrar_casilla(palabras[2].trim());
+            cas.venderEdificio(tipo, n);
         }
         // construye un edificio
         else if (comando.contains("edificar")) {
