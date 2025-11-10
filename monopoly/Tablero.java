@@ -489,6 +489,53 @@ public class Tablero {
         return origen;
     }
 
+    public void estadisticas() {
+
+
+        Casilla casillaMasRentable = null;
+        Casilla casillaMasFrecuentada = null;
+        Grupo grupoMasRentable = null;
+        Jugador jugadorMasVueltas = null;
+        Jugador jugadorEnCabeza = null;
+
+        for (ArrayList<Casilla> fila : posiciones) {
+            for (Casilla c : fila) {
+                if (c.getTipo().equals("Solar")) {
+                    if (c.getRentabilidad() > casillaMasRentable.getRentabilidad()) {
+                        casillaMasRentable = c;
+                    }
+                    else if(c.getFrecuencia() > casillaMasFrecuentada.getFrecuencia()){
+                        casillaMasFrecuentada = c;
+                    }
+                }
+
+            }
+        }
+
+        for (Grupo grupo : grupos.values()) {
+            for (Casilla c : grupo.getMiembros()) {
+                grupo.setRentabilidad(grupo.getRentabilidad() + c.getRentabilidad());
+            }
+            if (grupo.getRentabilidad() > grupoMasRentable.getRentabilidad()) {
+                grupoMasRentable = grupo;
+            }
+        }
+
+        for (Jugador jugador : MonopolyETSE.menu.getJugadores()) {
+            if(jugador.getVueltas() > jugadorMasVueltas.getVueltas()) {
+                jugadorMasVueltas = jugador;
+            }
+            if(jugador.getPatrimonio() > jugadorEnCabeza.getPatrimonio()) {
+                jugadorEnCabeza = jugador;
+            }
+        }
+
+
+
+
+        
+    }
+
 
 
     private final List<List<Integer>> SolServTrans = Arrays.asList(

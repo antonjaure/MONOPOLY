@@ -52,4 +52,6 @@ public class Edificio {
     public void setTipo(String tipo) {
         this.tipo = tipo;
     }
+
+
 }

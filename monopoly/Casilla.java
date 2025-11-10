@@ -22,6 +22,8 @@ public class Casilla {
     private HashMap<String, Float> valores = new HashMap<>();
     private HashMap<String, Float> alquileres = new HashMap<>();
     private ArrayList<Avatar> avatares; //Avatares que están situados en la casilla.
+    private float rentabilidad = 0;
+    public int frecuencia = 0;
     // Nuevo atributo para la hipoteca
     protected boolean hipotecada = false;
 
@@ -308,6 +310,10 @@ public class Casilla {
         }
     }
 
+    public void incrementarFrecuencia() {
+        this.frecuencia++;
+    }
+
     /**
      * Método que gestiona los pagos al caer en esta casilla.
      * Parámetros:
@@ -352,6 +358,9 @@ public class Casilla {
 
                 jugadorActual.sumarFortuna(-cantidad);
                 duenho.sumarFortuna(cantidad);
+                if(duenho != MonopolyETSE.menu.getBanca()){
+                    rentabilidad += cantidad;
+                }
                 System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ a " + duenho.getNombre());
                 // Actualizar estadísticas
                 jugadorActual.agregarPagoDeAlquileres(cantidad);
@@ -638,6 +647,9 @@ public class Casilla {
     public Jugador getDuenho() {
         return this.duenho;
     }
+    public float getRentabilidad() {
+        return this.rentabilidad;
+    }
     public Grupo getGrupo() {
         return this.grupo;
     }
@@ -674,6 +686,9 @@ public class Casilla {
     public float getAlquilerPista() {
         return alquileres.get("pista");
     }
+    public int getFrecuencia() {
+        return frecuencia;
+    }
     public ArrayList<Edificio> getEdificios() {
         if (edificios == null) edificios = new ArrayList<>();
         return edificios;
@@ -687,7 +702,9 @@ public class Casilla {
 
 
 
-
+    public void setRentabilidad(float rentabilidad) {
+        this.rentabilidad = rentabilidad;
+    }
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -708,6 +725,9 @@ public class Casilla {
     }
     public void setImpuesto(float impuesto){
         this.impuesto = impuesto;
+    }
+    public void setFrecuencia(int frecuencia){
+        this.frecuencia = frecuencia;
     }
     public void setHipoteca(float hipoteca){
         this.hipoteca = hipoteca;

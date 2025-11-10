@@ -206,6 +206,20 @@ public class Jugador {
     public int getCartaSuerteId() {
         return cartaSuerteId;
     }
+    public int getVueltas() {
+        return vueltas;
+    }
+
+    public float getPatrimonio() {
+        float patrimonio = this.fortuna;
+        for (Casilla casilla : this.getPropiedades()) {
+            patrimonio += casilla.getValor();
+            for (Edificio edificio : casilla.getEdificios()) {
+                patrimonio += edificio.getCoste();
+            }
+        }
+        return patrimonio;
+    }
 
     public boolean isEnCarcel() { //getter para saber si esta en la carcel
         return this.enCarcel;
@@ -214,6 +228,7 @@ public class Jugador {
     public void setDoblesConsecutivos(int doblesConsecutivos) {
         this.doblesConsecutivos = doblesConsecutivos;
     }
+    
 
     public void setNombre(String nombre) {
         this.nombre = nombre;

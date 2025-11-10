@@ -12,6 +12,7 @@ class Grupo {
     private String colorGrupo; //Color del grupo
     private String codigoColor;
     private int numCasillas; //Número de casillas del grupo.
+    private float rentabilidad; // Rentabilidad del grupo
 
 
     public ArrayList<Casilla> getMiembros() {
@@ -23,6 +24,14 @@ class Grupo {
 
     public String getCodigoColor() {
         return codigoColor;
+    }
+
+    public float getRentabilidad() {
+        return rentabilidad;
+    }
+
+    public void setRentabilidad(float rentabilidad) {
+        this.rentabilidad = rentabilidad;
     }
 
     public int numCasillas() {

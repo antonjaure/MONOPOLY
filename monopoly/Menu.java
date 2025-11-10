@@ -484,6 +484,7 @@ public class Menu {
 
         // Gestionar IrCarcel y otras casillas
         Casilla destino = avatarActual.getCasilla();
+        destino.incrementarFrecuencia();
         if (destino.getNombre().equals("IrCarcel")) {
             Casilla carcel = tablero.encontrar_casilla("Cárcel");
             avatarActual.moverAvatar(tablero.getPosiciones(), carcel.getPosicion() - destino.getPosicion());
@@ -813,5 +814,4 @@ public class Menu {
             System.out.println("*** Error: no se encontró el archivo. ***\n");
         }
     }
-
 }
