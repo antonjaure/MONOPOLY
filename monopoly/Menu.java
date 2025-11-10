@@ -314,9 +314,7 @@ public class Menu {
 
             // Si el comando solo tiene "estadisticas", sin nombre de jugador
             if (numPalabras == 1) {
-                System.out.println("\t*** Debes indicar el nombre del jugador. ***");
-                System.out.println("\tUso: estadisticas <nombre_jugador>");
-                System.out.println("}\n");
+                tablero.estadisticas();
                 return;
             }
 
