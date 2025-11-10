@@ -181,6 +181,15 @@ public class Menu {
             String nombre = palabras[1].trim();
             comprar(nombre);
         }
+        else if (comando.contains("vender")) {
+            if (numPalabras != 4) {
+                System.out.println("\t*** Argumentos incorrectos. ***");
+                System.out.println("\tUso: vender <tipo edificio> <casilla> <cantidad>");
+                System.out.println("}\n");
+                return;
+            }
+
+        }
         // construye un edificio
         else if (comando.contains("edificar")) {
             if (numPalabras != 2) {

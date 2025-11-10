@@ -385,6 +385,20 @@ public class Casilla {
             default -> System.out.println("\tCasilla de paso. No pasa nada.");
         }
     }
+
+    public void venderEdificio(Casilla casilla, String tipoEd, int n) {
+        if (casilla.getDuenho() != MonopolyETSE.menu.getJugadores().get(MonopolyETSE.menu.getTurno())) {
+            System.out.println("\tNo puedes vender. Esta casilla no es tuya.");
+            System.out.println("}\n");
+            return;
+        }
+        if (!tipoEd.equals("casa") && !tipoEd.equals("hotel") && !tipoEd.equals("piscina") && !tipoEd.equals("pista")) {
+            System.out.println("No puedes vender. Tipo de edificio no registrado.");
+            System.out.println("}\n");
+            return;
+        }
+    }
+
     public void edificar(String tipo) {
         Jugador propietario = this.duenho;
         int tamGrupo = grupo.numCasillas();
