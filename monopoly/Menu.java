@@ -305,14 +305,41 @@ public class Menu {
 
 
         // mostrar las estadísticas del jugador actual
-        else if (comando.equals("estadisticas")) {
+        else if (comando.startsWith("estadisticas")) {
             if (jugadores == null || jugadores.isEmpty()) {
                 System.out.println("\t*** No hay jugadores activos. ***");
                 System.out.println("}\n");
                 return;
             }
-            Jugador jActual = jugadores.get(turno % jugadores.size());
-            jActual.mostrarEstadisticas();
+
+            // Si el comando solo tiene "estadisticas", sin nombre de jugador
+            if (numPalabras == 1) {
+                System.out.println("\t*** Debes indicar el nombre del jugador. ***");
+                System.out.println("\tUso: estadisticas <nombre_jugador>");
+                System.out.println("}\n");
+                return;
+            }
+
+            // Tomamos el nombre del jugador
+            String nombreJugador = palabras[1].trim();
+            Jugador jugadorEncontrado = null;
+
+            // Buscar al jugador por nombre (ignora mayúsculas/minúsculas)
+            for (Jugador j : jugadores) {
+                if (j.getNombre().equalsIgnoreCase(nombreJugador)) {
+                    jugadorEncontrado = j;
+                    break;
+                }
+            }
+
+            if (jugadorEncontrado == null) {
+                System.out.println("\t*** No se encontró al jugador " + nombreJugador + ". ***");
+                System.out.println("}\n");
+                return;
+            }
+
+            // Mostrar estadísticas del jugador encontrado
+            jugadorEncontrado.mostrarEstadisticas();
         }
     
         // finaliza el programa
@@ -432,9 +459,9 @@ public class Menu {
                     jugadorActual.setEnCarcel(true);
                     jugadorActual.setDoblesConsecutivos(0);
                     System.out.println(tablero.toString());
-
+                    jugadorActual.incrementarVecesEnCarcel();
                     // Terminar el turno inmediatamente
-                    // acabarTurno(); // <-- Aquí es clave
+                    // acabarTurno();
                     return;
                 } else {
                     System.out.println("\t¡Dobles! " + avatarActual.getJugador().getNombre() + " vuelve a tirar.");
@@ -465,6 +492,7 @@ public class Menu {
             jugadorActual.setDoblesConsecutivos(0);
             System.out.println("\t" + jugadorActual.getNombre() + " va a la cárcel.");
             System.out.println(tablero.toString());
+            jugadorActual.incrementarVecesEnCarcel();
             // acabarTurno();
             return; // Terminar turno
         } 
