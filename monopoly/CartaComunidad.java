@@ -5,7 +5,7 @@ import partida.*;
 import java.util.ArrayList;
 
 public class CartaComunidad {
-        private ArrayList<String> cartasComunidad;
+        public ArrayList<String> cartasComunidad;
 
         public CartaComunidad() {
         cartasComunidad = new ArrayList<>();
@@ -38,9 +38,8 @@ public class CartaComunidad {
             case 0:
                 System.out.println(cartasComunidad.get(0));
                 if(jugadorActual.getFortuna() < 500000){
-                    //HIPOTECA
                     System.out.println("\nNo tienes suficiente dinero para pagar, debes hipotecar para continuar\n");
-                    break;//QUITAR BREAK CUANDO SE HAGA HIPOTECAR
+                    break;
                 }
 
                 jugadorActual.sumarFortuna(500000);

@@ -25,6 +25,8 @@ public class Menu {
     private Jugador banca; //El jugador banca.
     private boolean tirado; //Booleano para comprobar si el jugador que tiene el turno ha tirado o no.
     private boolean solvente; //Booleano para comprobar si el jugador que tiene el turno es solvente, es decir, si ha pagado sus deudas.
+    public CartaComunidad cartasComunidad;
+    public CartaSuerte cartasSuerte;
 
     public void setJugador(Jugador jugador) {
         if (jugadores == null) {
@@ -66,6 +68,9 @@ public class Menu {
     public Menu() {
         this.banca = new Jugador();
         banca.setNombre("Banca");
+
+        this.cartasComunidad = new CartaComunidad();
+        this.cartasSuerte = new CartaSuerte();
     }
 
     public int getTurno() {
@@ -298,7 +303,7 @@ public class Menu {
             casilla.deshipotecar(jugadorActual);
         }
 
-        
+
         // mostrar las estadísticas del jugador actual
         else if (comando.equals("estadisticas")) {
             if (jugadores == null || jugadores.isEmpty()) {
@@ -462,7 +467,14 @@ public class Menu {
             System.out.println(tablero.toString());
             // acabarTurno();
             return; // Terminar turno
-        } else {
+        } 
+        else if(destino.getTipo().equals("Comunidad")){
+            cartasComunidad.sacarCartaComunidad();
+        }
+        else if(destino.getTipo().equals("Suerte")){
+            cartasSuerte.sacarCartaSuerte();
+        }
+        else {
             // Gestionar pagos normales
             destino.gestionarPago(jugadorActual, tablero.getBanca(), valorTirada);
         }

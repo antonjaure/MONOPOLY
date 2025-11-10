@@ -77,9 +77,8 @@ public class CartaSuerte {
                 for (Jugador j : jugadoresActivos) {
                     if (j != jugadorActual) {
                         if(jugadorActual.getFortuna() < 250000){
-                            //HIPOTECA
                             System.out.println("\nNo tienes suficiente dinero para pagar, debes hipotecar para continuar\n");
-                            break;//QUITAR BREAK CUANDO SE HAGA HIPOTECAR
+                            break;
                         }
                         j.sumarFortuna(250000);
                         System.out.println(j.getNombre() + " ha recibido 250.000€ de " + jugadorActual.getNombre() + ".\n");  
@@ -101,9 +100,8 @@ public class CartaSuerte {
             case 5:
                 System.out.println(cartasSuerte.get(5));
                 if(jugadorActual.getFortuna() < 150000){
-                    //HIPOTECA
                     System.out.println("\nNo tienes suficiente dinero para pagar, debes hipotecar para continuar\n");
-                    break;//QUITAR BREAK CUANDO SE HAGA HIPOTECAR
+                    break;
                 }
                 jugadorActual.sumarFortuna(-150000);
                 Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
@@ -145,9 +143,8 @@ public class CartaSuerte {
                         float pago = siguienteTransporte.getImpuesto() * 2;
 
                         if(jugadorActual.getFortuna() < pago){
-                            //HIPOTECA
                             System.out.println("\nNo tienes suficiente dinero para pagar, debes hipotecar para continuar\n");
-                            break;//QUITAR BREAK CUANDO SE HAGA HIPOTECAR
+                            break;
                         }
                         jugadorActual.sumarFortuna(-pago);
                         siguienteTransporte.getDuenho().sumarFortuna(pago);
