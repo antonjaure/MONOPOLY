@@ -704,7 +704,7 @@ public class Casilla {
             System.out.println("\t¿Quieres vender los edificios ahora? (s/n)");
             String respuesta = sc.nextLine();
             if (respuesta.equalsIgnoreCase("s")) {
-                venderEdificio(null, respuesta, posicion); // Método para vender edificios
+                venderEdificio(respuesta, posicion); // Método para vender edificios
                 this.edificios.clear(); // Por seguridad
             } else {
                 System.out.println("\t" + Valor.RED + "No se han vendido los edificios. No se puede hipotecar la casilla." + Valor.RESET);
