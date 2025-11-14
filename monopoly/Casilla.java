@@ -138,8 +138,7 @@ public class Casilla {
 
                 float impuesto = casilla.getImpuesto();
                 return actual.getFortuna() >= impuesto; // Si tiene dinero para el impuesto = true, else false
-            case "Comunidad":
-            case "Suerte":
+            case "Comunidad", "Suerte":
                 return true; //No pasa nada, se roba carta.
             case "Especial":
                 String nombre = casilla.getNombre();
