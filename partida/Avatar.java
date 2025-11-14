@@ -83,9 +83,15 @@ public class Avatar {
     * - Un entero que indica el numero de casillas a moverse (será el valor sacado en la tirada de los dados).
     * EN ESTA VERSIÓN SUPONEMOS QUE valorTirada siempre es positivo.
      */
-    public void moverAvatar(ArrayList<ArrayList<Casilla>> casillas, int valorTirada) {
+    public void moverAvatar(int valorTirada) {
         Casilla origen = this.lugar;
         Casilla destino = MonopolyETSE.tablero.avanzarCasillas(origen, valorTirada);
+
+        if (origen.getPosicion() - valorTirada < 0) {
+            System.out.println("\t" + this.getJugador().getNombre() + " pasa por Salida y recibe 2.000.000€");
+            this.getJugador().sumarFortuna(2000000f);
+            this.getJugador().agregarPasarPorSalida(2000000f);
+        }
     
         // Mover avatar en las casillas
         origen.eliminarAvatar(this);
@@ -94,7 +100,20 @@ public class Avatar {
     
         // Mostrar movimiento
         System.out.println("\tEl avatar " + this.id + " avanza " + valorTirada +
-                " posiciones, desde " + origen.getNombre() + " hasta " + destino.getNombre() + ".");
+                " posiciones, desde '" + origen.getNombre() + "' hasta '" + destino.getNombre() + "'.");
+    }
+    // alternativa para mover un avatar directamente a una casilla, sin tener en cuenta por donde pase
+    public void moverAvatar(String nombreCasilla) {
+        Casilla origen = this.lugar;
+        Casilla destino = MonopolyETSE.tablero.encontrar_casilla(nombreCasilla);
+
+        // Mover avatar en las casillas
+        origen.eliminarAvatar(this);
+        destino.anhadirAvatar(this);
+        this.lugar = destino;
+
+        // Mostrar movimiento
+        System.out.println("\tEl avatar " + this.id + " avanza hasta '" + destino.getNombre() + "'.");
     }
     
     /*Método que permite generar un ID para un avatar. Sólo lo usamos en esta clase (por ello es privado).

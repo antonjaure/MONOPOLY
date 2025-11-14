@@ -43,33 +43,20 @@ public class CartaSuerte {
         switch(id){
             case 0:
                 System.out.println(cartasSuerte.get(0));
-                Casilla solar19 = MonopolyETSE.tablero.encontrar_casilla("Solar19");
-                avatarActual.getCasilla().eliminarAvatar(avatarActual);
-                solar19.anhadirAvatar(avatarActual);
-                if(posicionActual > solar19.getPosicion()){
-                    jugadorActual.sumarFortuna(2000000);
-                    System.out.println(jugadorActual.getNombre() + " ha cobrado 2.000.000€ por pasar por la casilla de Salida.\n");
-                }
-                solar19.gestionarPago(jugadorActual, MonopolyETSE.tablero.getBanca(), 0);
+                System.out.println("\t" + jugadorActual + "avanzó hasta Solar19");
+                int tirada = MonopolyETSE.tablero.encontrar_casilla("Solar19").getPosicion() - avatarActual.getCasilla().getPosicion();
+                avatarActual.moverAvatar(tirada); // usamos la version con tirada en lugar de con el nombre de la casilla, asi tenemos en cuenta si pasa por la casilla
+                avatarActual.getCasilla().gestionarPago(jugadorActual, MonopolyETSE.menu.getBanca(), 0);
                 break;
-
             case 1:
                 System.out.println(cartasSuerte.get(1));
-                Casilla carcel = MonopolyETSE.tablero.encontrar_casilla("Cárcel");
-                avatarActual.getCasilla().eliminarAvatar(avatarActual);
-                carcel.anhadirAvatar(avatarActual);
-                jugadorActual.setEnCarcel(true);
-                jugadorActual.setDoblesConsecutivos(0);
-                jugadorActual.setTiradasCarcel(0);
-                System.out.println(jugadorActual.getNombre() + " ha sido enviado a la cárcel.\n");
+                jugadorActual.encarcelar();
                 break;
-
             case 2:
                 System.out.println(cartasSuerte.get(2));
                 jugadorActual.sumarFortuna(1000000);
-                System.out.println(jugadorActual.getNombre() + "recibe 1.000.000€");
+                System.out.println("\t" + jugadorActual.getNombre() + "recibe 1.000.000€");
                 break;
-
             case 3:
                 System.out.println(cartasSuerte.get(3));
                 ArrayList<Jugador> jugadoresActivos = MonopolyETSE.menu.getJugadores();
@@ -80,58 +67,47 @@ public class CartaSuerte {
                             break;
                         }
                         j.sumarFortuna(250000);
-                        System.out.println(j.getNombre() + " ha recibido 250.000€ de " + jugadorActual.getNombre() + ".\n");  
+                        System.out.println("\t" + j.getNombre() + " ha recibido 250.000€ de " + jugadorActual.getNombre() + ".\n");
                         jugadorActual.sumarFortuna(-250000);
                     }
                 }
                 break;
-            
             case 4:
-            
                 System.out.println(cartasSuerte.get(4));
-                Casilla destino =  MonopolyETSE.tablero.avanzarCasillas(avatarActual.getCasilla(), -3);
-                avatarActual.getCasilla().eliminarAvatar(avatarActual);
-                destino.anhadirAvatar(avatarActual);
-                System.out.println(jugadorActual.getNombre() + " ha retrocedido tres casillas.\n");
-                destino.gestionarPago(jugadorActual, MonopolyETSE.tablero.getBanca(), 0);
+                avatarActual.moverAvatar(-3);
+                System.out.println("\t" + jugadorActual.getNombre() + " ha retrocedido tres casillas.\n");
+                avatarActual.getCasilla().gestionarPago(jugadorActual, MonopolyETSE.tablero.getBanca(), 0);
                 break;
-
             case 5:
                 System.out.println(cartasSuerte.get(5));
                 if(jugadorActual.getFortuna() < 150000){
-                    System.out.println("\nNo tienes suficiente dinero para pagar, debes hipotecar para continuar\n");
+                    System.out.println("\t\n*** No tienes suficiente dinero para pagar, debes hipotecar para continuar. ***");
                     break;
                 }
                 jugadorActual.sumarFortuna(-150000);
-                Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
-                parking.sumarValor(150000);
-                System.out.println(jugadorActual.getNombre() + " ha pagado una multa de 150.000€.\n");
+                System.out.println("\t" + jugadorActual.getNombre() + " ha pagado una multa de 150.000€.\n");
                 break;
-
             case 6:
                 System.out.println(cartasSuerte.get(6));
                 Casilla siguienteTransporte = null;
+                ArrayList<ArrayList<Casilla>> tablero = MonopolyETSE.tablero.getPosiciones();
+                ArrayList<Casilla> todas = new ArrayList<>(); // lista para recorrer circularmente
 
-                if(posicionActual == 7 ) {
-                    siguienteTransporte = MonopolyETSE.tablero.encontrar_casilla("Transporte2");
-                    avatarActual.getCasilla().eliminarAvatar(avatarActual);
-                    siguienteTransporte.anhadirAvatar(avatarActual);
-
-                }else if(posicionActual == 22 ) {
-                    siguienteTransporte = MonopolyETSE.tablero.encontrar_casilla("Transporte3");
-                    avatarActual.getCasilla().eliminarAvatar(avatarActual);
-                    siguienteTransporte.anhadirAvatar(avatarActual);
-                    
-
-                }else if (posicionActual == 36 ) {
-                    siguienteTransporte = MonopolyETSE.tablero.encontrar_casilla("Transporte1");
-                    jugadorActual.sumarFortuna(2000000);
-                    System.out.println(jugadorActual.getNombre() + " ha cobrado 2.000.000€ por pasar por la casilla de Salida.\n");
-                    avatarActual.getCasilla().eliminarAvatar(avatarActual);
-                    siguienteTransporte.anhadirAvatar(avatarActual);
-                } else {
-                    System.out.println("Error: La posición actual no es válida para esta carta.");
+                for (ArrayList<Casilla> calle : tablero) {
+                    todas.addAll(calle);
                 }
+                int start = todas.indexOf(avatarActual.getCasilla());
+                int n = todas.size();
+                for (int i = 1; i < n + 1; i++) {
+                    int idx = (start + i) % n;   // índice circular
+                    Casilla c = todas.get(idx);
+
+                    if (c.getTipo().equals("Transporte")) {
+                        siguienteTransporte = c;
+                        break;
+                    }
+                }
+
                 if(siguienteTransporte == null){
                     System.out.println("Error: No se ha podido encontrar la siguiente casilla de transporte.");
                 }else{
@@ -146,8 +122,15 @@ public class CartaSuerte {
                             break;
                         }
                         jugadorActual.sumarFortuna(-pago);
-                        siguienteTransporte.getDuenho().sumarFortuna(pago);
+                        Jugador duenho = siguienteTransporte.getDuenho();
+                        duenho.sumarFortuna(pago);
+                        if(duenho != MonopolyETSE.menu.getBanca()){
+                            siguienteTransporte.setRentabilidad(siguienteTransporte.getRentabilidad() + pago);
+                        }
                         System.out.println(jugadorActual.getNombre() + " ha pagado " + pago + "€ a " + siguienteTransporte.getDuenho().getNombre() + ".\n");
+                        // Actualizar estadísticas
+                        jugadorActual.agregarPagoDeAlquileres(pago);
+                        duenho.agregarCobroDeAlquileres(pago);
                         break;
                     }
 

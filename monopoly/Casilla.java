@@ -108,7 +108,7 @@ public class Casilla {
         String tipo = casilla.getTipo();
 
         switch(tipo) {
-            case "Solar": 
+            case "Solar":
             case "Transporte":
                 if(casilla.getDuenho() == banca) {
                     return actual.getFortuna() >= casilla.getValor(); // Si tiene dinero comprarla = true, else false
@@ -135,9 +135,9 @@ public class Casilla {
 
 
             case "Impuestos":   /////////////    *** esto hace que pague el impuesto, pero también permite que compre la casilla ***
-
                 float impuesto = casilla.getImpuesto();
                 return actual.getFortuna() >= impuesto; // Si tiene dinero para el impuesto = true, else false
+
             case "Comunidad", "Suerte":
                 return true; //No pasa nada, se roba carta.
             case "Especial":
@@ -166,6 +166,11 @@ public class Casilla {
     public void comprarCasilla(Jugador solicitante, Jugador banca) {
         if (solicitante.getAvatar().getLugar() != this) {
             System.out.println("\t" + Valor.RED + "Error: Debes estar sobre la casilla para comprarla." + Valor.RESET);
+            return;
+        }
+
+        if (!this.tipo.equals("Solar") && !this.tipo.equals("Servicios") && !this.tipo.equals("Transporte")) {
+            System.out.println("\t" + Valor.RED + "Error: La casilla no es adquirible." + Valor.RESET);
             return;
         }
 
@@ -321,12 +326,6 @@ public class Casilla {
      * - tirada: valor de los dados (para calcular servicios).
      */
     public void gestionarPago(Jugador jugadorActual, Jugador banca, int tirada) {
-        if (this.posicion - tirada < 0) {
-            System.out.println("\t" + jugadorActual.getNombre() + " pasa por Salida y recibe 2.000.000€");
-            jugadorActual.sumarFortuna(2000000f);
-            jugadorActual.agregarPasarPorSalida(2000000f);
-        }
-    
         boolean solvente = evaluarCasilla(jugadorActual, banca);
     
         if (!solvente) {
@@ -384,7 +383,6 @@ public class Casilla {
                     valor = 0; // Vaciar el bote
                 } else if (nombre.equals("Salida") || this.posicion - tirada < 0) {
                     System.out.println("\t" + jugadorActual.getNombre() + " cayó en la salida.");
-                    // jugadorActual.sumarFortuna(2000000f);
                 } else if (nombre.equals("IrCarcel")) {
                     jugadorActual.encarcelar();
                     jugadorActual.incrementarVecesEnCarcel();

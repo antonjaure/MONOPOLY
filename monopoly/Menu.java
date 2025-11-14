@@ -456,7 +456,7 @@ public class Menu {
                     System.out.println(jugadorActual.getNombre() + " va a la cárcel.");
 
                     Casilla carcel = tablero.encontrar_casilla("Cárcel");
-                    avatarActual.moverAvatar(tablero.getPosiciones(), carcel.getPosicion() - avatarActual.getCasilla().getPosicion());
+                    avatarActual.moverAvatar(carcel.getPosicion() - avatarActual.getCasilla().getPosicion());
                     jugadorActual.setEnCarcel(true);
                     jugadorActual.setDoblesConsecutivos(0);
                     System.out.println(tablero.toString());
@@ -471,7 +471,7 @@ public class Menu {
                 jugadorActual.setDoblesConsecutivos(0); // Reiniciar si no es doble
             }
             // Mover avatar
-            avatarActual.moverAvatar(tablero.getPosiciones(), valorTirada);
+            avatarActual.moverAvatar(valorTirada);
 
             if (forzado) break;
             if (dado1Val != dado2Val) volverATirar = false; // No seguir tirando si no es doble
@@ -488,7 +488,7 @@ public class Menu {
         destino.incrementarFrecuencia();
         if (destino.getNombre().equals("IrCarcel")) {
             Casilla carcel = tablero.encontrar_casilla("Cárcel");
-            avatarActual.moverAvatar(tablero.getPosiciones(), carcel.getPosicion() - destino.getPosicion());
+            avatarActual.moverAvatar(carcel.getPosicion() - destino.getPosicion());
             jugadorActual.setEnCarcel(true);
 
             jugadorActual.setDoblesConsecutivos(0);
@@ -589,7 +589,7 @@ public class Menu {
                 System.out.println(jugador.getNombre() + " ha sacado dobles y sale de la cárcel. Avanza " + valorTirada + " casillas.\n");
                 jugador.setEnCarcel(false);
                 jugador.setTiradasCarcel(0);
-                jugador.getAvatar().moverAvatar(tablero.getPosiciones(), valorTirada);
+                jugador.getAvatar().moverAvatar(valorTirada);
             } else {
                 System.out.println(jugador.getNombre() + " no ha sacado dobles y permanece en la cárcel.\n");
                 acabarTurno();
@@ -786,7 +786,7 @@ public class Menu {
 
     public void analizarArchivo(String[] args) {
         if (args.length != 1) {
-            System.out.println("*** Argumentos incorrectos. ***");
+            System.out.println("*** No se ha podido leer el archivo. ***");
             System.out.println("Uso: java <ejecutable> <nombre archivo>");
             return;
         }
