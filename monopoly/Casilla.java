@@ -333,6 +333,10 @@ public class Casilla {
             // Avisar que debe hipotecar o declararse en bancarrota
             return;
         }
+        if (this.duenho == jugadorActual) {
+            System.out.println("\tEsta casilla te pertenece.");
+            return;
+        }
     
         // Casillas con dueño distinto al jugador actual
         switch (tipo) {
@@ -368,8 +372,8 @@ public class Casilla {
                 // Actualizar estadísticas
                 jugadorActual.agregarPagoDeAlquileres(cantidad);
                 duenho.agregarCobroDeAlquileres(cantidad);
-                // Casillas sin dueño (o de la banca)
             }
+            // Casillas sin dueño (o de la banca)
             case "Impuestos" -> {
                 float cantidad = this.impuesto;
                 jugadorActual.sumarFortuna(-cantidad);
@@ -531,6 +535,7 @@ public class Casilla {
         int tamGrupo = grupo.numCasillas();
         ArrayList<Casilla> prop = propietario.getPropiedades();
         int count = 0;
+        // se comprueba si todo el grupo es del mismo jugador
         for (Casilla casilla : prop) {
             if (casilla.getGrupo() == grupo) {
                 count += 1;
@@ -541,7 +546,7 @@ public class Casilla {
             return;
         }
         if (edificios == null) edificios = new ArrayList<>();
-
+        // se distingue el tipo de edificio
         switch (tipo) {
             case "casa":
                 if (this.valores.get("casa") > propietario.getFortuna()) {
@@ -549,11 +554,13 @@ public class Casilla {
                     return;
                 }
                 if (!construirCasa()) return;
-                String Cnom = "casa-" + (MonopolyETSE.tablero.getCasas().size()+1);
+                String Cnom = "casa-" + (MonopolyETSE.tablero.getCasas().size()+1); // id de la casa
                 Edificio casa = new Edificio(Cnom, this, tipo);
                 Jugador actual1 = this.avatares.getLast().getJugador();
+                // se paga la casa
                 actual1.sumarFortuna(-getValorCasa());
                 actual1.agregarDineroInvertido(getValorCasa());
+                // se contruye la casa
                 edificios.add(casa);
                 this.impuesto += getAlquilerCasa();
                 MonopolyETSE.tablero.getCasas().add(casa);
@@ -564,15 +571,14 @@ public class Casilla {
                     return;
                 }
                 if (!construirHotel()) return;
-                String Hnom = "hotel-" + (MonopolyETSE.tablero.getHoteles().size()+1);
+                String Hnom = "hotel-" + (MonopolyETSE.tablero.getHoteles().size()+1); // id del hotel
                 Edificio hotel = new Edificio(Hnom, this, tipo);
                 Jugador actual2 = this.avatares.getLast().getJugador();
+                // paga el hotel
                 actual2.sumarFortuna(-getValorHotel());
                 actual2.agregarDineroInvertido(getValorHotel());
+
                 // se sustituyen las casas por el hotel
-                edificios.add(hotel);
-                this.impuesto += getAlquilerHotel();
-                MonopolyETSE.tablero.getHoteles().add(hotel);
                 Iterator<Edificio> it = edificios.iterator();
                 while (it.hasNext()) {
                     Edificio ed = it.next();
@@ -581,7 +587,11 @@ public class Casilla {
                         MonopolyETSE.tablero.getCasas().remove(ed);
                     }
                 }
-
+                this.impuesto -= getAlquilerCasa() * 4;
+                // se construye el hotel
+                edificios.add(hotel);
+                MonopolyETSE.tablero.getHoteles().add(hotel);
+                this.impuesto += getAlquilerHotel();
                 break;
             case "piscina":
                 if (this.valores.get("piscina") > propietario.getFortuna()) {
@@ -589,11 +599,13 @@ public class Casilla {
                     return;
                 }
                 if (!construirPiscina()) return;
-                String Pnom = "piscina-" + (MonopolyETSE.tablero.getPiscinas().size()+1);
+                String Pnom = "piscina-" + (MonopolyETSE.tablero.getPiscinas().size()+1); // id de la piscina
                 Edificio piscina = new Edificio(Pnom, this, tipo);
                 Jugador actual3 = this.avatares.getLast().getJugador();
+                // se paga la piscina
                 actual3.sumarFortuna(-getValorPiscina());
-                actual3.agregarDineroInvertido(getValorPiscina()); 
+                actual3.agregarDineroInvertido(getValorPiscina());
+                // se construye la piscina
                 edificios.add(piscina);
                 this.impuesto += getAlquilerPiscina();
                 MonopolyETSE.tablero.getPiscinas().add(piscina);
@@ -604,11 +616,13 @@ public class Casilla {
                     return;
                 }
                 if (!construirPista()) return;
-                String Pinom = "pista-" + (MonopolyETSE.tablero.getPistas().size()+1);
+                String Pinom = "pista-" + (MonopolyETSE.tablero.getPistas().size()+1); // id de la pista
                 Edificio pista = new Edificio(Pinom, this, tipo);
                 Jugador actual4 = this.avatares.getLast().getJugador();
+                // se paga la pista
                 actual4.sumarFortuna(-getValorPista());
                 actual4.agregarDineroInvertido(getValorPista());
+                // se construye la pista
                 edificios.add(pista);
                 this.impuesto += getAlquilerPista();
                 MonopolyETSE.tablero.getPistas().add(pista);
