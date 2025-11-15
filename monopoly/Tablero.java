@@ -269,17 +269,24 @@ public class Tablero {
                 String linea = "";
                 String lineaVacia = " ".repeat(lenCasilla/2);
                 for (int j = 0; j < columnas; j++) {
-                    String[] contenidoCasilla = matrizTablero[i][j].split(";");
+                    String[] contenidoCasilla = matrizTablero[i][j].split(";"); // separamos el avatar
+
                     String calle = contenidoCasilla[0];
 
                     // Al dividir la cadena hay que volver a formatear el color
                     String color = "";
-                    boolean solar = calle.startsWith("\u001B[");
+                    boolean solar = calle.contains("\u001B[");
                     if (solar) {
                         color = calle.substring(0, calle.indexOf('m') + 1);
                         calle = calle.substring(calle.indexOf('m') + 1, calle.length() - 4);
                     }
+                    // añadimos la posicion al nombre
+                    if (!calle.equals(vacio)) {
+                        int posCasilla = encontrar_casilla(calle).getPosicion();
+                        calle = "(" + posCasilla + ") " + calle;
+                    }
 
+                    // dividimos en dos líneas
                     String[] lineasDiv = splitByWords(calle, lenCasilla/2);
 
                     String avatar = "";
@@ -287,7 +294,7 @@ public class Tablero {
                         int lenAv = contenidoCasilla[1].length();
                         avatar = "\033[1m" + contenidoCasilla[1] + "\033[22m";
 
-                        // Calcula cuántos espacios poner entre base y el texto añadido
+                        // Calcula cuántos espacios poner entre base y los avatares
                         int margen = 1;
                         lineasDiv[1] = lineasDiv[1].trim(); // quita espacios sobrantes
                         int espacios = lenCasilla/2 - lineasDiv[1].length() - lenAv - margen;
@@ -295,12 +302,12 @@ public class Tablero {
 
                         lineasDiv[1] = lineasDiv[1] + " ".repeat(espacios) + avatar + " ".repeat(margen);
                     }
-
+                    // añadimos los colores con las líneas ya separadas
                     if (solar) {
                         lineasDiv[0] = color + lineasDiv[0] + Valor.RESET;
                         lineasDiv[1] = color + lineasDiv[1] + Valor.RESET;
                     }
-
+                    // diferenciamos entre las dos líneas de una misma casilla
                     if (k == 0) linea = lineasDiv[0];
                     else linea =  lineasDiv[1];
 
