@@ -555,7 +555,7 @@ public class Casilla {
                 }
                 if (!construirCasa()) return;
                 String Cnom = "casa-" + (MonopolyETSE.tablero.getCasas().size()+1); // id de la casa
-                Edificio casa = new Edificio(Cnom, this, tipo);
+                Edificio casa = new Edificio(Cnom, this, tipo, getValorCasa(), getAlquilerCasa());
                 Jugador actual1 = this.avatares.getLast().getJugador();
                 // se paga la casa
                 actual1.sumarFortuna(-getValorCasa());
@@ -572,7 +572,7 @@ public class Casilla {
                 }
                 if (!construirHotel()) return;
                 String Hnom = "hotel-" + (MonopolyETSE.tablero.getHoteles().size()+1); // id del hotel
-                Edificio hotel = new Edificio(Hnom, this, tipo);
+                Edificio hotel = new Edificio(Hnom, this, tipo, getValorHotel(), getAlquilerHotel());
                 Jugador actual2 = this.avatares.getLast().getJugador();
                 // paga el hotel
                 actual2.sumarFortuna(-getValorHotel());
@@ -600,7 +600,7 @@ public class Casilla {
                 }
                 if (!construirPiscina()) return;
                 String Pnom = "piscina-" + (MonopolyETSE.tablero.getPiscinas().size()+1); // id de la piscina
-                Edificio piscina = new Edificio(Pnom, this, tipo);
+                Edificio piscina = new Edificio(Pnom, this, tipo, getValorPiscina(), getAlquilerPiscina());
                 Jugador actual3 = this.avatares.getLast().getJugador();
                 // se paga la piscina
                 actual3.sumarFortuna(-getValorPiscina());
@@ -617,7 +617,7 @@ public class Casilla {
                 }
                 if (!construirPista()) return;
                 String Pinom = "pista-" + (MonopolyETSE.tablero.getPistas().size()+1); // id de la pista
-                Edificio pista = new Edificio(Pinom, this, tipo);
+                Edificio pista = new Edificio(Pinom, this, tipo, getValorPista(), getAlquilerPista());
                 Jugador actual4 = this.avatares.getLast().getJugador();
                 // se paga la pista
                 actual4.sumarFortuna(-getValorPista());

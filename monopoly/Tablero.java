@@ -536,11 +536,6 @@ public class Tablero {
                 jugadorEnCabeza = jugador;
             }
         }
-
-
-
-
-        
     }
 
 

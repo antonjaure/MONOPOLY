@@ -696,7 +696,7 @@ public class Menu {
             System.out.println("\tpropietario: " + ed.getCasilla().getDuenho().getNombre());
             System.out.println("\tcasilla:  " + ed.getCasilla().getNombre());
             System.out.println("\tgrupo: " + ed.getCasilla().getGrupo().getCodigoColor() + ed.getCasilla().getGrupo().getColorGrupo() + Valor.RESET);
-            System.out.println("\tcoste: " + ed.getCoste());
+            System.out.println("\tcoste: " + ed.getCasilla().getValor());
             System.out.println("}\n{");
         }
 
@@ -705,7 +705,7 @@ public class Menu {
             System.out.println("\tpropietario: " + ed.getCasilla().getDuenho().getNombre());
             System.out.println("\tcasilla:  " + ed.getCasilla().getNombre());
             System.out.println("\tgrupo: " + ed.getCasilla().getGrupo().getCodigoColor() + ed.getCasilla().getGrupo().getColorGrupo() + Valor.RESET);
-            System.out.println("\tcoste: " + ed.getCoste());
+            System.out.println("\tcoste: " + ed.getCasilla().getValor());
             System.out.println("}\n{");
         }
 
@@ -714,7 +714,7 @@ public class Menu {
             System.out.println("\tpropietario: " + ed.getCasilla().getDuenho().getNombre());
             System.out.println("\tcasilla:  " + ed.getCasilla().getNombre());
             System.out.println("\tgrupo: " + ed.getCasilla().getGrupo().getCodigoColor() + ed.getCasilla().getGrupo().getColorGrupo() + Valor.RESET);
-            System.out.println("\tcoste: " + ed.getCoste());
+            System.out.println("\tcoste: " + ed.getCasilla().getValor());
             System.out.println("}\n{");
         }
 
@@ -723,17 +723,33 @@ public class Menu {
             System.out.println("\tpropietario: " + ed.getCasilla().getDuenho().getNombre());
             System.out.println("\tcasilla:  " + ed.getCasilla().getNombre());
             System.out.println("\tgrupo: " + ed.getCasilla().getGrupo().getCodigoColor() + ed.getCasilla().getGrupo().getColorGrupo() + Valor.RESET);
-            System.out.println("\tcoste: " + ed.getCoste());
-            System.out.println("}\n{");
+            System.out.println("\tcoste: " + ed.getCasilla().getValor());
+            System.out.println("}\n");
         }
     }
 
     private void listarEdificios(Grupo g) {
+        if (jugadores == null) {
+            System.out.println("\t*** No hay jugadores registrados. ***");
+            System.out.println("}\n");
+            return;
+        }
+        if (!g.esDuenhoGrupo(jugadores.get(turno))) {
+            System.out.println("\t*** Nadie tiene el grupo completo en posesión. ***");
+            System.out.println("}\n");
+            return;
+        }
+
         ArrayList<String > casas = new ArrayList<>();
         ArrayList<String > hoteles = new ArrayList<>();
         ArrayList<String > piscinas = new ArrayList<>();
         ArrayList<String > pistas = new ArrayList<>();
         ArrayList<Casilla> casillas = g.getMiembros();
+        int numCasas = 0;
+        int numHoteles = 0;
+        int numPiscinas = 0;
+        int numPistas = 0;
+        int hotelesDisponibles = 0;
 
         for (Casilla cas : casillas) {
             for (Edificio ed : cas.getEdificios()) {
@@ -758,34 +774,34 @@ public class Menu {
             System.out.println("\tpistas de deporte: " + pistas);
             System.out.println("\timpuesto: " + cas.getImpuesto());
 
-            int numCasas = casas.size();
-            int numHoteles = hoteles.size();
-            int numPiscinas = piscinas.size();
-            int numPistas = pistas.size();
+            numCasas += casas.size();
+            numHoteles += hoteles.size();
+            numPiscinas += piscinas.size();
+            numPistas += pistas.size();
 
-            if (numPistas > 0) {
-                System.out.println("\tYa no se pueden construir más edificios.");
-            }
-            else if (numPiscinas > 0) {
-                System.out.println("\tAún se puede construir 1 pista de deporte. Ya no se pueden construir más casas, hoteles o piscinas.");
-            }
-            else if (numHoteles > 0) {
-                System.out.println("\tAún se pueden construir 1 piscina y 1 pista de deporte. Ya no se pueden construir más casas ni hoteles.");
-            }
-            else {
-                if (numCasas == 4) {
-                    System.out.println("\tAún se pueden construir 1 hotel, 1 piscina y 1 pista de deporte. Ya no se pueden construir más casas.");
-                } else {
-                    System.out.println("\tAún se pueden construir " + (4 - numCasas) + " casas.");
-                }
-            }
+            if (casas.size() == 4) hotelesDisponibles++;
 
-            System.out.println("}\n{");
+            System.out.println("},\n{");
             casas.clear();
             hoteles.clear();
             piscinas.clear();
             pistas.clear();
         }
+
+        System.out.println("\tAun puedes construír:");
+        if (numCasas + 4*numHoteles < 4 * g.getMiembros().size()) {
+            System.out.println("\t\t-> " + ((4 * g.getMiembros().size() - numCasas) - 4*numHoteles) + " casas");
+        }
+        if (numHoteles < g.getMiembros().size()) {
+            System.out.println("\t\t-> " + (g.getMiembros().size() - numHoteles) + " hoteles (" + hotelesDisponibles + " disponibles)");
+        }
+        if (numPiscinas < g.getMiembros().size()) {
+            System.out.println("\t\t-> " + (g.getMiembros().size() - numPiscinas) + " piscinas (" + numHoteles + " disponibles)");
+        }
+        if (numPistas < g.getMiembros().size()) {
+            System.out.println("\t\t-> " + (g.getMiembros().size() - numPistas) + " pistas (" + numPiscinas + " disponibles)");
+        }
+        System.out.println("}\n");
     }
 
     // Metodo que realiza las acciones asociadas al comando 'acabar turno'.

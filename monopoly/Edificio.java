@@ -4,10 +4,10 @@ public class Edificio {
     private String nombre;
     private Casilla terreno;
     private String tipo;
-    private int coste;
-    private int alquiler;
+    private float coste;
+    private float alquiler;
 
-    public Edificio(String nombre, Casilla terreno, String tipo) {
+    public Edificio(String nombre, Casilla terreno, String tipo, float coste, float alquiler) {
         this.nombre = nombre;
         this.terreno = terreno;
         this.tipo = tipo;
@@ -29,19 +29,19 @@ public class Edificio {
         this.terreno = terreno;
     }
 
-    public int getAlquiler() {
+    public float getAlquiler() {
         return alquiler;
     }
 
-    public void setAlquiler(int alquiler) {
+    public void setAlquiler(float alquiler) {
         this.alquiler = alquiler;
     }
 
-    public int getCoste() {
+    public float getCoste() {
         return coste;
     }
 
-    public void setCoste(int coste) {
+    public void setCoste(float coste) {
         this.coste = coste;
     }
 
