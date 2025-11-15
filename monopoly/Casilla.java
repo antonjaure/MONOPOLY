@@ -337,7 +337,12 @@ public class Casilla {
         // Casillas con dueño distinto al jugador actual
         switch (tipo) {
             case "Solar", "Transporte", "Servicios" -> {
-
+                // Si la propiedad está hipotecada, no se cobra alquiler
+                if (!puedeCobrarAlquiler) {
+                    System.out.println("\tLa propiedad está hipotecada. No se cobra alquiler.");
+                    return;
+                }
+                
                 if (this.duenho == MonopolyETSE.menu.getBanca()) {
                     System.out.println("\tCasilla en venta.");
                     return;
