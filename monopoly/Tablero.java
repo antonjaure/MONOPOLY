@@ -2,6 +2,8 @@ package monopoly;
 
 import partida.*;
 
+import static monopoly.MonopolyETSE.tablero;
+
 import java.util.*;
 
 
@@ -499,8 +501,8 @@ public class Tablero {
     public void estadisticas() {
 
 
-        Casilla casillaMasRentable = null;
-        Casilla casillaMasFrecuentada = null;
+        Casilla casillaMasRentable = encontrar_casilla("Solar1");
+        Casilla casillaMasFrecuentada = encontrar_casilla("Solar1");
         Grupo grupoMasRentable = null;
         Jugador jugadorMasVueltas = null;
         Jugador jugadorEnCabeza = null;
@@ -508,6 +510,7 @@ public class Tablero {
         for (ArrayList<Casilla> fila : posiciones) {
             for (Casilla c : fila) {
                 if (c.getTipo().equals("Solar")) {
+
                     if (c.getRentabilidad() > casillaMasRentable.getRentabilidad()) {
                         casillaMasRentable = c;
                     }
@@ -523,12 +526,23 @@ public class Tablero {
             for (Casilla c : grupo.getMiembros()) {
                 grupo.setRentabilidad(grupo.getRentabilidad() + c.getRentabilidad());
             }
+            if(grupoMasRentable == null) {
+                //Inicializamos las variables en la primera iteración para poder usar los metodos sin errores.
+                grupoMasRentable = grupo;
+            }
             if (grupo.getRentabilidad() > grupoMasRentable.getRentabilidad()) {
                 grupoMasRentable = grupo;
             }
         }
 
         for (Jugador jugador : MonopolyETSE.menu.getJugadores()) {
+
+            if(jugadorMasVueltas == null || jugadorEnCabeza == null) {
+                //Inicializamos las variables en la primera iteración para poder usar los metodos sin errores.
+                jugadorMasVueltas = jugador;
+                jugadorEnCabeza = jugador;
+            }
+            
             if(jugador.getVueltas() > jugadorMasVueltas.getVueltas()) {
                 jugadorMasVueltas = jugador;
             }

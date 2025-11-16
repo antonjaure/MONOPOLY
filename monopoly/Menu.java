@@ -552,6 +552,10 @@ public class Menu {
             return;
         }
         Casilla c = tablero.encontrar_casilla(nombre);
+        if(c==null) {
+            System.out.println("\t*** La casilla " + nombre + " no existe. ***");
+            return;
+        }
         Jugador jActual = jugadores.get(turno % jugadores.size());
         c.comprarCasilla(jActual, banca);
     }
