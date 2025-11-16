@@ -106,6 +106,8 @@ public class Jugador {
 
     //Método para añadir fortuna a un jugador
     //Como parámetro se pide el valor a añadir. Si hay que restar fortuna, se pasaría un valor negativo.
+
+    //////////////  FALTA COMPROBAR CUANDO EL VALOR ES NEGATIVO(hay que pagar) SI EL JUGADOR PUEDE PAGAR Y DARLE LA OPCION DE VENDER, HIPOTECAR, ETC.
     public void sumarFortuna(float valor) {
         this.fortuna += valor;
         if(valor < 0) {
@@ -133,7 +135,7 @@ public class Jugador {
         this.setEnCarcel(true);
         this.setTiradasCarcel(0);
 
-        System.out.println(this.getNombre() + " ha sido enviado a la cárcel.\n");
+        System.out.println("\t" + this.getNombre() + " ha sido enviado a la cárcel.");
     }
 
     // Metodo para encontrar un jugador de la lista de jugadores activos
