@@ -705,14 +705,25 @@ public class Casilla {
             Scanner sc = new Scanner(System.in);
             System.out.println("\t¿Quieres vender los edificios ahora? (s/n)");
             String respuesta = sc.nextLine();
+        
             if (respuesta.equalsIgnoreCase("s")) {
-                venderEdificio(respuesta, posicion); // Método para vender edificios
-                this.edificios.clear(); // Por seguridad
+        
+                while (!this.edificios.isEmpty()) {
+                    System.out.println("\t¿Qué edificio quieres vender? (casa / hotel / piscina / pista)");
+                    String tipo = sc.nextLine().toLowerCase();
+        
+                    System.out.println("\t¿Cuántos quieres vender?");
+                    int cantidad = Integer.parseInt(sc.nextLine());
+        
+                    this.venderEdificio(tipo, cantidad);
+                }
+        
             } else {
                 System.out.println("\t" + Valor.RED + "No se han vendido los edificios. No se puede hipotecar la casilla." + Valor.RESET);
                 return;
             }
         }
+        
     
         // Hipotecar
         this.hipotecada = true; // Marca la casilla como hipotecada
