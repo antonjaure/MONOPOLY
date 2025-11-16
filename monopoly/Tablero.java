@@ -550,6 +550,15 @@ public class Tablero {
                 jugadorEnCabeza = jugador;
             }
         }
+
+        System.out.println("\tcasillaMasRentable: " + casillaMasRentable.getNombre());
+        System.out.println("\tgrupoMasRentable: " + grupoMasRentable.getColorGrupo());
+        System.out.println("\tcasillaMasFrecuentada: " + casillaMasFrecuentada.getNombre());
+        System.out.println("\tjugadorMasVueltas: " + jugadorMasVueltas.getNombre());
+        System.out.println("\tjugadorEnCabeza: " + jugadorEnCabeza.getNombre() + "\n");
+        System.out.println("}");
+        
+        return;
     }
 
 

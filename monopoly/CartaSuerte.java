@@ -43,19 +43,23 @@ public class CartaSuerte {
         switch(id){
             case 0:
                 System.out.println(cartasSuerte.get(0));
-                System.out.println("\t" + jugadorActual + "avanzó hasta Solar19");
+                System.out.println("\t" + jugadorActual.getNombre() + " avanzó hasta Solar19");
                 int tirada = MonopolyETSE.tablero.encontrar_casilla("Solar19").getPosicion() - avatarActual.getCasilla().getPosicion();
+                if(tirada < 0){
+                    tirada += 40; // para que sea positivo y tenga en cuenta que ha pasado por salida
+                }
                 avatarActual.moverAvatar(tirada); // usamos la version con tirada en lugar de con el nombre de la casilla, asi tenemos en cuenta si pasa por la casilla
                 avatarActual.getCasilla().gestionarPago(jugadorActual, MonopolyETSE.menu.getBanca(), 0);
                 break;
             case 1:
                 System.out.println(cartasSuerte.get(1));
                 jugadorActual.encarcelar();
+                jugadorActual.incrementarVecesEnCarcel();
                 break;
             case 2:
                 System.out.println(cartasSuerte.get(2));
                 jugadorActual.sumarFortuna(1000000);
-                System.out.println("\t" + jugadorActual.getNombre() + "recibe 1.000.000€");
+                System.out.println("\t" + jugadorActual.getNombre() + " recibe 1.000.000€");
                 break;
             case 3:
                 System.out.println(cartasSuerte.get(3));
@@ -88,7 +92,7 @@ public class CartaSuerte {
                 System.out.println("\t" + jugadorActual.getNombre() + " ha pagado una multa de 150.000€.\n");
                 break;
             case 6:
-                System.out.println(cartasSuerte.get(6));
+                /*System.out.println(cartasSuerte.get(6));
                 Casilla siguienteTransporte = null;
                 ArrayList<ArrayList<Casilla>> tablero = MonopolyETSE.tablero.getPosiciones();
                 ArrayList<Casilla> todas = new ArrayList<>(); // lista para recorrer circularmente
@@ -96,18 +100,37 @@ public class CartaSuerte {
                 for (ArrayList<Casilla> calle : tablero) {
                     todas.addAll(calle);
                 }
-                int start = todas.indexOf(avatarActual.getCasilla());
+                int inicio = todas.indexOf(avatarActual.getCasilla());
                 int n = todas.size();
                 for (int i = 1; i < n + 1; i++) {
-                    int idx = (start + i) % n;   // índice circular
+                    int idx = (inicio + i) % n;   // índice circular
                     Casilla c = todas.get(idx);
 
                     if (c.getTipo().equals("Transporte")) {
                         siguienteTransporte = c;
                         break;
                     }
-                }
+                }*/
 
+                System.out.println(cartasSuerte.get(6));
+                Casilla siguienteTransporte = null;
+                ArrayList<ArrayList<Casilla>> tablero = MonopolyETSE.tablero.getPosiciones();
+
+                //Calculamos la siguiente casilla de transporte con ifs
+                if(posicionActual == 7){
+                    siguienteTransporte = MonopolyETSE.tablero.encontrar_casilla("Trans2");
+                    avatarActual.moverAvatar(siguienteTransporte.getPosicion() - posicionActual);
+
+                }
+                else if(posicionActual == 22){
+                    siguienteTransporte = MonopolyETSE.tablero.encontrar_casilla("Trans3");
+                    avatarActual.moverAvatar(siguienteTransporte.getPosicion() - posicionActual);
+                }
+                else if(posicionActual == 36){
+                    siguienteTransporte = MonopolyETSE.tablero.encontrar_casilla("Trans1");
+                    avatarActual.moverAvatar(siguienteTransporte.getPosicion() - posicionActual);
+                }
+                
                 if(siguienteTransporte == null){
                     System.out.println("Error: No se ha podido encontrar la siguiente casilla de transporte.");
                 }else{

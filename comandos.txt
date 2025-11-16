@@ -1,7 +1,9 @@
-crear jugador Adrian pelota
-lanzar dados 1+0
-comprar Solar1
-edificar casa
-edificar hotel
-edificar piscina
-edificar pista
+crear jugador Anton coche
+lanzar dados 7+0
+lanzar dados 4+0
+salir carcel
+lanzar dados 12+0
+lanzar dados 14+0
+lanzar dados 11+0
+lanzar dados 3+0
+lanzar dados 15+0

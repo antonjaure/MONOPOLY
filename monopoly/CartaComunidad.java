@@ -45,6 +45,7 @@ public class CartaComunidad {
             case 1:
                 System.out.println(cartasComunidad.get(1));
                 jugadorActual.encarcelar();
+                jugadorActual.incrementarVecesEnCarcel();
                 break;
             case 2:
                 System.out.println(cartasComunidad.get(2));
@@ -55,17 +56,17 @@ public class CartaComunidad {
             case 3:
                 System.out.println(cartasComunidad.get(3));
                 jugadorActual.sumarFortuna(500000);
-                System.out.println("\t" + jugadorActual.getNombre() + "recibe 500.000€");
+                System.out.println("\t" + jugadorActual.getNombre() + " recibe 500.000€");
                 break;
             case 4:
                 System.out.println(cartasComunidad.get(4));
                 avatarActual.moverAvatar("Solar1");
-                System.out.println("\t" + jugadorActual + "retrocedió hasta Solar1");
+                System.out.println("\t" + jugadorActual.getNombre() + "retrocedió hasta Solar1");
                 avatarActual.getCasilla().gestionarPago(jugadorActual, MonopolyETSE.menu.getBanca(), 0);
                 break;
             case 5:
                 System.out.println(cartasComunidad.get(5));
-                System.out.println("\t" + jugadorActual + "avanzó hasta Solar20");
+                System.out.println("\t" + jugadorActual.getNombre() + " avanzó hasta Solar20");
                 int tirada = MonopolyETSE.tablero.encontrar_casilla("Solar20").getPosicion() - avatarActual.getCasilla().getPosicion();
                 avatarActual.moverAvatar(tirada); // usamos la version con tirada en lugar de con el nombre de la casilla, asi tenemos en cuenta si pasa por la casilla
                 avatarActual.getCasilla().gestionarPago(jugadorActual, MonopolyETSE.menu.getBanca(), 0);
