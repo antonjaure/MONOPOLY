@@ -368,7 +368,7 @@ public class Casilla {
                 if(duenho != MonopolyETSE.menu.getBanca()){
                     rentabilidad += cantidad;
                 }
-                System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ a " + duenho.getNombre());
+                System.out.println("\t" + jugadorActual.getNombre() + " paga "+ String.format("%.0f", cantidad) + "€ a " + duenho.getNombre());
                 // Actualizar estadísticas
                 jugadorActual.agregarPagoDeAlquileres(cantidad);
                 duenho.agregarCobroDeAlquileres(cantidad);
@@ -742,7 +742,7 @@ public class Casilla {
         // Hipotecar
         this.hipotecada = true; // Marca la casilla como hipotecada
         this.puedeCobrarAlquiler = false; // Bloquear alquileres
-        jugadorActual.sumarFortuna(this.hipoteca); // Entregar dinero
+        jugadorActual.sumarFortuna(this.hipoteca/2); // Entregar dinero
         System.out.println("\t" + Valor.GREEN + "Casilla hipotecada con éxito. Se han recibido " + this.hipoteca + "€." + Valor.RESET);
     }
 
@@ -769,7 +769,7 @@ public class Casilla {
         // Deshipotecar
         this.hipotecada = false; // Marca la casilla como no hipotecada
         this.puedeCobrarAlquiler = true; // Permitir alquileres
-        jugadorActual.sumarFortuna(-costoDeshipotecar); // Cobrar al jugador
+        jugadorActual.sumarFortuna(-costoDeshipotecar/2); // Cobrar al jugador
         System.out.println("\t" + Valor.GREEN + "Casilla deshipotecada con éxito. Se han pagado " + costoDeshipotecar + "€." + Valor.RESET);
     }
     

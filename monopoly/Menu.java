@@ -534,7 +534,7 @@ public class Menu {
 
         // Mostrar tablero actualizado
         try {
-            Thread.sleep(2000); // pausa de 2 segundos
+            Thread.sleep(100); // pausa de 2 segundos
         } catch (InterruptedException e) {
         }
         System.out.println(tablero.toString());

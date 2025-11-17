@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class CartaComunidad {
         public ArrayList<String> cartasComunidad;
+        int contador = 0;
 
         public CartaComunidad() {
         cartasComunidad = new ArrayList<>();
@@ -16,6 +17,8 @@ public class CartaComunidad {
         cartasComunidad.add("\tDevolución de Hacienda. Cobra 500.000€.");
         cartasComunidad.add("\tRetrocede hasta Solar1 para comprar antigüedades exóticas.");
         cartasComunidad.add("\tVe a Solar20 para disfrutar del San Fermín. Si pasas por la casilla de Salida, cobra 2.000.000€.");
+
+        this.contador = 0;
     }
 
      public void sacarCartaComunidad() {
@@ -25,7 +28,9 @@ public class CartaComunidad {
         ArrayList<Jugador> jugadores = MonopolyETSE.menu.getJugadores();
         Jugador jugadorActual = jugadores.get(turno % jugadores.size());
         Avatar avatarActual = jugadorActual.getAvatar();
-        int id = jugadorActual.getCartaComunidadId();
+        //int id = jugadorActual.getCartaComunidadId();
+
+        int id = this.contador;
 
 
         if (id >= cartasComunidad.size()) {
@@ -78,7 +83,8 @@ public class CartaComunidad {
                 
         }
         //ACTUALIZAMOS EL ID DE LA CARTA DE COMUNIDAD DEL JUGADOR
-        jugadorActual.setCartaComunidadId(id + 1);
+        // jugadorActual.setCartaComunidadId(id + 1);
+        this.contador += 1;
     }
 }
 

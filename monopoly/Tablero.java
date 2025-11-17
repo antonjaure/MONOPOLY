@@ -16,6 +16,8 @@ public class Tablero {
     private ArrayList<Edificio> pistas;
     private HashMap<String, Grupo> grupos; //Grupos del tablero, almacenados como un HashMap con clave String (será el color del grupo).
     private Jugador banca; //Un jugador que será la banca.
+    private int contadorCartaSuerte = 0;
+    private int contadorCartaComunidad = 0;
 
 
     public ArrayList<Edificio> getCasas() {
@@ -26,6 +28,22 @@ public class Tablero {
     public ArrayList<Edificio> getHoteles() {
         if (hoteles == null) hoteles = new ArrayList<>();
         return hoteles;
+    }
+
+    public int getContadorCartaSuerte() {
+        return contadorCartaSuerte;
+    }
+
+    public void incrementarContadorCartaSuerte() {
+        this.contadorCartaSuerte++;
+    }
+
+    public int getContadorCartaComunidad() {
+        return contadorCartaComunidad;
+    }
+
+    public void incrementarContadorCartaComunidad() {
+        this.contadorCartaComunidad++;
     }
 
     public ArrayList<Edificio> getPiscinas() {

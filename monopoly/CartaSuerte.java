@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class CartaSuerte {
     private ArrayList<String> cartasSuerte;
+    int contador = 0;
     
 
 
@@ -22,6 +23,8 @@ public class CartaSuerte {
         cartasSuerte.add("¡Hora punta de tráfico! Retrocede tres casillas.");
         cartasSuerte.add("Te multan por usar el móvil mientras conduces. Paga 150.000€.");
         cartasSuerte.add("Avanza hasta la casilla de transporte más cercana. Si no tiene dueño, puedes comprarla. Si tiene dueño, paga al dueño el doble de la operación indicada.");
+
+        this.contador = 0;
     }
 
     public void sacarCartaSuerte() {
@@ -32,7 +35,8 @@ public class CartaSuerte {
         Jugador jugadorActual = jugadores.get(turno % jugadores.size());
         Avatar avatarActual = jugadorActual.getAvatar();
         int posicionActual = avatarActual.getCasilla().getPosicion();
-        int id = jugadorActual.getCartaSuerteId();
+        //int id = jugadorActual.getCartaSuerteId();
+        int id = this.contador;
 
 
         if (id >= cartasSuerte.size()) {
@@ -166,7 +170,8 @@ public class CartaSuerte {
         }
         
         //ACTUALIZAMOS EL ID DE LA CARTA DE SUERTE DEL JUGADOR
-        jugadorActual.setCartaSuerteId(id + 1);
+        //jugadorActual.setCartaSuerteId(id + 1);
+        this.contador += 1;
         return;
     }
 }
