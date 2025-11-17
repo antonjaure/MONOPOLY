@@ -41,6 +41,9 @@ public class CartaComunidad {
                     break;
                 }
                 jugadorActual.sumarFortuna(-500000);
+                jugadorActual.agregarPagoTasasEImpuestos(500000);
+                Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
+                parking.sumarValor(500000);
                 break;
             case 1:
                 System.out.println(cartasComunidad.get(1));
@@ -50,12 +53,13 @@ public class CartaComunidad {
             case 2:
                 System.out.println(cartasComunidad.get(2));
                 avatarActual.moverAvatar("Salida");
-                jugadorActual.sumarFortuna(2000000);
+                jugadorActual.sumarFortuna(2000000);                
                 System.out.println("\t" + jugadorActual.getNombre() + " ha cobrado 2.000.000€ por pasar por la casilla de Salida.");
                 break;
             case 3:
                 System.out.println(cartasComunidad.get(3));
                 jugadorActual.sumarFortuna(500000);
+                jugadorActual.agregarPremiosInversionesOBote(500000);
                 System.out.println("\t" + jugadorActual.getNombre() + " recibe 500.000€");
                 break;
             case 4:

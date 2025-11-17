@@ -60,6 +60,7 @@ public class CartaSuerte {
                 System.out.println(cartasSuerte.get(2));
                 jugadorActual.sumarFortuna(1000000);
                 System.out.println("\t" + jugadorActual.getNombre() + " recibe 1.000.000€");
+                jugadorActual.agregarPremiosInversionesOBote(1000000f);
                 break;
             case 3:
                 System.out.println(cartasSuerte.get(3));
@@ -89,6 +90,9 @@ public class CartaSuerte {
                     break;
                 }
                 jugadorActual.sumarFortuna(-150000);
+                jugadorActual.agregarPagoTasasEImpuestos(150000);
+                Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
+                parking.sumarValor(150000);
                 System.out.println("\t" + jugadorActual.getNombre() + " ha pagado una multa de 150.000€.\n");
                 break;
             case 6:
@@ -116,7 +120,7 @@ public class CartaSuerte {
                 Casilla siguienteTransporte = null;
                 ArrayList<ArrayList<Casilla>> tablero = MonopolyETSE.tablero.getPosiciones();
 
-                //Calculamos la siguiente casilla de transporte con ifs
+                //Calculamos la siguiente casilla de transporte.
                 if(posicionActual == 7){
                     siguienteTransporte = MonopolyETSE.tablero.encontrar_casilla("Trans2");
                     avatarActual.moverAvatar(siguienteTransporte.getPosicion() - posicionActual);

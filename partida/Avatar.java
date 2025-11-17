@@ -96,6 +96,8 @@ public class Avatar {
             System.out.println("\t" + this.getJugador().getNombre() + " pasa por Salida y recibe 2.000.000€");
             this.getJugador().sumarFortuna(2000000f);
             this.getJugador().agregarPasarPorSalida(2000000f);
+            int num_vueltas = this.getJugador().getVueltas();
+            this.getJugador().setVueltas(num_vueltas + 1);
         }
         /*if (origen.getPosicion() - valorTirada < 0) {
             System.out.println("\t" + this.getJugador().getNombre() + " pasa por Salida y recibe 2.000.000€");
@@ -116,6 +118,14 @@ public class Avatar {
     public void moverAvatar(String nombreCasilla) {
         Casilla origen = this.lugar;
         Casilla destino = MonopolyETSE.tablero.encontrar_casilla(nombreCasilla);
+
+        if(origen.getPosicion() > destino.getPosicion()) {
+            System.out.println("\t" + this.getJugador().getNombre() + " pasa por Salida y recibe 2.000.000€");
+            this.getJugador().sumarFortuna(2000000f);
+            this.getJugador().agregarPasarPorSalida(2000000f);
+            int num_vueltas = this.getJugador().getVueltas();
+            this.getJugador().setVueltas(num_vueltas + 1);
+        }
 
         // Mover avatar en las casillas
         origen.eliminarAvatar(this);
