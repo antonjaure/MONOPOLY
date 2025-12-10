@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
+
+import excepciones.*;
 import partida.*;
 
 public class Menu {
@@ -84,7 +86,7 @@ public class Menu {
     /*Metodo que interpreta el comando introducido y toma la acción correspondiente.
      * Parámetro: cadena de caracteres (el comando).
      */
-    private void analizarComando(String comando) {
+    private void analizarComando(String comando)  {
 
         String[] palabras = comando.trim().split("\\s+");  // divide por uno o más espacios
         int numPalabras = (comando.trim().isEmpty()) ? 0 : palabras.length;
@@ -144,7 +146,13 @@ public class Menu {
         // hace una tirada de dados
         else if (comando.startsWith("lanzar dados")) {
             // tirada aleatoria
-            if (numPalabras == 2) lanzarDados(0, 0, false);
+            if (numPalabras == 2) {
+                try {
+                    lanzarDados(0, 0, false);
+                } catch (DadosException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
 
                 // tirada forzada con el valor pasado por la línea de comandos
             else if (numPalabras == 3) {
@@ -158,10 +166,11 @@ public class Menu {
                     int d1 = Integer.parseInt(dados[0].trim()); // primer dado
                     int d2 = Integer.parseInt(dados[1].trim()); // segundo dado
                     lanzarDados(d1, d2, true); // lanzada forzada
-                } catch (NumberFormatException e) {
-                    System.out.println("\t*** Valores de dados incorrectos. ***\n\tDeben ser números del 1 al 6.");
-                    System.out.println("}\n");
+                } catch (DadosException e) {
+                    System.out.println(e.getMessage());
+                    System.out.println("\nEste mensaje no se debería ver nunca");
                 }
+                
             } else {
                 System.out.println("\t*** Formato incorrecto. ***\n\tUso: lanzar dados <Dado1>+<Dado2>");
                 System.out.println("}\n");
@@ -169,7 +178,14 @@ public class Menu {
             }
         }
         // finaliza el turno
-        else if (comando.equals("acabar turno")) acabarTurno();
+        else if (comando.equals("acabar turno")) {
+            
+            try {
+                acabarTurno();
+            } catch (DadosSinLanzarException e) {
+                System.out.println(e.getMessage());
+            }        
+        }
 
         // imprime el tablero
         else if (comando.equals("ver tablero")) {
@@ -442,10 +458,10 @@ public class Menu {
     }
 
     //Metodo que ejecuta todas las acciones relacionadas con el comando 'lanzar dados'.
-    private void lanzarDados(int dado1Forzado, int dado2Forzado, boolean forzado) {
+    private void lanzarDados(int dado1Forzado, int dado2Forzado, boolean forzado) throws DadosException {
         if (tirado && !forzado) {
-            System.out.println("\t*** Solo una tirada por turno. ***");
-            return;
+            DadosYaLanzadosException error = new DadosYaLanzadosException();
+            throw error;    
         }
 
         if (jugadores == null || jugadores.isEmpty()) {
@@ -629,7 +645,11 @@ public class Menu {
             jugador.getAvatar().moverAvatar(valorTirada);
         } else {
             System.out.println("\t" + jugador.getNombre() + " no ha sacado dobles " + Valor.RED + "(" + valorDado1 + "+" + valorDado2 + ")" + Valor.RESET + " y permanece en la cárcel.\n");
-            acabarTurno();
+            try {
+                acabarTurno();
+            } catch (DadosSinLanzarException e) {
+                System.out.println(e.getMessage());
+            }
         }
     }
 
@@ -809,7 +829,7 @@ public class Menu {
     }
 
     // Metodo que realiza las acciones asociadas al comando 'acabar turno'.
-    private void acabarTurno() {
+    private void acabarTurno() throws DadosSinLanzarException {
         if (jugadores == null || jugadores.isEmpty()) {
             System.out.println("\t*** No hay jugadores en la partida. ***");
             return;
@@ -817,8 +837,8 @@ public class Menu {
 
         // comprobar si el jugador actual ya tiró
         if (!tirado) {
-            System.out.println("\t*** El jugador actual debe lanzar los dados antes de acabar su turno. ***");
-            return;
+            DadosSinLanzarException error = new DadosSinLanzarException();
+            throw error;
         }
 
         Jugador jugadorAnterior = jugadores.get(turno);
