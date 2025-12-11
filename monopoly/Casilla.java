@@ -18,6 +18,7 @@ public class Casilla {
     private Jugador duenho; //Dueño de la casilla (por defecto sería la banca).
     private Grupo grupo; //Grupo al que pertenece la casilla (si es solar).
     private float impuesto; //Cantidad a pagar por caer en la casilla: el alquiler en solares/servicios/transportes o impuestos.
+    private float impuestoConstrucciones;
     private float hipoteca; //Valor otorgado por hipotecar una casilla
     private ArrayList<Edificio> edificios;
     private HashMap<String, Float> valores = new HashMap<>();
@@ -366,9 +367,8 @@ public class Casilla {
     public void gestionarPago(Jugador jugadorActual, Jugador banca, int tirada){
 
         try { 
-            boolean solvente = evaluarCasilla(jugadorActual, banca);
+            evaluarCasilla(jugadorActual, banca);
         } catch (PropiedadesException e) {
-            boolean solvente = false;
             System.out.println("\t" + e.getMessage());
             return;
         }
@@ -402,13 +402,15 @@ public class Casilla {
                     case "Solar" -> {
                         boolean duenhoGrupo = this.grupo.esDuenhoGrupo(this.duenho);
 
-                        yield duenhoGrupo ? impuesto * 2 : impuesto;
+                        yield duenhoGrupo ? impuesto * 2 + impuestoConstrucciones: impuesto;
+                        
                     }
                     case "Transporte" -> this.impuesto;
                     case "Servicios" -> tirada * 4 * this.impuesto;
                     default -> 0;
                 };
 
+                
                 jugadorActual.sumarFortuna(-cantidad);
                 duenho.sumarFortuna(cantidad);
                 if(duenho != MonopolyETSE.menu.getBanca()){
@@ -479,7 +481,7 @@ public class Casilla {
                         if (i >= count - n) {
                             it.remove();
                             MonopolyETSE.tablero.getCasas().remove(ed);
-                            this.impuesto -= getAlquilerCasa();
+                            this.impuestoConstrucciones -= getAlquilerCasa();
                             j.sumarFortuna(getValorCasa());
                         }
                         i++;
@@ -503,7 +505,7 @@ public class Casilla {
                     if (ed.getTipo().equals("hotel")) {
                         it2.remove();
                         MonopolyETSE.tablero.getHoteles().remove(ed);
-                        this.impuesto -= getAlquilerHotel();
+                        this.impuestoConstrucciones -= getAlquilerHotel();
                         j.sumarFortuna(getValorHotel());
                         break;
                     }
@@ -530,7 +532,7 @@ public class Casilla {
                     if (ed.getTipo().equals("piscina")) {
                         it3.remove();
                         MonopolyETSE.tablero.getPiscinas().remove(ed);
-                        this.impuesto -= getAlquilerPiscina();
+                        this.impuestoConstrucciones -= getAlquilerPiscina();
                         j.sumarFortuna(getValorPiscina());
                         break;
                     }
@@ -557,7 +559,7 @@ public class Casilla {
                     if (ed.getTipo().equals("pista")) {
                         it4.remove();
                         MonopolyETSE.tablero.getPistas().remove(ed);
-                        this.impuesto -= getAlquilerPista();
+                        this.impuestoConstrucciones -= getAlquilerPista();
                         j.sumarFortuna(getValorPista());
                         break;
                     }
@@ -608,7 +610,7 @@ public class Casilla {
                 actual1.agregarDineroInvertido(getValorCasa());
                 // se contruye la casa
                 edificios.add(casa);
-                this.impuesto += getAlquilerCasa();
+                this.impuestoConstrucciones += getAlquilerCasa();
                 MonopolyETSE.tablero.getCasas().add(casa);
                 break;
             case "hotel":
@@ -633,11 +635,11 @@ public class Casilla {
                         MonopolyETSE.tablero.getCasas().remove(ed);
                     }
                 }
-                this.impuesto -= getAlquilerCasa() * 4;
+                this.impuestoConstrucciones -= getAlquilerCasa() * 4;
                 // se construye el hotel
                 edificios.add(hotel);
                 MonopolyETSE.tablero.getHoteles().add(hotel);
-                this.impuesto += getAlquilerHotel();
+                this.impuestoConstrucciones += getAlquilerHotel();
                 break;
             case "piscina":
                 if (this.valores.get("piscina") > propietario.getFortuna()) {
@@ -653,7 +655,7 @@ public class Casilla {
                 actual3.agregarDineroInvertido(getValorPiscina());
                 // se construye la piscina
                 edificios.add(piscina);
-                this.impuesto += getAlquilerPiscina();
+                this.impuestoConstrucciones += getAlquilerPiscina();
                 MonopolyETSE.tablero.getPiscinas().add(piscina);
                 break;
             case "pista":
@@ -670,7 +672,7 @@ public class Casilla {
                 actual4.agregarDineroInvertido(getValorPista());
                 // se construye la pista
                 edificios.add(pista);
-                this.impuesto += getAlquilerPista();
+                this.impuestoConstrucciones += getAlquilerPista();
                 MonopolyETSE.tablero.getPistas().add(pista);
                 break;
             default:

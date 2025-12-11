@@ -21,8 +21,9 @@ public class MonopolyETSE {
 
         // Bucle para leer los comandos
         do {
-            System.out.println("Escribe una acción: ");
-            comando = sc.nextLine();
+            /*System.out.println("Escribe una acción: ");
+            comando = sc.nextLine();*/
+            comando = Menu.CONSOLA.leer("Escribe una acción: ");
             menu.ejecutarComando(comando);
         } while (!comando.equals("salir")); // comando para finalizar el programa
 

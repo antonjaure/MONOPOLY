@@ -29,6 +29,7 @@ public class Menu {
     private boolean solvente; //Booleano para comprobar si el jugador que tiene el turno es solvente, es decir, si ha pagado sus deudas.
     public CartaComunidad cartasComunidad;
     public CartaSuerte cartasSuerte;
+    public static ConsolaNormal CONSOLA = new ConsolaNormal();
 
     public void setJugador(Jugador jugador) {
         if (jugadores == null) {
