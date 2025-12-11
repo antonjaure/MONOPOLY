@@ -265,7 +265,7 @@ public class Casilla {
                 "\tgrupo: " + this.grupo.getCodigoColor() + this.grupo.getColorGrupo() + Valor.RESET + "\n" +
                 "\tpropietario: " + (this.duenho.getNombre()) + "\n" +
                 "\tvalor: " + this.valor + "€\n" +
-                "\talquiler: " + this.impuesto + "€\n" +
+                "\talquiler: " + (this.impuesto + this.impuestoConstrucciones) + "€\n" +
                 "\thipoteca: " + this.hipoteca + "€\n" +
                 "\tedificios: " + edif + "\n" +
                 "\tvalor casa: " + this.valores.get("casa") + "€\n" +
@@ -895,7 +895,13 @@ public class Casilla {
         return alquileres;
     }
 
+    public float getImpuestoConstrucciones() {
+        return impuestoConstrucciones;
+    }
 
+    public void setImpuestoConstrucciones(float impuestoConstrucciones) {
+        this.impuestoConstrucciones = impuestoConstrucciones;
+    }
 
     public void setRentabilidad(float rentabilidad) {
         this.rentabilidad = rentabilidad;

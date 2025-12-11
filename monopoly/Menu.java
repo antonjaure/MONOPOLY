@@ -816,7 +816,7 @@ public class Menu {
             System.out.println("\thoteles: " + hoteles);
             System.out.println("\tpiscinas: " + piscinas);
             System.out.println("\tpistas de deporte: " + pistas);
-            System.out.println("\timpuesto: " + cas.getImpuesto());
+            System.out.println("\timpuesto: " + (cas.getImpuesto() + cas.getImpuestoConstrucciones()) + "\n");
 
             numCasas += casas.size();
             numHoteles += hoteles.size();
