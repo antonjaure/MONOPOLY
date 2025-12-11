@@ -255,7 +255,13 @@ public class Menu {
                 return;
             }
 
-            casilla.hipotecar(jugadorActual);
+            try{
+                casilla.hipotecar(jugadorActual);
+            } catch (PropiedadesException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+            //casilla.hipotecar(jugadorActual);
         }
         // deshipotecar una propiedad
         else if (comando.startsWith("deshipotecar")) {
@@ -275,7 +281,13 @@ public class Menu {
                 return;
             }
 
-            casilla.deshipotecar(jugadorActual);
+            try{
+                casilla.deshipotecar(jugadorActual);
+            } catch (PropiedadesException e) {
+                System.out.println(e.getMessage());
+                return;
+            }
+            //casilla.deshipotecar(jugadorActual);
         }
 
         // describe el jugador del turno actual
@@ -573,7 +585,14 @@ public class Menu {
             return;
         }
         Jugador jActual = jugadores.get(turno % jugadores.size());
-        c.comprarCasilla(jActual, banca);
+
+        try{
+            c.comprarCasilla(jActual, banca);
+        } catch (PropiedadesException e) {
+            System.out.println(e.getMessage());
+            return;
+        }
+        //c.comprarCasilla(jActual, banca);
     }
 
     //Metodo que ejecuta todas las acciones relacionadas con el comando 'salir carcel'.

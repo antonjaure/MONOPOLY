@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Scanner;
 
+import excepciones.*;
 
 public class Casilla {
 
@@ -97,7 +98,7 @@ public class Casilla {
 
     FALTA IMPLEMENTAR EL CÓDIGO PARA LAS CASILLAS ESPECIALES (IR A CÁRCEL, PARKING Y SALIDA)*/
 
-    public boolean evaluarCasilla(Jugador actual, Jugador banca) {
+    public boolean evaluarCasilla(Jugador actual, Jugador banca) throws PropiedadesException {
 
 
         ////////////////    las casillas de impuestos no se deberian poder comprar
@@ -148,6 +149,7 @@ public class Casilla {
                 }
                 else if(nombre.equals("Cárcel")){
                     float salidaCarcel = casilla.getImpuesto();
+
                     return actual.getFortuna() >= salidaCarcel; // Si tiene dinero para pagar la cárcel = true, else false
                 }
                 System.err.println("\nError al evaluarCasilla().\n");
@@ -163,7 +165,7 @@ public class Casilla {
     * - Jugador que solicita la compra de la casilla.
     * - Banca del monopoly (es el dueño de las casillas no compradas aún).
     * - Se añade tirada para poder pasarla como parámetro a evaluar casilla.*/
-    public void comprarCasilla(Jugador solicitante, Jugador banca) {
+    public void comprarCasilla(Jugador solicitante, Jugador banca) throws PropiedadesException {
         if (solicitante.getAvatar().getLugar() != this) {
             System.out.println("\t" + Valor.RED + "Error: Debes estar sobre la casilla para comprarla." + Valor.RESET);
             return;
@@ -174,7 +176,43 @@ public class Casilla {
             return;
         }
 
-        if(evaluarCasilla(solicitante, banca)){
+        try {
+
+            if(evaluarCasilla(solicitante, banca)){
+            Casilla casilla = solicitante.getAvatar().getCasilla();
+                if(casilla.getDuenho() == banca) { //Si la casilla no tiene dueño, se ofrece comprarla.
+                    float valor = casilla.getValor();
+                    solicitante.sumarFortuna(-valor); //Se resta el valor de la casilla a la fortuna del jugador.
+                    solicitante.agregarDineroInvertido(valor);
+                    banca.sumarFortuna(valor); //Se añade el valor de la casilla a la fortuna de la banca.
+
+                    casilla.setDuenho(solicitante); //El dueño de la casilla pasa a ser el jugador solicitante.
+                    solicitante.añadirPropiedad(casilla); //Se añade la casilla al arraylist de propiedades del jugador.
+                    banca.eliminarPropiedad(casilla); //Se elimina la casilla del arraylist de propiedades de la banca.
+
+                    System.out.println("\t" + Valor.GREEN + "¡Compra realizada con éxito!" + Valor.RESET);
+                }
+                else {
+                    PropiedadOtroJugadorException error = new PropiedadOtroJugadorException(this.getNombre(), this.duenho.getNombre());
+                    throw error;
+                }
+            }
+            else {
+                if(this.duenho != banca) {
+                    PropiedadOtroJugadorException error = new PropiedadOtroJugadorException(this.getNombre(), this.duenho.getNombre());
+                    throw error;
+                }
+                else {
+                    System.out.println("\t" + Valor.RED + "Error: No tienes suficiente dinero para comprar la casilla." + Valor.RESET);
+                }
+
+                
+                System.out.println("\t" + Valor.RED + "Error: La casilla ya tiene dueño o no tiene suficiente dinero para comprarla." + Valor.RESET);
+            }
+        } catch (PropiedadesException e) {
+            System.out.println("\t" + e.getMessage());
+        }
+        /*if(evaluarCasilla(solicitante, banca)){
             Casilla casilla = solicitante.getAvatar().getCasilla();
             if(casilla.getDuenho() == banca) { //Si la casilla no tiene dueño, se ofrece comprarla.
                 float valor = casilla.getValor();
@@ -194,7 +232,7 @@ public class Casilla {
         }
         else {
             System.out.println("\t" + Valor.RED + "Error: La casilla ya tiene dueño o no tiene suficiente dinero para comprarla." + Valor.RESET);
-        }
+        }*/
     }
 
     /*Método para añadir valor a una casilla. Utilidad:
@@ -325,14 +363,22 @@ public class Casilla {
      * - banca: jugador banca.
      * - tirada: valor de los dados (para calcular servicios).
      */
-    public void gestionarPago(Jugador jugadorActual, Jugador banca, int tirada) {
-        boolean solvente = evaluarCasilla(jugadorActual, banca);
-    
-        if (!solvente) {
+    public void gestionarPago(Jugador jugadorActual, Jugador banca, int tirada){
+
+        try { 
+            boolean solvente = evaluarCasilla(jugadorActual, banca);
+        } catch (PropiedadesException e) {
+            boolean solvente = false;
+            System.out.println("\t" + e.getMessage());
+            return;
+        }
+        //boolean solvente = evaluarCasilla(jugadorActual, banca);
+        
+        /*if (!solvente) {
             System.out.println("\t" + jugadorActual.getNombre() + " no tiene dinero suficiente para pagar esta casilla.");
             // Avisar que debe hipotecar o declararse en bancarrota
             return;
-        }
+        }*/
         if (this.duenho == jugadorActual) {
             System.out.println("\tEsta casilla te pertenece.");
             return;
@@ -700,7 +746,7 @@ public class Casilla {
         return true;
     }
 
-    public void hipotecar(Jugador jugadorActual) {
+    public void hipotecar(Jugador jugadorActual) throws PropiedadesException {
         // Verificar dueño
         if (this.duenho != jugadorActual) {
             System.out.println("\t" + Valor.RED + "Error: Solo el dueño puede hipotecar esta casilla." + Valor.RESET);
@@ -709,8 +755,10 @@ public class Casilla {
     
         // Verificar si ya está hipotecada
         if (this.hipotecada) {
-            System.out.println("\t" + Valor.RED + "Error: La propiedad ya está hipotecada." + Valor.RESET);
-            return;
+            PropiedadHipotecadaException error = new PropiedadHipotecadaException(this.getNombre());
+            throw error;
+            //System.out.println("\t" + Valor.RED + "Error: La propiedad ya está hipotecada." + Valor.RESET);
+            //return;
         }
     
         // Verificar si hay edificios
@@ -746,7 +794,7 @@ public class Casilla {
         System.out.println("\t" + Valor.GREEN + "Casilla hipotecada con éxito. Se han recibido " + this.hipoteca + "€." + Valor.RESET);
     }
 
-    public void deshipotecar(Jugador jugadorActual){
+    public void deshipotecar(Jugador jugadorActual) throws PropiedadesException {
         // Verificar dueño
         if (this.duenho != jugadorActual) {
             System.out.println("\t" + Valor.RED + "Error: Solo el dueño puede deshipotecar esta casilla." + Valor.RESET);
@@ -755,8 +803,10 @@ public class Casilla {
     
         // Verificar si está hipotecada
         if (!this.hipotecada) {
-            System.out.println("\t" + Valor.RED + "Error: La propiedad no está hipotecada." + Valor.RESET);
-            return;
+            PropiedadSinHipotecarException error = new PropiedadSinHipotecarException(this.getNombre());
+            throw error;
+            //System.out.println("\t" + Valor.RED + "Error: La propiedad no está hipotecada." + Valor.RESET);
+            //return;
         }
     
         // Verificar si el jugador tiene suficiente dinero
