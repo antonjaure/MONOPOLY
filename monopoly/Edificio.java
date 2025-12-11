@@ -1,17 +1,20 @@
 package monopoly;
 
-public class Edificio {
-    private String nombre;
-    private Casilla terreno;
-    private String tipo;
-    private float coste;
-    private float alquiler;
+public abstract class Edificio {
+    protected String nombre;
+    protected Casilla terreno;
+    protected float coste;
+    protected float alquiler;
 
-    public Edificio(String nombre, Casilla terreno, String tipo, float coste, float alquiler) {
+    public Edificio(String nombre, Casilla terreno, float coste, float alquiler) {
         this.nombre = nombre;
         this.terreno = terreno;
-        this.tipo = tipo;
+        this.coste = coste;
+        this.alquiler = alquiler;
     }
+
+    // Cada subclase nos dirá qué tipo es 
+    public abstract String getTipo();
 
     public String getNombre() {
         return nombre;
@@ -44,14 +47,4 @@ public class Edificio {
     public void setCoste(float coste) {
         this.coste = coste;
     }
-
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
-
 }
