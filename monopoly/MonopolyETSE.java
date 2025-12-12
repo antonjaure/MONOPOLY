@@ -1,32 +1,18 @@
 package monopoly;
 
-import partida.Jugador;
-
-import java.util.Scanner;
-
 public class MonopolyETSE {
 
-    public static Menu menu = new Menu();
-    public static Tablero tablero = new Tablero(menu.getBanca());
+    // Mantenemos la referencia estática a Juego para que las Cartas (Suerte) puedan acceder si lo necesitan
+    public static Juego juego;
 
     public static void main(String[] args) {
-        System.out.println(Valor.RED + "Monopoly ETSE\n" + Valor.RESET);
-        System.out.println("Iniciando partida...\n");
-        System.out.println(tablero.toString()); // esto también crea las casillas, si se quisiese crear las casillas
-        // sin imprimir el tablero habría que llamar a la función generarCasillas() de Tablero
-        menu.analizarArchivo(args);
+        juego = new Juego();
 
-        Scanner sc = new Scanner(System.in);
-        String comando = "";
-
-        // Bucle para leer los comandos
-        do {
-            /*System.out.println("Escribe una acción: ");
-            comando = sc.nextLine();*/
-            comando = Menu.CONSOLA.leer("Escribe una acción: ");
-            menu.ejecutarComando(comando);
-        } while (!comando.equals("salir")); // comando para finalizar el programa
-
-        sc.close();
+        //Si hay archivo de comandos (args), lo procesamos
+        if (args.length > 0) {
+            juego.analizarArchivo(args);
+        }
+        //Iniciamos el bucle principal del juego
+        juego.iniciarPartida();
     }
 }

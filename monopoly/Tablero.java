@@ -2,7 +2,7 @@ package monopoly;
 
 import partida.*;
 
-import static monopoly.MonopolyETSE.tablero;
+
 
 import java.util.*;
 
@@ -77,7 +77,7 @@ public class Tablero {
     public Tablero(Jugador banca) {
         this.banca = banca;
 
-        MonopolyETSE.menu.setTablero(this);
+        MonopolyETSE.juego.setTablero(this);
     }
 
 
@@ -553,7 +553,7 @@ public class Tablero {
             }
         }
 
-        for (Jugador jugador : MonopolyETSE.menu.getJugadores()) {
+        for (Jugador jugador : MonopolyETSE.juego.getJugadores()) {
 
             if(jugadorMasVueltas == null || jugadorEnCabeza == null) {
                 //Inicializamos las variables en la primera iteración para poder usar los metodos sin errores.
