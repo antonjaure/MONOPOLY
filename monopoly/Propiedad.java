@@ -7,13 +7,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class Propiedad extends Casilla {
-    private ArrayList<Edificio> edificios;
 
     private float valor; //Valor de esta casilla (en la mayoría será valor de compra, en la casilla parking se usará como el bote).
     private float impuesto; //Cantidad a pagar por caer en la casilla: el alquiler en solares/servicios/transportes o impuestos.
+    private Grupo grupo; //Grupo al que pertenece la casilla (si es solar).
     private float rentabilidad = 0;
     private float hipoteca; //Valor otorgado por hipotecar una casilla ------------- No se si es solo de Solar
     protected boolean hipotecada = false;
+    // Para bloquear alquileres y edificaciones
+    protected boolean puedeCobrarAlquiler = true;
 
     public Propiedad(Jugador duenho, String nombre, String tipo, int posicion, float valor, float hipoteca) {
         super(duenho, nombre, tipo, posicion);
@@ -22,8 +24,11 @@ public abstract class Propiedad extends Casilla {
         setHipoteca(hipoteca);
     }
 
-    // Para bloquear alquileres y edificaciones
-    protected boolean puedeCobrarAlquiler = true;
+    public String toString() {
+        return super.toString() +
+                "\n\tValor: " + valor +
+                "\n\tAlquiler: " + impuesto;
+    }
 
     public boolean perteneceAJugador(Jugador jugador) {
         return jugador == this.getDuenho();
@@ -31,69 +36,6 @@ public abstract class Propiedad extends Casilla {
 
     public abstract boolean alquiler();
     public abstract float valor();
-
-    public boolean evaluarCasilla(Jugador actual) {
-
-
-        ////////////////    las casillas de impuestos no se deberian poder comprar
-
-
-        Avatar avatar = actual.getAvatar();
-        Casilla casilla = avatar.getCasilla();
-        String tipo = casilla.getTipo();
-
-        switch(casilla) {
-            case Propiedad p:
-                if(p.getDuenho() == MonopolyETSE.menu.getBanca()) {
-                    return actual.getFortuna() >= p.getValor(); // Si tiene dinero comprarla = true, else false
-                }
-                else if(p.getDuenho() != actual) {
-                    float impuesto = p.getImpuesto();
-                    return actual.getFortuna() >= impuesto; // Si tiene dinero para el alquiler = true, else false
-                }
-                else if(p.getDuenho() == actual) {
-                    return true; //No pasa nada, es su casilla.
-                }
-                break;
-
-            /*
-            case Servicio s:
-                if(s.getDuenho() == MonopolyETSE.menu.getBanca()) {
-                    return actual.getFortuna() >= s.getValor(); // Si tiene dinero comprarla = true, else false
-                }
-
-                // El caso de (duenho != actual) se maneja con la llamada a evaluarCasilla con tirada.
-
-                else if(casilla.getDuenho() == actual) {
-                    return true; // No pasa nada, es su casilla.
-                }
-                break;
-            */
-
-            case Impuesto i:   /////////////    *** esto hace que pague el impuesto, pero también permite que compre la casilla ***
-                float impuesto = i.getImpuesto();
-                return actual.getFortuna() >= impuesto; // Si tiene dinero para el impuesto = true, else false
-
-            case Accion a:
-                return true; //No pasa nada, se roba carta.
-            case Especial e:
-                String nombre = e.getNombre();
-
-                if(nombre.equals("IrCarcel") || nombre.equals("Salida")){
-                    return true; //No pasa nada especial al caer en estas casillas.
-                }
-                else if(nombre.equals("Cárcel")){
-                    float salidaCarcel = e.getImpuesto();
-                    return actual.getFortuna() >= salidaCarcel; // Si tiene dinero para pagar la cárcel = true, else false
-                }
-                System.err.println("\nError al evaluarCasilla().\n");
-                return false;
-            default:
-                System.err.println("\nError al evaluarCasilla().\n");
-                return false;
-        }
-        return false;
-    }
 
     public void comprar(Jugador jugador) {
         if (jugador.getAvatar().getLugar() != this) {
@@ -129,13 +71,22 @@ public abstract class Propiedad extends Casilla {
         }
     }
 
-
-    public ArrayList<Edificio> getEdificios() {
-        return edificios;
+    /*Método para añadir valor a una casilla. Utilidad:
+    * - Sumar valor a la casilla de parking.
+    * - Sumar valor a las casillas de solar al no comprarlas tras cuatro vueltas de todos los jugadores.
+    * Este método toma como argumento la cantidad a añadir del valor de la casilla.
+    ------------ FALTA EL VALOR DEL SOLAR QUE NO SE CUANTO ES */
+    public void sumarValor(float suma) {
+        this.valor += suma;
     }
 
-    public void setEdificios(ArrayList<Edificio> edificios) {
-        this.edificios = edificios;
+
+    public Grupo getGrupo() {
+        return grupo;
+    }
+
+    public void setGrupo(Grupo grupo) {
+        this.grupo = grupo;
     }
 
     public float getHipoteca() {

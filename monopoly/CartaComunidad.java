@@ -5,10 +5,11 @@ import partida.*;
 import java.util.ArrayList;
 
 public class CartaComunidad extends Accion {
-        public ArrayList<String> cartasComunidad;
-        int contador = 0;
+    public ArrayList<String> cartasComunidad;
+    int contador = 0;
 
-        public CartaComunidad() {
+    public CartaComunidad() {
+        super(MonopolyETSE.tablero.getBanca(),  "MazoComunidad", "Mazo", -1);
         cartasComunidad = new ArrayList<>();
 
         cartasComunidad.add("\tPaga 500.000€ por un fin de semana en un balneario de 5 estrellas.");
@@ -19,6 +20,10 @@ public class CartaComunidad extends Accion {
         cartasComunidad.add("\tVe a Solar20 para disfrutar del San Fermín. Si pasas por la casilla de Salida, cobra 2.000.000€.");
 
         this.contador = 0;
+    }
+
+    public CartaComunidad(Jugador duenho, String nombre, String tipo, int posicion) {
+        super(duenho, nombre, tipo, posicion);
     }
 
      public void sacarCartaComunidad() {
@@ -47,7 +52,7 @@ public class CartaComunidad extends Accion {
                 }
                 jugadorActual.sumarFortuna(-500000);
                 jugadorActual.agregarPagoTasasEImpuestos(500000);
-                Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
+                Parking parking = (Parking) MonopolyETSE.tablero.encontrar_casilla("Parking");
                 parking.sumarValor(500000);
                 break;
             case 1:

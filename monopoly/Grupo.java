@@ -9,14 +9,14 @@ import java.util.List;
 class Grupo {
 
     //Atributos
-    private ArrayList<Solar> miembros; //Solares miembros del grupo.
+    private ArrayList<Propiedad> miembros; //Solares miembros del grupo.
     private String colorGrupo; //Color del grupo
     private String codigoColor;
     private int numCasillas; //Número de casillas del grupo.
     private float rentabilidad; // Rentabilidad del grupo
 
 
-    public ArrayList<Solar> getMiembros() {
+    public ArrayList<Propiedad> getMiembros() {
         return this.miembros;
     }
     public String getColorGrupo() {
@@ -39,7 +39,7 @@ class Grupo {
         return numCasillas;
     }
 
-    public void setMiembros(ArrayList<Solar> miembros) {
+    public void setMiembros(ArrayList<Propiedad> miembros) {
         this.miembros = miembros;
     }
 
@@ -48,7 +48,7 @@ class Grupo {
     public Grupo(){
     }
 
-    /*Constructor para cuando el grupo está formado por DOS CASILLAS:
+    /*Constructor para cuando el grupo está formado por DOS SOLARES:
     * Requiere como parámetros las dos casillas miembro y el color del grupo.
      */
     public Grupo(String cas1, String cas2, String colorGrupo, String codigoColor) {
@@ -85,10 +85,10 @@ class Grupo {
         this.numCasillas = 2;
     }
 
-    /*Constructor para cuando el grupo está formado por TRES CASILLAS:
+    /*Constructor para cuando el grupo está formado por TRES SOLARES:
     * Requiere como parámetros las tres casillas miembro y el color del grupo.
      */
-    public Grupo(String cas1, String  cas2, String cas3, String colorGrupo, String codigoColor) {
+    public Grupo(String cas1, String cas2, String cas3, String colorGrupo, String codigoColor) {
         List<Integer> Posiciones = MonopolyETSE.tablero.getSolServTrans().get(0);
         List<List<Object>> Solares = MonopolyETSE.tablero.getSolares();
 
@@ -123,6 +123,51 @@ class Grupo {
         this.colorGrupo = colorGrupo;
         this.codigoColor = codigoColor;
         this.numCasillas = 3;
+    }
+
+    public Grupo(int tipo, String nombreGrupo, String codigoColor) {
+        List<List<Integer>> Posiciones = MonopolyETSE.tablero.getSolServTrans();
+        List<List<Object>> Solares = MonopolyETSE.tablero.getSolares();
+        this.miembros = new ArrayList<>();
+
+        switch (tipo) {
+            // grupo servicios
+            case 1 -> {
+                List<Integer> serv = Posiciones.get(1);
+
+                float valor = 500000, impuesto = 50000;
+                String nomtipo = "Servicios";
+                for (Integer i : serv) {
+                    String nombre = "Serv" + (serv.indexOf(i) + 1);
+                    Servicio s = new Servicio(MonopolyETSE.menu.getBanca(), nombre, nomtipo, i, valor, valor/2);
+                    s.setImpuesto(impuesto);
+                    MonopolyETSE.tablero.añadirPropiedad(s, i);
+                    miembros.add(s);
+                    s.setGrupo(this);
+                }
+            }
+            case 2 -> {
+                List<Integer> trans = Posiciones.get(2);
+
+                float valor = 500000, impuesto = 250000;
+                String nomtipo = "Transporte";
+                for (Integer i : trans) {
+                    String nombre = "Trans" + (trans.indexOf(i) + 1);
+                    Transporte t = new Transporte(MonopolyETSE.menu.getBanca(), nombre, nomtipo, i, valor, valor/2);
+                    t.setImpuesto(impuesto);
+                    MonopolyETSE.tablero.añadirPropiedad(t, i);
+                    miembros.add(t);
+                    t.setGrupo(this);
+                }
+            }
+            default -> {
+                return;
+            }
+        }
+
+        this.colorGrupo = nombreGrupo;
+        this.codigoColor = codigoColor;
+        this.numCasillas = Posiciones.size();
     }
 
     /* Método que añade una casilla al array de casillas miembro de un grupo.

@@ -2,11 +2,11 @@ package monopoly;
 
 public abstract class Edificio {
     protected String nombre;
-    protected Casilla terreno;
+    protected Solar terreno;
     protected float coste;
     protected float alquiler;
 
-    public Edificio(String nombre, Casilla terreno, float coste, float alquiler) {
+    public Edificio(String nombre, Solar terreno, float coste, float alquiler) {
         this.nombre = nombre;
         this.terreno = terreno;
         this.coste = coste;
@@ -24,11 +24,11 @@ public abstract class Edificio {
         this.nombre = nombre;
     }
 
-    public Casilla getCasilla() {
+    public Solar getSolar() {
         return terreno;
     }
 
-    public void setTerreno(Casilla terreno) {
+    public void setTerreno(Solar terreno) {
         this.terreno = terreno;
     }
 

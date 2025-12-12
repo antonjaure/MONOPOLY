@@ -2,29 +2,70 @@ package monopoly;
 
 import partida.Jugador;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.util.*;
 
 public class Solar extends Propiedad {
-    private Grupo grupo; //Grupo al que pertenece la casilla (si es solar).
+    private ArrayList<Edificio> edificios;
     private HashMap<String, Float> valores = new HashMap<>(); // valores de compra de cada tipo de edificio
     private HashMap<String, Float> alquileres = new HashMap<>(); // alquileres de cada tipo de edificio
 
     public Solar(Jugador duenho, String nombre, String tipo, int posicion, float valor, float hipoteca) {
         super(duenho, nombre, tipo, posicion, valor, hipoteca);
+        asignarAlquileres();
+        asignarPrecioEdificios();
+    }
+
+    public String toString() {
+        return super.toString() +
+                "\n\tEdificios: " + edificios +
+                "\n\tGrupo: " + getGrupo() +
+                "\n\tAlquileres edificios: " + alquileres +
+                "\n\tValores edificios: " + valores;
+    }
+
+    private void asignarPrecioEdificios() {
+        List<List<Object>> PreciosConstruccion = MonopolyETSE.tablero.getPreciosConstruccion();
+        List<List<Integer>> SolServTrans = MonopolyETSE.tablero.getSolServTrans();
+        int pos = this.getPosicion();
+
+        float valorCasa = (int) PreciosConstruccion.get(SolServTrans.getFirst().indexOf(pos)).get(1);
+        float valorHotel = (int) PreciosConstruccion.get(SolServTrans.getFirst().indexOf(pos)).get(2);
+        float valorPiscina = (int) PreciosConstruccion.get(SolServTrans.getFirst().indexOf(pos)).get(3);
+        float valorPista = (int) PreciosConstruccion.get(SolServTrans.getFirst().indexOf(pos)).get(4);
+
+        this.setValorCasa(valorCasa);
+        this.setValorHotel(valorHotel);
+        this.setValorPiscina(valorPiscina);
+        this.setValorPista(valorPista);
+    }
+
+    private void asignarAlquileres() {
+        List<List<Object>> Alquileres = MonopolyETSE.tablero.getAlquileres();
+        List<List<Integer>> SolServTrans = MonopolyETSE.tablero.getSolServTrans();
+        int pos = this.getPosicion();
+
+        float impuesto = (int) Alquileres.get(SolServTrans.getFirst().indexOf(pos)).get(1);
+        float alquilerCasa = (int) Alquileres.get(SolServTrans.getFirst().indexOf(pos)).get(2);
+        float alquilerHotel = (int) Alquileres.get(SolServTrans.getFirst().indexOf(pos)).get(3);
+        float alquilerPiscina = (int) Alquileres.get(SolServTrans.getFirst().indexOf(pos)).get(4);
+        float alquilerPista = (int) Alquileres.get(SolServTrans.getFirst().indexOf(pos)).get(5);
+
+        this.setImpuesto(impuesto);
+        this.setAlquilerCasa(alquilerCasa);
+        this.setAlquilerHotel(alquilerHotel);
+        this.setAlquilerPiscina(alquilerPiscina);
+        this.setAlquilerPista(alquilerPista);
     }
 
     public void edificar(String tipo) {
         Jugador propietario = this.getDuenho();
-        int tamGrupo = grupo.numCasillas();
+        int tamGrupo = getGrupo().numCasillas();
         ArrayList<Propiedad> prop = propietario.getPropiedades();
         int count = 0;
         // se comprueba si todo el grupo es del mismo jugador
         for (Propiedad p : prop) {
             if (p instanceof Solar s) {
-                if (s.getGrupo() == grupo) count += 1;
+                if (s.getGrupo() == getGrupo()) count += 1;
             }
         }
         if (count < tamGrupo) {
@@ -41,7 +82,7 @@ public class Solar extends Propiedad {
                 }
                 if (!construirCasa()) return;
                 String Cnom = "casa-" + (MonopolyETSE.tablero.getCasas().size()+1); // id de la casa
-                Edificio casa = new Edificio(Cnom, this, tipo, getValorCasa(), getAlquilerCasa());
+                Casa casa = new Casa(Cnom, this, getValorCasa(), getAlquilerCasa());
                 Jugador actual1 = this.getAvatares().getLast().getJugador();
                 // se paga la casa
                 actual1.sumarFortuna(-getValorCasa());
@@ -59,7 +100,7 @@ public class Solar extends Propiedad {
                 }
                 if (!construirHotel()) return;
                 String Hnom = "hotel-" + (MonopolyETSE.tablero.getHoteles().size()+1); // id del hotel
-                Edificio hotel = new Edificio(Hnom, this, tipo, getValorHotel(), getAlquilerHotel());
+                Hotel hotel = new Hotel(Hnom, this, getValorHotel(), getAlquilerHotel());
                 Jugador actual2 = this.getAvatares().getLast().getJugador();
                 // paga el hotel
                 actual2.sumarFortuna(-getValorHotel());
@@ -88,7 +129,7 @@ public class Solar extends Propiedad {
                 }
                 if (!construirPiscina()) return;
                 String Pnom = "piscina-" + (MonopolyETSE.tablero.getPiscinas().size()+1); // id de la piscina
-                Edificio piscina = new Edificio(Pnom, this, tipo, getValorPiscina(), getAlquilerPiscina());
+                Piscina piscina = new Piscina(Pnom, this, getValorPiscina(), getAlquilerPiscina());
                 Jugador actual3 = this.getAvatares().getLast().getJugador();
                 // se paga la piscina
                 actual3.sumarFortuna(-getValorPiscina());
@@ -106,7 +147,7 @@ public class Solar extends Propiedad {
                 }
                 if (!construirPista()) return;
                 String Pinom = "pista-" + (MonopolyETSE.tablero.getPistas().size()+1); // id de la pista
-                Edificio pista = new Edificio(Pinom, this, tipo, getValorPista(), getAlquilerPista());
+                PistaDeporte pista = new PistaDeporte(Pinom, this, getValorPista(), getAlquilerPista());
                 Jugador actual4 = this.getAvatares().getLast().getJugador();
                 // se paga la pista
                 actual4.sumarFortuna(-getValorPista());
@@ -410,13 +451,6 @@ public class Solar extends Propiedad {
         return this.hipotecada;
     }
 
-    public void setGrupo(Grupo grupo){
-        this.grupo = grupo;
-    }
-    public Grupo getGrupo() {
-        return grupo;
-    }
-
     public void setValorCasa(float valorCasa) {
         this.valores.put("casa", valorCasa);
     }
@@ -441,7 +475,13 @@ public class Solar extends Propiedad {
     public void setAlquilerPista(float alquilerPista) {
         this.alquileres.put("pista", alquilerPista);
     }
+    public void setEdificios(ArrayList<Edificio> edificios) {
+        this.edificios = edificios;
+    }
 
+    public ArrayList<Edificio> getEdificios() {
+        return edificios;
+    }
     public float getValorCasa() {
         return valores.get("casa");
     }

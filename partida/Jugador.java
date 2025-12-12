@@ -95,8 +95,8 @@ public class Jugador {
 
     //Otros métodos:
     //Método para añadir una propiedad al jugador. Como parámetro, la casilla a añadir.
-    public void añadirPropiedad(Casilla casilla) {
-        this.propiedades.add(casilla);
+    public void añadirPropiedad(Propiedad p) {
+        this.propiedades.add(p);
     }
 
     //Método para eliminar una propiedad del arraylist de propiedades de jugador.
@@ -212,10 +212,12 @@ public class Jugador {
 
     public float getPatrimonio() {
         float patrimonio = this.fortuna;
-        for (Casilla casilla : this.getPropiedades()) {
-            patrimonio += casilla.getValor();
-            for (Edificio edificio : casilla.getEdificios()) {
-                patrimonio += edificio.getCoste();
+        for (Propiedad p : this.getPropiedades()) {
+            patrimonio += p.getValor();
+            if (p instanceof Solar s){
+                for (Edificio ed : s.getEdificios()) {
+                    patrimonio += ed.getCoste();
+                }
             }
         }
         return patrimonio;

@@ -1,7 +1,7 @@
 package monopoly;
 
 public class Hotel extends Edificio {
-    public Hotel(String nombre, Casilla terreno, float coste, float alquiler){
+    public Hotel(String nombre, Solar terreno, float coste, float alquiler){
         super(nombre,terreno,coste,alquiler);
     }
 

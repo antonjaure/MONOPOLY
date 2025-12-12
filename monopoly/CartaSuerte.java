@@ -14,6 +14,7 @@ public class CartaSuerte extends Accion {
      * EN MENU O DONDE SEA.
      */
     public CartaSuerte() {
+        super(MonopolyETSE.tablero.getBanca(), "MazoSuerte", "Mazo", -1);
         cartasSuerte = new ArrayList<>();
 
         cartasSuerte.add("Decides hacer un viaje de placer. Avanza hasta Solar19. Si pasas por la casilla de Salida, cobra 2.000.000€.");
@@ -25,6 +26,10 @@ public class CartaSuerte extends Accion {
         cartasSuerte.add("Avanza hasta la casilla de transporte más cercana. Si no tiene dueño, puedes comprarla. Si tiene dueño, paga al dueño el doble de la operación indicada.");
 
         this.contador = 0;
+    }
+
+    public CartaSuerte(Jugador duenho, String nombre, String tipo, int posicion) {
+        super(duenho, nombre, tipo, posicion);
     }
 
     public void sacarCartaSuerte() {
@@ -95,7 +100,7 @@ public class CartaSuerte extends Accion {
                 }
                 jugadorActual.sumarFortuna(-150000);
                 jugadorActual.agregarPagoTasasEImpuestos(150000);
-                Casilla parking = MonopolyETSE.tablero.encontrar_casilla("Parking");
+                Parking parking = (Parking) MonopolyETSE.tablero.encontrar_casilla("Parking");
                 parking.sumarValor(150000);
                 System.out.println("\t" + jugadorActual.getNombre() + " ha pagado una multa de 150.000€.\n");
                 break;
@@ -121,21 +126,21 @@ public class CartaSuerte extends Accion {
                 }*/
 
                 System.out.println(cartasSuerte.get(6));
-                Casilla siguienteTransporte = null;
+                Transporte siguienteTransporte = null;
                 ArrayList<ArrayList<Casilla>> tablero = MonopolyETSE.tablero.getPosiciones();
 
                 //Calculamos la siguiente casilla de transporte.
                 if(posicionActual == 7){
-                    siguienteTransporte = MonopolyETSE.tablero.encontrar_casilla("Trans2");
+                    siguienteTransporte = (Transporte) MonopolyETSE.tablero.encontrar_casilla("Trans2");
                     avatarActual.moverAvatar(siguienteTransporte.getPosicion() - posicionActual);
 
                 }
                 else if(posicionActual == 22){
-                    siguienteTransporte = MonopolyETSE.tablero.encontrar_casilla("Trans3");
+                    siguienteTransporte = (Transporte) MonopolyETSE.tablero.encontrar_casilla("Trans3");
                     avatarActual.moverAvatar(siguienteTransporte.getPosicion() - posicionActual);
                 }
                 else if(posicionActual == 36){
-                    siguienteTransporte = MonopolyETSE.tablero.encontrar_casilla("Trans1");
+                    siguienteTransporte = (Transporte) MonopolyETSE.tablero.encontrar_casilla("Trans1");
                     avatarActual.moverAvatar(siguienteTransporte.getPosicion() - posicionActual);
                 }
                 

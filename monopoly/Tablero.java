@@ -7,10 +7,10 @@ import java.util.*;
 public class Tablero {
     //Atributos.
     private ArrayList<ArrayList<Casilla>> posiciones; //Posiciones del tablero: se define como un arraylist de arraylists de casillas (uno por cada lado del tablero).
-    private ArrayList<Edificio> casas;
-    private ArrayList<Edificio> hoteles;
-    private ArrayList<Edificio> piscinas;
-    private ArrayList<Edificio> pistas;
+    private ArrayList<Casa> casas;
+    private ArrayList<Hotel> hoteles;
+    private ArrayList<Piscina> piscinas;
+    private ArrayList<PistaDeporte> pistas;
     private HashMap<String, Grupo> grupos; //Grupos del tablero, almacenados como un HashMap con clave String (será el color del grupo).
     private Jugador banca; //Un jugador que será la banca.
     private int contadorCartaSuerte = 0;
@@ -23,12 +23,12 @@ public class Tablero {
         if (31 <= pos && pos < 40) this.posiciones.get(3).set(pos - 31, p);
     }
 
-    public ArrayList<Edificio> getCasas() {
+    public ArrayList<Casa> getCasas() {
         if (casas == null) casas = new ArrayList<>();
         return casas;
     }
 
-    public ArrayList<Edificio> getHoteles() {
+    public ArrayList<Hotel> getHoteles() {
         if (hoteles == null) hoteles = new ArrayList<>();
         return hoteles;
     }
@@ -49,12 +49,12 @@ public class Tablero {
         this.contadorCartaComunidad++;
     }
 
-    public ArrayList<Edificio> getPiscinas() {
+    public ArrayList<Piscina> getPiscinas() {
         if (piscinas == null) piscinas = new ArrayList<>();
         return piscinas;
     }
 
-    public ArrayList<Edificio> getPistas() {
+    public ArrayList<PistaDeporte> getPistas() {
         if (pistas == null) pistas = new ArrayList<>();
         return pistas;
     }
@@ -102,6 +102,11 @@ public class Tablero {
     private void generarGrupos() {
         if (posiciones == null) generarCasillas();
         if (grupos == null) grupos = new HashMap<>();
+
+        Grupo servicios = new Grupo(1, "Servicios", Valor.YELLOW);
+        setGrupos("Servicios", servicios);
+        Grupo transportes = new Grupo(2, "Transportes",  Valor.YELLOW);
+        setGrupos("Transportes", transportes);
 
         Grupo negro =  new Grupo((String) Solares.get(0).getFirst(),
                 (String) Solares.get(1).getFirst(),
@@ -356,33 +361,23 @@ public class Tablero {
         if (SolServTrans.getFirst().contains(pos)) { // Solares
             return null;
         }
-        if (SolServTrans.get(1).contains(pos)) { // Servicios
-            String nombre = "Serv" + (SolServTrans.get(1).indexOf(pos) + 1);
-            String tipo = "Servicios";
-            float valor = 500000;
-            Casilla casilla = new Casilla(nombre, tipo, pos, valor, banca);
-            casilla.setImpuesto(50000);
-            return casilla;
+        if (SolServTrans.get(1).contains(pos)) { // Servicio
+            return null;
         }
         if (SolServTrans.get(2).contains(pos)) { // Transporte
-            String nombre = "Trans" + (SolServTrans.get(2).indexOf(pos) + 1);
-            String tipo = "Transporte";
-            float valor = 500000;
-            Casilla casilla = new Casilla(nombre, tipo, pos, valor, banca);
-            casilla.setImpuesto(250000);
-            return casilla;
+            return null;
         }
 
 
         if (impuestos.contains(pos)) { // Impuestos
             String nombre = "Imp" + (impuestos.indexOf(pos) + 1);
-            return new Casilla(2000000, nombre, "Impuestos", pos, banca);
+            return new Impuesto(banca, nombre, "Impuestos", pos, 2000000);
         }
         if (SuCajEsp.getFirst().contains(pos)) { // Suerte
-            return new Casilla("Suerte", "Suerte", pos, banca);
+            return new CartaSuerte(banca, "Suerte", "Suerte", pos);
         }
-        if (SuCajEsp.get(1).contains(pos)) { // Caja
-            return new Casilla("Caja", "Comunidad", pos, banca);
+        if (SuCajEsp.get(1).contains(pos)) { // CajaCom
+            return new CartaComunidad(banca, "Comunidad", "Caja", pos);
         }
         if (SuCajEsp.get(2).contains(pos)) { // Especial
             int n = SuCajEsp.get(2).indexOf(pos);
@@ -393,40 +388,20 @@ public class Tablero {
                 case 3 -> "IrCarcel";
                 default -> "";
             };
-            Casilla casilla = new Casilla(nombre, "Especial", pos, banca);
-            if (n == 1) casilla.setImpuesto(500000);
-            else if (n == 2) casilla.setValor(0);
-            return casilla;
+            if (n == 2) {
+                Parking p = new Parking(banca, nombre, "Especial", pos);
+                p.setValor(0);
+                return p;
+            }
+            Especial esp = new Especial(banca, nombre, "Especial", pos);
+            if (n == 1) esp.setImpuesto(500000);
+            return esp;
         }
 
-        return new Casilla();
+        return null;
     }
 
-    private void asignarPrecioEdificios(Solar c, int pos) {
-        float valorCasa =  (int) PreciosConstruccion.get(SolServTrans.getFirst().indexOf(pos)).get(1);
-        float valorHotel =  (int) PreciosConstruccion.get(SolServTrans.getFirst().indexOf(pos)).get(2);
-        float valorPiscina =   (int) PreciosConstruccion.get(SolServTrans.getFirst().indexOf(pos)).get(3);
-        float valorPista = (int) PreciosConstruccion.get(SolServTrans.getFirst().indexOf(pos)).get(4);
 
-        c.setValorCasa(valorCasa);
-        c.setValorHotel(valorHotel);
-        c.setValorPiscina(valorPiscina);
-        c.setValorPista(valorPista);
-    }
-
-    private void asignarAlquileres(Solar c, int pos) {
-        float impuesto = (int) Alquileres.get(SolServTrans.getFirst().indexOf(pos)).get(1);
-        float alquilerCasa = (int) Alquileres.get(SolServTrans.getFirst().indexOf(pos)).get(2);
-        float alquilerHotel = (int) Alquileres.get(SolServTrans.getFirst().indexOf(pos)).get(3);
-        float alquilerPiscina = (int) Alquileres.get(SolServTrans.getFirst().indexOf(pos)).get(4);
-        float alquilerPista = (int) Alquileres.get(SolServTrans.getFirst().indexOf(pos)).get(5);
-
-        c.setImpuesto(impuesto);
-        c.setAlquilerCasa(alquilerCasa);
-        c.setAlquilerHotel(alquilerHotel);
-        c.setAlquilerPiscina(alquilerPiscina);
-        c.setAlquilerPista(alquilerPista);
-    }
 
     private String avataresString(ArrayList<Avatar> avatares){
         StringBuilder avs = new StringBuilder();
@@ -533,7 +508,7 @@ public class Tablero {
         }
 
         for (Grupo grupo : grupos.values()) {
-            for (Solar c : grupo.getMiembros()) {
+            for (Propiedad c : grupo.getMiembros()) {
                 grupo.setRentabilidad(grupo.getRentabilidad() + c.getRentabilidad());
             }
             if(grupoMasRentable == null) {
@@ -665,5 +640,13 @@ public class Tablero {
 
     public List<List<Object>> getSolares() {
         return Solares;
+    }
+
+    public List<List<Object>> getAlquileres() {
+        return Alquileres;
+    }
+
+    public List<List<Object>> getPreciosConstruccion() {
+        return PreciosConstruccion;
     }
 }
