@@ -4,7 +4,7 @@ import partida.*;
 
 import java.util.ArrayList;
 
-public class CartaComunidad {
+public class CartaComunidad extends Accion {
         public ArrayList<String> cartasComunidad;
         int contador = 0;
 
