@@ -19,13 +19,13 @@ public class Jugador {
     private boolean enCarcel; //Será true si el jugador está en la carcel
     private int tiradasCarcel; //Cuando está en la carcel, contará las tiradas sin éxito que ha hecho allí para intentar salir (se usa para limitar el numero de intentos).
     private int vueltas; //Cuenta las vueltas dadas al tablero.
-    private ArrayList<Casilla> propiedades; //Propiedades que posee el jugador.
-    private ArrayList<Casilla> hipotecas;
+    private ArrayList<Propiedad> propiedades; //Propiedades que posee el jugador.
+    private ArrayList<Propiedad> hipotecas;
     private int doblesConsecutivos = 0; // variable de clase para contar dobles
     private int cartaComunidadId = 0; // id de la carta de comunidad actual
     private int cartaSuerteId = 0; // id de la carta de suerte actual
     // --- Atributos adicionales para estadísticas ---
-    private float dineroInvertido = 0;           // Dinero invertido en compra de propiedades y edificaciones
+    private float dineroInvertido = 0;            // Dinero invertido en compra de propiedades y edificaciones
     private float pagoTasasEImpuestos = 0;      // Dinero pagado en tasas e impuestos
     private float pagoDeAlquileres = 0;         // Dinero pagado en alquileres
     private float cobroDeAlquileres = 0;        // Dinero cobrado por alquileres
@@ -94,8 +94,8 @@ public class Jugador {
 
     //Otros métodos:
     //Método para añadir una propiedad al jugador. Como parámetro, la casilla a añadir.
-    public void añadirPropiedad(Casilla casilla) {
-        this.propiedades.add(casilla);
+    public void añadirPropiedad(Propiedad p) {
+        this.propiedades.add(p);
     }
 
     //Método para eliminar una propiedad del arraylist de propiedades de jugador.
@@ -166,7 +166,6 @@ public class Jugador {
 
     // --- Método para mostrar estadísticas ---
     public void mostrarEstadisticas() {
-        System.out.println("{");
         System.out.println("\tdineroInvertido: " + (int)dineroInvertido);
         System.out.println("\tpagoTasasEImpuestos: " + (int)pagoTasasEImpuestos);
         System.out.println("\tpagoDeAlquileres: " + (int)pagoDeAlquileres);
@@ -174,7 +173,6 @@ public class Jugador {
         System.out.println("\tpasarPorCasillaDeSalida: " + (int)pasarPorCasillaDeSalida);
         System.out.println("\tpremiosInversionesOBote: " + (int)premiosInversionesOBote);
         System.out.println("\tvecesEnLaCarcel: " + vecesEnLaCarcel);
-        System.out.println("}");
     }
 
     public String getNombre() {
@@ -189,7 +187,7 @@ public class Jugador {
         return this.fortuna;
     }
 
-    public ArrayList<Casilla> getPropiedades() {
+    public ArrayList<Propiedad> getPropiedades() {
         if (propiedades == null) propiedades = new ArrayList<>();
         return propiedades;
     }
@@ -213,10 +211,12 @@ public class Jugador {
 
     public float getPatrimonio() {
         float patrimonio = this.fortuna;
-        for (Casilla casilla : this.getPropiedades()) {
-            patrimonio += casilla.getValor();
-            for (Edificio edificio : casilla.getEdificios()) {
-                patrimonio += edificio.getCoste();
+        for (Propiedad p : this.getPropiedades()) {
+            patrimonio += p.getValor();
+            if (p instanceof Solar s){
+                for (Edificio ed : s.getEdificios()) {
+                    patrimonio += ed.getCoste();
+                }
             }
         }
         return patrimonio;
@@ -259,7 +259,7 @@ public class Jugador {
         this.vueltas = vueltas;
     }
 
-    public void setPropiedades(ArrayList<Casilla> propiedades) {
+    public void setPropiedades(ArrayList<Propiedad> propiedades) {
         this.propiedades = propiedades;
     }
 

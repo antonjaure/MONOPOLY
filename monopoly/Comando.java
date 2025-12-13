@@ -43,12 +43,12 @@ public interface Comando {
     void verTablero();
 
     // Necesita el nombre del jugador a describir
-    void describirJugador(String nombre);
+    void descJugador(String nombre);
 
     // Necesita el nombre de la casilla
-    void describirCasilla(String nombre);
+    void descCasilla(String nombre);
 
-    void listarEnVenta();
+    void listarVenta();
 
     void listarJugadores();
 

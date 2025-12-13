@@ -2,7 +2,7 @@ package monopoly;
 
 public class PistaDeporte extends Edificio {
 
-    public PistaDeporte(String nombre, Casilla terreno, float coste, float alquiler) {
+    public PistaDeporte(String nombre, Solar terreno, float coste, float alquiler) {
         super(nombre, terreno, coste, alquiler);
     }
 
