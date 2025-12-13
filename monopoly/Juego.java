@@ -199,19 +199,29 @@ public class Juego implements Comando {
                 consola.imprimir("}\n");
                 return;
             }
-            if (jugadores != null && jugadores.size() >= 4) {
-                consola.imprimir("\t*** Máximo de 4 jugadores alcanzado. ***");
+            if (jugadores != null && jugadores.size() >= 4) { // O el límite que quieras (6)
+                consola.imprimir("\t*** Máximo de jugadores alcanzado. ***");
                 consola.imprimir("}\n");
                 return;
             }
+            
             String nombre = palabras[2];
             String tipo = palabras[3].toLowerCase(Locale.ROOT);
-            int numJ1 = (jugadores == null) ? 0 : jugadores.size();
             Jugador jugador = new Jugador(nombre, tipo, tablero.encontrar_casilla("Salida"), getAvatares());
-            // si se pudo crear el jugador => numJ2 sera numJ1 + 1
-            int numJ2 = (jugadores == null) ? 0 : jugadores.size();
-            if (numJ2 > numJ1) descJugador(nombre);
+            
+            boolean existe = false;
+            for(Jugador j : this.jugadores) {
+                if(j.getNombre().equals(nombre)) existe = true;
+            }
 
+            if (!existe) {
+                this.jugadores.add(jugador);
+                this.avatares.add(jugador.getAvatar()); 
+                consola.imprimir("\tJugador " + nombre + " creado con éxito.\n");
+                descJugador(nombre);
+            } else {
+                 consola.imprimir("\t*** El jugador ya existe o no se pudo crear. ***\n");
+            }
         }
         // hace una tirada de dados
         else if (comando.startsWith("lanzar dados")) {
@@ -641,7 +651,7 @@ public class Juego implements Comando {
     /*Metodo que ejecuta todas las acciones realizadas con el comando 'comprar nombre_casilla'.
      * Parámetro: cadena de caracteres con el nombre de la casilla.
      */
-    private void comprar(String nombre) {
+    public void comprar(String nombre) {
         if (jugadores == null) {
             consola.imprimir("\t*** No hay jugadores en la partida. ***");
             return;
@@ -666,7 +676,7 @@ public class Juego implements Comando {
     /*CAMBIOS POR HACER:
         * - En la tercera tirada si no sacas dobles te tiene que obligar a pagar y luego salir de la carcel con esa tirada.
      */
-    private void salirCarcel() {
+    public void salirCarcel() {
 
         if (jugadores == null || jugadores.isEmpty()) {
             consola.imprimir("\t*** No hay jugadores en la partida. ***");
@@ -738,7 +748,7 @@ public class Juego implements Comando {
     }
 
     // Metodo que realiza las acciones asociadas al comando 'listar enventa'.
-    private void listarVenta() {
+    public void listarVenta() {
         ArrayList<Casilla> sinDuenho = banca.getPropiedades();
         ArrayList<Casilla> enVenta = new ArrayList<>();
 
@@ -777,7 +787,7 @@ public class Juego implements Comando {
     }
 
     // Metodo que realiza las acciones asociadas al comando 'listar jugadores'.
-    private void listarJugadores() {
+    public void listarJugadores() {
         if (jugadores == null || jugadores.isEmpty()) {
             consola.imprimir("\t*** Ningún jugador registrado. ***");
             return;
@@ -793,7 +803,7 @@ public class Juego implements Comando {
     private void listarAvatares() {
     }
 
-    private void listarEdificios() {
+    public void listarEdificios() {
         ArrayList<Edificio> casas = tablero.getCasas();
         ArrayList<Edificio> hoteles = tablero.getHoteles();
         ArrayList<Edificio> piscinas = tablero.getPiscinas();
@@ -913,7 +923,7 @@ public class Juego implements Comando {
     }
 
     // Metodo que realiza las acciones asociadas al comando 'acabar turno'.
-    private void acabarTurno() throws DadosSinLanzarException {
+    public void acabarTurno() throws DadosSinLanzarException {
         if (jugadores == null || jugadores.isEmpty()) {
             consola.imprimir("\t*** No hay jugadores en la partida. ***");
             return;
