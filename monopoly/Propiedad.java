@@ -50,15 +50,15 @@ public abstract class Propiedad extends Casilla {
 
         if(evaluarCasilla(jugador)){
             Propiedad propiedad = (Propiedad) jugador.getAvatar().getCasilla();
-            if(propiedad.getDuenho() == MonopolyETSE.menu.getBanca()) { //Si la casilla no tiene dueño, se ofrece comprarla.
+            if(propiedad.getDuenho() == MonopolyETSE.juego.getBanca()) { //Si la casilla no tiene dueño, se ofrece comprarla.
                 float valor = propiedad.getValor();
                 jugador.sumarFortuna(-valor); //Se resta el valor de la casilla a la fortuna del jugador.
                 jugador.agregarDineroInvertido(valor);
-                MonopolyETSE.menu.getBanca().sumarFortuna(valor); //Se añade el valor de la casilla a la fortuna de laMonopolyETSE.menu.getBanca().
+                MonopolyETSE.juego.getBanca().sumarFortuna(valor); //Se añade el valor de la casilla a la fortuna de laMonopolyETSE.menu.getBanca().
 
                 propiedad.setDuenho(jugador); //El dueño de la casilla pasa a ser el Jugador jugador.
                 jugador.añadirPropiedad(propiedad); //Se añade la casilla al arraylist de propiedades del jugador.
-                MonopolyETSE.menu.getBanca().eliminarPropiedad(propiedad); //Se elimina la casilla del arraylist de propiedades de laMonopolyETSE.menu.getBanca().
+                MonopolyETSE.juego.getBanca().eliminarPropiedad(propiedad); //Se elimina la casilla del arraylist de propiedades de laMonopolyETSE.menu.getBanca().
 
                 System.out.println("\t" + Valor.GREEN + "¡Compra realizada con éxito!" + Valor.RESET);
             }

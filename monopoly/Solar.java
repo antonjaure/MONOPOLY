@@ -11,6 +11,7 @@ public class Solar extends Propiedad {
 
     public Solar(Jugador duenho, String nombre, String tipo, int posicion, float valor, float hipoteca) {
         super(duenho, nombre, tipo, posicion, valor, hipoteca);
+        this.edificios = new ArrayList<>();
         asignarAlquileres();
         asignarPrecioEdificios();
     }
@@ -24,8 +25,8 @@ public class Solar extends Propiedad {
     }
 
     private void asignarPrecioEdificios() {
-        List<List<Object>> PreciosConstruccion = MonopolyETSE.tablero.getPreciosConstruccion();
-        List<List<Integer>> SolServTrans = MonopolyETSE.tablero.getSolServTrans();
+        List<List<Object>> PreciosConstruccion = MonopolyETSE.juego.getTablero().getPreciosConstruccion();
+        List<List<Integer>> SolServTrans = MonopolyETSE.juego.getTablero().getSolServTrans();
         int pos = this.getPosicion();
 
         float valorCasa = (int) PreciosConstruccion.get(SolServTrans.getFirst().indexOf(pos)).get(1);
@@ -40,8 +41,8 @@ public class Solar extends Propiedad {
     }
 
     private void asignarAlquileres() {
-        List<List<Object>> Alquileres = MonopolyETSE.tablero.getAlquileres();
-        List<List<Integer>> SolServTrans = MonopolyETSE.tablero.getSolServTrans();
+        List<List<Object>> Alquileres = MonopolyETSE.juego.getTablero().getAlquileres();
+        List<List<Integer>> SolServTrans = MonopolyETSE.juego.getTablero().getSolServTrans();
         int pos = this.getPosicion();
 
         float impuesto = (int) Alquileres.get(SolServTrans.getFirst().indexOf(pos)).get(1);
@@ -81,7 +82,7 @@ public class Solar extends Propiedad {
                     return;
                 }
                 if (!construirCasa()) return;
-                String Cnom = "casa-" + (MonopolyETSE.tablero.getCasas().size()+1); // id de la casa
+                String Cnom = "casa-" + (MonopolyETSE.juego.getTablero().getCasas().size()+1); // id de la casa
                 Casa casa = new Casa(Cnom, this, getValorCasa(), getAlquilerCasa());
                 Jugador actual1 = this.getAvatares().getLast().getJugador();
                 // se paga la casa
@@ -91,7 +92,7 @@ public class Solar extends Propiedad {
                 getEdificios().add(casa);
                 float impCasa = getImpuesto() + getAlquilerCasa();
                 setImpuesto(impCasa);
-                MonopolyETSE.tablero.getCasas().add(casa);
+                MonopolyETSE.juego.getTablero().getCasas().add(casa);
                 break;
             case "hotel":
                 if (this.valores.get("hotel") > propietario.getFortuna()) {
@@ -99,7 +100,7 @@ public class Solar extends Propiedad {
                     return;
                 }
                 if (!construirHotel()) return;
-                String Hnom = "hotel-" + (MonopolyETSE.tablero.getHoteles().size()+1); // id del hotel
+                String Hnom = "hotel-" + (MonopolyETSE.juego.getTablero().getHoteles().size()+1); // id del hotel
                 Hotel hotel = new Hotel(Hnom, this, getValorHotel(), getAlquilerHotel());
                 Jugador actual2 = this.getAvatares().getLast().getJugador();
                 // paga el hotel
@@ -112,13 +113,13 @@ public class Solar extends Propiedad {
                     Edificio ed = it.next();
                     if (ed.getTipo().equals("casa")) {
                         it.remove();
-                        MonopolyETSE.tablero.getCasas().remove(ed);
+                        MonopolyETSE.juego.getTablero().getCasas().remove(ed);
                     }
                 }
                 float impHotel = getImpuesto() - getAlquilerCasa() * 4;
                 // se construye el hotel
                 getEdificios().add(hotel);
-                MonopolyETSE.tablero.getHoteles().add(hotel);
+                MonopolyETSE.juego.getTablero().getHoteles().add(hotel);
                 impHotel += getAlquilerHotel();
                 setImpuesto(impHotel);
                 break;
@@ -128,7 +129,7 @@ public class Solar extends Propiedad {
                     return;
                 }
                 if (!construirPiscina()) return;
-                String Pnom = "piscina-" + (MonopolyETSE.tablero.getPiscinas().size()+1); // id de la piscina
+                String Pnom = "piscina-" + (MonopolyETSE.juego.getTablero().getPiscinas().size()+1); // id de la piscina
                 Piscina piscina = new Piscina(Pnom, this, getValorPiscina(), getAlquilerPiscina());
                 Jugador actual3 = this.getAvatares().getLast().getJugador();
                 // se paga la piscina
@@ -138,7 +139,7 @@ public class Solar extends Propiedad {
                 getEdificios().add(piscina);
                 float impPisc = getImpuesto() + getAlquilerPiscina();
                 setImpuesto(impPisc);
-                MonopolyETSE.tablero.getPiscinas().add(piscina);
+                MonopolyETSE.juego.getTablero().getPiscinas().add(piscina);
                 break;
             case "pista":
                 if (this.valores.get("pista") > propietario.getFortuna()) {
@@ -146,7 +147,7 @@ public class Solar extends Propiedad {
                     return;
                 }
                 if (!construirPista()) return;
-                String Pinom = "pista-" + (MonopolyETSE.tablero.getPistas().size()+1); // id de la pista
+                String Pinom = "pista-" + (MonopolyETSE.juego.getTablero().getPistas().size()+1); // id de la pista
                 PistaDeporte pista = new PistaDeporte(Pinom, this, getValorPista(), getAlquilerPista());
                 Jugador actual4 = this.getAvatares().getLast().getJugador();
                 // se paga la pista
@@ -156,7 +157,7 @@ public class Solar extends Propiedad {
                 getEdificios().add(pista);
                 float impPista = getImpuesto() + getAlquilerPista();
                 setImpuesto(impPista);
-                MonopolyETSE.tablero.getPistas().add(pista);
+                MonopolyETSE.juego.getTablero().getPistas().add(pista);
                 break;
             default:
                 System.out.println("\t*** Tipo de edificio no registrado. ***");
@@ -166,7 +167,7 @@ public class Solar extends Propiedad {
     }
 
     public void venderEdificio(String tipoEd, int n) {
-        if (this.getDuenho() != MonopolyETSE.menu.getJugadores().get(MonopolyETSE.menu.getTurno())) {
+        if (this.getDuenho() != MonopolyETSE.juego.getJugadores().get(MonopolyETSE.juego.getTurno())) {
             System.out.println("\t*** No puedes vender. La casilla '" + this.getNombre() + "' no es tuya. ***");
             System.out.println("}\n");
             return;
@@ -176,7 +177,7 @@ public class Solar extends Propiedad {
             System.out.println("}\n");
             return;
         }
-        Jugador j = MonopolyETSE.menu.getJugadores().get(MonopolyETSE.menu.getTurno());
+        Jugador j = MonopolyETSE.juego.getJugadores().get(MonopolyETSE.juego.getTurno());
         if (getEdificios() == null || getEdificios().isEmpty()) setEdificios(new ArrayList<>());
         int count = 0;
         switch (tipoEd) {
@@ -195,7 +196,7 @@ public class Solar extends Propiedad {
                     if (ed.getTipo().equals("casa")) {
                         if (i >= count - n) {
                             it.remove();
-                            MonopolyETSE.tablero.getCasas().remove(ed);
+                            MonopolyETSE.juego.getTablero().getCasas().remove(ed);
                             float impCasa = getImpuesto() - getAlquilerCasa();
                             setImpuesto(impCasa);
                             j.sumarFortuna(getValorCasa());
@@ -220,7 +221,7 @@ public class Solar extends Propiedad {
                     Edificio ed = it2.next();
                     if (ed.getTipo().equals("hotel")) {
                         it2.remove();
-                        MonopolyETSE.tablero.getHoteles().remove(ed);
+                        MonopolyETSE.juego.getTablero().getHoteles().remove(ed);
                         float impHotel = getImpuesto() - getAlquilerHotel();
                         setImpuesto(impHotel);
                         j.sumarFortuna(getValorHotel());
@@ -248,7 +249,7 @@ public class Solar extends Propiedad {
                     Edificio ed = it3.next();
                     if (ed.getTipo().equals("piscina")) {
                         it3.remove();
-                        MonopolyETSE.tablero.getPiscinas().remove(ed);
+                        MonopolyETSE.juego.getTablero().getPiscinas().remove(ed);
                         float impPisc = getImpuesto() - getAlquilerPiscina();
                         setImpuesto(impPisc);
                         j.sumarFortuna(getValorPiscina());
@@ -276,7 +277,7 @@ public class Solar extends Propiedad {
                     Edificio ed = it4.next();
                     if (ed.getTipo().equals("pista")) {
                         it4.remove();
-                        MonopolyETSE.tablero.getPistas().remove(ed);
+                        MonopolyETSE.juego.getTablero().getPistas().remove(ed);
                         float impPista = getImpuesto() - getAlquilerPista();
                         setImpuesto(impPista);
                         j.sumarFortuna(getValorPista());
@@ -437,7 +438,7 @@ public class Solar extends Propiedad {
     }
 
     public boolean alquiler() {
-        if (this.getDuenho() != MonopolyETSE.menu.getBanca() && !estaHipotecada())
+        if (this.getDuenho() != MonopolyETSE.juego.getBanca() && !estaHipotecada())
             return true;
         return false;
     }
@@ -480,7 +481,10 @@ public class Solar extends Propiedad {
     }
 
     public ArrayList<Edificio> getEdificios() {
-        return edificios;
+        if (this.edificios == null) {
+            this.edificios = new ArrayList<>();
+        }
+        return this.edificios;
     }
     public float getValorCasa() {
         return valores.get("casa");

@@ -8,7 +8,7 @@ public class Servicio extends Propiedad {
     }
 
     public boolean alquiler() {
-        if (this.getDuenho() != MonopolyETSE.menu.getBanca() && !estaHipotecada())
+        if (this.getDuenho() != MonopolyETSE.juego.getBanca() && !estaHipotecada())
             return true;
         return false;
     }

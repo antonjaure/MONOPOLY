@@ -55,13 +55,7 @@ public abstract class Casilla {
     }
 
     public void gestionarPago(Jugador jugadorActual, Jugador banca, int tirada) {
-        boolean solvente = evaluarCasilla(jugadorActual);
 
-        if (!solvente) {
-            System.out.println("\t" + jugadorActual.getNombre() + " no tiene dinero suficiente para pagar esta casilla.");
-            // Avisar que debe hipotecar o declararse en bancarrota
-            return;
-        }
         if (this.duenho == jugadorActual) {
             System.out.println("\tEsta casilla te pertenece.");
             return;
@@ -77,8 +71,13 @@ public abstract class Casilla {
                 }
 
                 // Si la propiedad es de la banca significa que no es de nadie
-                if (p.getDuenho() == MonopolyETSE.menu.getBanca()) {
+                if (p.getDuenho() == MonopolyETSE.juego.getBanca()) {
                     System.out.println("\tCasilla en venta.");
+                    return;
+                }
+
+                if (!evaluarCasilla(jugadorActual)) {
+                    System.out.println("\t" + jugadorActual.getNombre() + " no tiene dinero suficiente para pagar el alquiler.");
                     return;
                 }
 
@@ -95,7 +94,7 @@ public abstract class Casilla {
 
                 jugadorActual.sumarFortuna(-cantidad);
                 duenho.sumarFortuna(cantidad);
-                if(duenho != MonopolyETSE.menu.getBanca()){
+                if(duenho != MonopolyETSE.juego.getBanca()){
                     float newRentabilidad = p.getRentabilidad() + cantidad;
                     p.setRentabilidad(newRentabilidad);
                 }
@@ -106,25 +105,38 @@ public abstract class Casilla {
             }
             // Casillas sin dueño (o de la banca)
             case Impuesto i -> {
+                if (!evaluarCasilla(jugadorActual)) {
+                    System.out.println("\t" + jugadorActual.getNombre() + " no tiene dinero para pagar el impuesto.");
+                    return;
+                }
                 float cantidad = i.getImpuesto();
                 jugadorActual.sumarFortuna(-cantidad);
-                Parking parking = (Parking) MonopolyETSE.tablero.encontrar_casilla("Parking");
+                Parking parking = (Parking) MonopolyETSE.juego.getTablero().encontrar_casilla("Parking");
                 parking.sumarValor(cantidad);
                 System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ que se depositan en el Parking");
                 // Actualizar estadísticas
                 jugadorActual.agregarPagoTasasEImpuestos(cantidad);
             }
-            case CartaSuerte su -> System.out.println("\t" + jugadorActual.getNombre() + " roba una carta.");
-            case CartaComunidad com -> System.out.println("\t" + jugadorActual.getNombre() + " roba una carta.");
             case Parking p -> {
-                System.out.println("\t" + jugadorActual.getNombre() + " recibe el bote de " + p.getValor() + "€");
+                Juego.consola.imprimir("\t" + jugadorActual.getNombre() + " recibe el bote de " + p.getValor() + "€");
+                // FUNCIONES DE ESTADÍSTICAS SOLICITADAS:
                 jugadorActual.sumarFortuna(p.getValor());
                 jugadorActual.agregarPremiosInversionesOBote(p.getValor());
                 p.setValor(0); // Vaciar el bote
             }
+            
             case Especial e -> {
-                if (e.getNombre().equals("Salida") || e.getPosicion() - tirada < 0) {
-                    System.out.println("\t" + jugadorActual.getNombre() + " cayó en la salida.");
+                // Aquí diferenciamos por el tipo o nombre de la casilla especial
+                if (e.getTipo().equals("Suerte")) {
+                    Juego.consola.imprimir("\t" + jugadorActual.getNombre() + " cae en Suerte.");
+                    MonopolyETSE.juego.sacarCartaSuerte();
+                } 
+                else if (e.getTipo().equals("Comunidad")) {
+                    Juego.consola.imprimir("\t" + jugadorActual.getNombre() + " cae en Caja de Comunidad.");
+                    MonopolyETSE.juego.sacarCartaComunidad();
+                }
+                else if (e.getNombre().equals("Salida") || this.posicion - tirada < 0) {
+                    Juego.consola.imprimir("\t" + jugadorActual.getNombre() + " cayó en la salida.");
                 } else if (e.getNombre().equals("IrCarcel")) {
                     jugadorActual.encarcelar();
                     jugadorActual.incrementarVecesEnCarcel();
@@ -146,7 +158,7 @@ public abstract class Casilla {
 
         switch(casilla) {
             case Propiedad p:
-                if(p.getDuenho() == MonopolyETSE.menu.getBanca()) {
+                if(p.getDuenho() == MonopolyETSE.juego.getBanca()) {
                     return actual.getFortuna() >= p.getValor(); // Si tiene dinero comprarla = true, else false
                 }
                 else if(p.getDuenho() != actual) {

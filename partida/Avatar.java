@@ -85,7 +85,7 @@ public class Avatar {
      */
     public void moverAvatar(int valorTirada) {
         Casilla origen = this.lugar;
-        Casilla destino = MonopolyETSE.tablero.avanzarCasillas(origen, valorTirada);
+        Casilla destino = MonopolyETSE.juego.getTablero().avanzarCasillas(origen, valorTirada);
 
         int posActual = origen.getPosicion();
         int posDestino = destino.getPosicion();
@@ -117,7 +117,7 @@ public class Avatar {
     // alternativa para mover un avatar directamente a una casilla, sin tener en cuenta por donde pase
     public void moverAvatar(String nombreCasilla) {
         Casilla origen = this.lugar;
-        Casilla destino = MonopolyETSE.tablero.encontrar_casilla(nombreCasilla);
+        Casilla destino = MonopolyETSE.juego.getTablero().encontrar_casilla(nombreCasilla);
 
         if(origen.getPosicion() > destino.getPosicion()) {
             System.out.println("\t" + this.getJugador().getNombre() + " pasa por Salida y recibe 2.000.000€");

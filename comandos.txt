@@ -45,35 +45,4 @@ lanzar dados 6+6
 lanzar dados 3+2
 edificar hotel
 acabar turno
-salir carcel
-lanzar dados 5+5
-lanzar dados 4+5 
-acabar turno
-lanzar dados 1+4
-acabar turno
-lanzar dados 1+1
-comprar Solar18
-lanzar dados 1+2
-comprar Solar20
-edificar casa
-edificar casa
-edificar casa 
-acabar turno
-lanzar dados 4+3
-acabar turno
-listar edificios
-listar edificios azul
-estadisticas
-estadisticas Maria
-estadisticas Pedro
-lanzar dados 5+5
-lanzar dados 3+2
-hipotecar Solar22
-hipotecar Solar20
-vender Solar20
-vender casas Solar20 4
-vender casas Solar20 3
-hipotecar Solar20
-hipotecar Solar19
-deshipotecar Solar18
-deshipotecar Solar19
+

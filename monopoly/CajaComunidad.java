@@ -25,7 +25,7 @@ public class CajaComunidad extends Carta {
                     jugador.sumarFortuna(-500000);
                     jugador.agregarPagoTasasEImpuestos(500000);
                     Casilla parking = MonopolyETSE.juego.getTablero().encontrar_casilla("Parking");
-                    if (parking != null) parking.sumarValor(500000);
+                    if (parking instanceof Parking) ((Parking) parking).sumarValor(500000);
                 }
                 break;
 

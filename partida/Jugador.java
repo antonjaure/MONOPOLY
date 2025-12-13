@@ -6,8 +6,7 @@ import java.util.Random;
 
 import monopoly.*;
 
-import static monopoly.MonopolyETSE.menu;
-import static monopoly.MonopolyETSE.tablero;
+import static monopoly.MonopolyETSE.juego;
 
 
 public class Jugador {
@@ -49,14 +48,14 @@ public class Jugador {
         }
 
         boolean tipoValido = false;
-        for (String tipo : menu.getTipos()) {
+        for (String tipo : juego.getTipos()) {
             if (tipo.equals(tipoAvatar)) {
                 tipoValido = true;
                 break;
             }
         }
         if (!tipoValido) {
-            System.out.println("\t*** Avatares disponibles: " + menu.getTipos() + " ***");
+            System.out.println("\t*** Avatares disponibles: " + juego.getTipos() + " ***");
             return;
         }
 
@@ -89,8 +88,8 @@ public class Jugador {
         inicio.anhadirAvatar(avatar);
         setAvatar(avatar);
 
-        menu.setJugador(this);
-        menu.setAvatar(avatar);
+        juego.setJugador(this);
+        juego.setAvatar(avatar);
     }
 
     //Otros métodos:
@@ -125,7 +124,7 @@ public class Jugador {
     * Se requiere disponer de las casillas del tablero para ello (por eso se pasan como parámetro).*/
     public void encarcelar() {
         Avatar avatar = this.getAvatar();
-        Casilla carcel = tablero.encontrar_casilla("Cárcel");
+        Casilla carcel = juego.getTablero().encontrar_casilla("Cárcel");
 
         // Mover a la cárcel
         avatar.getCasilla().eliminarAvatar(avatar);
@@ -141,7 +140,7 @@ public class Jugador {
     // Metodo para encontrar un jugador de la lista de jugadores activos
     // parametro: cadena con el nombre del jugador
     public static Jugador buscarJugador(String jugador) {
-        ArrayList<Jugador> jugadores = menu.getJugadores();
+        ArrayList<Jugador> jugadores = juego.getJugadores();
         if (jugadores == null || jugadores.isEmpty()) {
             System.out.println("\t*** No hay jugadores en la partida. ***");
             return null;

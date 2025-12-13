@@ -1,7 +1,6 @@
 package monopoly;
 
 import partida.*;
-import static monopoly.MonopolyETSE.tablero;
 import java.util.*;
 
 public class Tablero {
@@ -17,6 +16,7 @@ public class Tablero {
     private int contadorCartaComunidad = 0;
 
     public void añadirPropiedad(Propiedad p, int pos) {
+        if (posiciones == null) return;
         if (0 <= pos && pos < 11) this.posiciones.get(0).set(pos, p);
         if (11 <= pos && pos < 20) this.posiciones.get(1).set(pos - 11, p);
         if (20 <= pos && pos < 31) this.posiciones.get(2).set(pos - 20, p);
@@ -65,38 +65,50 @@ public class Tablero {
     public Jugador getBanca() {
         return this.banca;
     }
-    public ArrayList<ArrayList<Casilla>> getPosiciones() {
-        return this.posiciones;
+    public ArrayList<ArrayList<Casilla>> getPosiciones() { 
+        if(posiciones == null) generarCasillas(); 
+        return this.posiciones; 
     }
-    public HashMap<String, Grupo> getGrupos() {
-        return grupos;
+    
+    public HashMap<String, Grupo> getGrupos() { 
+        if(grupos == null) generarCasillas(); 
+        return grupos; 
     }
 
-
-
-    public Tablero() {}
-
-    //Constructor: únicamente le pasamos el jugador banca (que se creará desde el menú).
+    // --- CAMBIO EN EL CONSTRUCTOR ---
     public Tablero(Jugador banca) {
         this.banca = banca;
-        MonopolyETSE.menu.setTablero(this);
+        this.casas = new ArrayList<>();
+        this.hoteles = new ArrayList<>();
+        this.piscinas = new ArrayList<>();
+        this.pistas = new ArrayList<>();
+        this.grupos = new HashMap<>();
+        
+        // BORRA ESTA LÍNEA DEL CONSTRUCTOR:
+        // generarCasillas();  <-- ¡BORRAR!
+    }
+
+    // --- AÑADE ESTE MÉTODO NUEVO DEBAJO DEL CONSTRUCTOR ---
+    public void inicializar() {
+        generarCasillas();
     }
 
 
-    //Método para crear todas las casillas del tablero. Formado a su vez por cuatro métodos (1/lado).
     private void generarCasillas() {
         posiciones = new ArrayList<>();
+        
+        // 1. ESTO ES NUEVO: Primero creo las 4 filas vacías explícitamente.
+        // Antes intentabas meter cosas sin haber hecho esto -> Error de índice.
+        for (int i = 0; i < 4; i++) posiciones.add(new ArrayList<>());
 
-        for (int i = 0; i < 4; i++) {
-            posiciones.add(new ArrayList<>());
-        }
-
+        // 2. ESTO ES VITAL: Primero inserto los lados (llenan la lista con nulls y casillas especiales)
         this.insertarLadoSur();
         this.insertarLadoOeste();
         this.insertarLadoNorte();
         this.insertarLadoEste();
 
-        generarGrupos();
+        // 3. Y AL FINAL genero los grupos (que sobrescriben los nulls con propiedades)
+        generarGrupos(); 
     }
 
     private void generarGrupos() {
@@ -158,35 +170,38 @@ public class Tablero {
 
     //Método para insertar las casillas del lado norte.
     private void insertarLadoNorte() {
-        ArrayList<Casilla> ladoNorte = new ArrayList<>();
+        // CAMBIO: Obtenemos la lista 2 (ya creada vacía), no hacemos new
+        ArrayList<Casilla> ladoNorte = posiciones.get(2); 
         for (int i = 20; i < 31; i++) {
             ladoNorte.add(asignarCasilla(i));
         }
-        posiciones.add(ladoNorte);
     }
     //Método para insertar las casillas del lado sur.
     private void insertarLadoSur() {
-        ArrayList<Casilla> ladoSur = new ArrayList<>();
+        // CAMBIO: Obtenemos la lista 0
+        ArrayList<Casilla> ladoSur = posiciones.get(0);
         for (int i = 0; i < 11; i++) {
             ladoSur.add(asignarCasilla(i));
         }
-        posiciones.add(ladoSur);
+        // CAMBIO: Borramos el add final
     }
     //Método que inserta casillas del lado oeste.
     private void insertarLadoOeste() {
-        ArrayList<Casilla> ladoOeste = new ArrayList<>();
+        // CAMBIO: Obtenemos la lista 1
+        ArrayList<Casilla> ladoOeste = posiciones.get(1);
         for (int i = 11; i < 20; i++) {
             ladoOeste.add(asignarCasilla(i));
         }
-        posiciones.add(ladoOeste);
+        // CAMBIO: Borramos el add final
     }
     //Método que inserta las casillas del lado este.
     private void insertarLadoEste() {
-        ArrayList<Casilla> ladoEste = new ArrayList<>();
+        // CAMBIO: Obtenemos la lista 3
+        ArrayList<Casilla> ladoEste = posiciones.get(3);
         for (int i = 31; i < 40; i++) {
             ladoEste.add(asignarCasilla(i));
         }
-        posiciones.add(ladoEste);
+        // CAMBIO: Borramos el add final
     }
 
     //Para imprimir el tablero, modificamos el método toString().
@@ -199,10 +214,10 @@ public class Tablero {
         int columnas = 11; // Total de columnas necesarias
         int lenCasilla = 40;
 
-        byte iSur = 4;
-        byte iOeste = 5;
-        byte iNorte = 6;
-        byte iEste = 7;
+        byte iSur = 0;
+        byte iOeste = 1;
+        byte iNorte = 2;
+        byte iEste = 3;
 
         ////////////////// Crear matriz para organizar el tablero
         String[][] matrizTablero = new String[filas][columnas];
@@ -374,10 +389,10 @@ public class Tablero {
             return new Impuesto(banca, nombre, "Impuestos", pos, 2000000);
         }
         if (SuCajEsp.getFirst().contains(pos)) { // Suerte
-            return new CartaSuerte(banca, "Suerte", "Suerte", pos);
+            return new Especial(banca, "Suerte", "Suerte", pos);
         }
         if (SuCajEsp.get(1).contains(pos)) { // CajaCom
-            return new CartaComunidad(banca, "Comunidad", "Caja", pos);
+            return new Especial(banca, "Comunidad", "Caja", pos);
         }
         if (SuCajEsp.get(2).contains(pos)) { // Especial
             int n = SuCajEsp.get(2).indexOf(pos);
@@ -520,7 +535,7 @@ public class Tablero {
             }
         }
 
-        for (Jugador jugador : MonopolyETSE.menu.getJugadores()) {
+        for (Jugador jugador : MonopolyETSE.juego.getJugadores()) {
 
             if(jugadorMasVueltas == null || jugadorEnCabeza == null) {
                 //Inicializamos las variables en la primera iteración para poder usar los metodos sin errores.

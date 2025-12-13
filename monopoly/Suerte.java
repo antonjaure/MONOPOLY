@@ -70,7 +70,7 @@ public class Suerte extends Carta {
                 jugador.sumarFortuna(-150000);
                 jugador.agregarPagoTasasEImpuestos(150000);
                 Casilla parking = MonopolyETSE.juego.getTablero().encontrar_casilla("Parking");
-                if (parking != null) parking.sumarValor(150000);
+                if (parking instanceof Parking) ((Parking) parking).sumarValor(150000);
                 Juego.consola.imprimir("\t" + jugador.getNombre() + " ha pagado una multa de 150.000€.");
                 break;
 
@@ -95,7 +95,7 @@ public class Suerte extends Carta {
                     } else {
                         // Aquí forzamos el pago doble manualmente o llamamos a gestionarPago
                         // Como tu gestionarPago usa "impuesto" directo para transporte, lo calculamos aquí:
-                        float pago = siguienteTransporte.getImpuesto() * 2;
+                        float pago = ((Transporte) siguienteTransporte).getImpuesto() * 2;
                         if (jugador.getFortuna() >= pago) {
                             jugador.sumarFortuna(-pago);
                             siguienteTransporte.getDuenho().sumarFortuna(pago);
