@@ -73,6 +73,14 @@ public class Juego implements Comando {
         return banca;
     }
 
+    public ArrayList<Carta> getBarajaSuerte() {
+        return barajaSuerte;
+    }
+
+    public ArrayList<Carta> getBarajaComunidad() {
+        return barajaComunidad;
+    }
+
     public Juego() {
         MonopolyETSE.juego = this; 
 

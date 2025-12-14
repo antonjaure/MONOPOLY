@@ -389,10 +389,10 @@ public class Tablero {
             return new Impuesto(banca, nombre, "Impuestos", pos, 2000000);
         }
         if (SuCajEsp.getFirst().contains(pos)) { // Suerte
-            return new Especial(banca, "Suerte", "Suerte", pos);
+            return new CasillaSuerte(banca, "Suerte", "Caja", pos);
         }
         if (SuCajEsp.get(1).contains(pos)) { // CajaCom
-            return new Especial(banca, "Comunidad", "Caja", pos);
+            return new CasillaCom(banca, "Comunidad", "Caja", pos);
         }
         if (SuCajEsp.get(2).contains(pos)) { // Especial
             int n = SuCajEsp.get(2).indexOf(pos);
