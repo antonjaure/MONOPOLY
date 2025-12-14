@@ -368,7 +368,7 @@ public class Tablero {
             else tablero.append("\n").append(" ").append(bordeCasilla).append(" ".repeat(198)).append(" ").append(bordeCasilla).append("\n");
         }
 
-        return tablero.toString();
+        return "\n" + tablero;
     }
 
     //Método para asignar el tipo de casilla

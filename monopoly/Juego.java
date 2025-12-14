@@ -91,30 +91,29 @@ public class Juego implements Comando {
         banca.setNombre("Banca");
 
 
-        this.tablero = new Tablero(this.banca); 
-        
-
-        this.tablero.inicializar(); 
+        this.tablero = new Tablero(this.banca);
 
         this.barajaSuerte = new ArrayList<>();
         this.barajaComunidad = new ArrayList<>();
         inicializarBarajas();
+
+        this.tablero.inicializar();
     }
     private void inicializarBarajas() {
-        barajaSuerte.add(new Suerte("Decides hacer un viaje de placer. Avanza hasta Solar19. Si pasas por la casilla de Salida, cobra 2.000.000€.", 0));
-        barajaSuerte.add(new Suerte("Los acreedores te persiguen por impago. Ve a la Cárcel. Ve directamente sin pasar por la casilla de Salida y sin cobrar los 2.000.000€.", 1));
-        barajaSuerte.add(new Suerte("¡Has ganado el bote de la lotería! Recibe 1.000.000€.", 2));
-        barajaSuerte.add(new Suerte("Has sido elegido presidente de la junta directiva. Paga a cada jugador 250.000€.", 3));
-        barajaSuerte.add(new Suerte("¡Hora punta de tráfico! Retrocede tres casillas.", 4));
-        barajaSuerte.add(new Suerte("Te multan por usar el móvil mientras conduces. Paga 150.000€.", 5));
-        barajaSuerte.add(new Suerte("Avanza hasta la casilla de transporte más cercana. Si no tiene dueño, puedes comprarla...", 6));
+        barajaSuerte.add(new Suerte("\tDecides hacer un viaje de placer. Avanza hasta Solar19. Si pasas por la casilla de Salida, cobra 2.000.000€.", 0));
+        barajaSuerte.add(new Suerte("\tLos acreedores te persiguen por impago. Ve a la Cárcel. Ve directamente sin pasar por la casilla de Salida y sin cobrar los 2.000.000€.", 1));
+        barajaSuerte.add(new Suerte("\t¡Has ganado el bote de la lotería! Recibe 1.000.000€.", 2));
+        barajaSuerte.add(new Suerte("\tHas sido elegido presidente de la junta directiva. Paga a cada jugador 250.000€.", 3));
+        barajaSuerte.add(new Suerte("\t¡Hora punta de tráfico! Retrocede tres casillas.", 4));
+        barajaSuerte.add(new Suerte("\tTe multan por usar el móvil mientras conduces. Paga 150.000€.", 5));
+        barajaSuerte.add(new Suerte("\tAvanza hasta la casilla de transporte más cercana. Si no tiene dueño, puedes comprarla...", 6));
 
-        barajaComunidad.add(new CajaComunidad("Paga 500.000€ por un fin de semana en un balneario de 5 estrellas.", 0));
-        barajaComunidad.add(new CajaComunidad("Te investigan por fraude de identidad. Ve a la Cárcel. Ve directamente...", 1));
-        barajaComunidad.add(new CajaComunidad("Colócate en la casilla de Salida. Cobra 2.000.000€.", 2));
-        barajaComunidad.add(new CajaComunidad("Devolución de Hacienda. Cobra 500.000€.", 3));
-        barajaComunidad.add(new CajaComunidad("Retrocede hasta Solar1 para comprar antigüedades exóticas.", 4));
-        barajaComunidad.add(new CajaComunidad("Ve a Solar20 para disfrutar del San Fermín. Si pasas por la casilla de Salida, cobra 2.000.000€.", 5));
+        barajaComunidad.add(new CajaComunidad("\tPaga 500.000€ por un fin de semana en un balneario de 5 estrellas.", 0));
+        barajaComunidad.add(new CajaComunidad("\tTe investigan por fraude de identidad. Ve a la Cárcel. Ve directamente...", 1));
+        barajaComunidad.add(new CajaComunidad("\tColócate en la casilla de Salida. Cobra 2.000.000€.", 2));
+        barajaComunidad.add(new CajaComunidad("\tDevolución de Hacienda. Cobra 500.000€.", 3));
+        barajaComunidad.add(new CajaComunidad("\tRetrocede hasta Solar1 para comprar antigüedades exóticas.", 4));
+        barajaComunidad.add(new CajaComunidad("\tVe a Solar20 para disfrutar del San Fermín. Si pasas por la casilla de Salida, cobra 2.000.000€.", 5));
     }
 
 
@@ -683,10 +682,10 @@ public class Juego implements Comando {
             // acabarTurno();
             return; // Terminar turno
         } 
-        else if(destino.getTipo().equals("Comunidad")){
+        else if(destino instanceof CasillaCom){
             sacarCartaComunidad();
         }
-        else if(destino.getTipo().equals("Suerte")){
+        else if(destino instanceof CasillaSuerte){
             sacarCartaSuerte();
         }
         else {

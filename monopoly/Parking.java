@@ -9,6 +9,12 @@ public class Parking extends Accion {
         super(duenho, nombre, tipo, posicion);
     }
 
+    @Override
+    public String toString() {
+        return super.toString() +
+                "\n\tBote: " + valor;
+    }
+
     public float getValor() {
         return valor;
     }

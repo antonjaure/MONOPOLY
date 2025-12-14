@@ -16,6 +16,7 @@ public class Solar extends Propiedad {
         asignarPrecioEdificios();
     }
 
+    @Override
     public String toString() {
         return super.toString() +
                 "\n\tEdificios: " + edificios +

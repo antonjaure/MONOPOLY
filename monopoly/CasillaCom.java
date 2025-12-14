@@ -12,6 +12,12 @@ public class CasillaCom extends Accion{
         baraja = MonopolyETSE.juego.getBarajaComunidad();
     }
 
+    @Override
+    public String toString() {
+        return super.toString() +
+                "\n\tBaraja: " + baraja.size() + " cartas";
+    }
+
     public ArrayList<Carta> getBaraja() {
         return baraja;
     }

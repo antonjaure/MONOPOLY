@@ -51,7 +51,7 @@ public abstract class Casilla {
     public String toString() {
         return "\tnombre: " + this.nombre +
                 "\n\ttipo: " + this.tipo +
-                "\n\tpropietario: " + this.duenho;
+                "\n\tpropietario: " + this.duenho.getNombre();
     }
 
     public void gestionarPago(Jugador jugadorActual, Jugador banca, int tirada) {

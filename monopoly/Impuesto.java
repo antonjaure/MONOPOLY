@@ -17,4 +17,10 @@ public class Impuesto extends Casilla {
         super(duenho, nombre, tipo, posicion);
         this.setImpuesto(impuesto);
     }
+
+    @Override
+    public String toString() {
+        return super.toString() +
+                "\n\tImpuesto: " + impuesto;
+    }
 }
