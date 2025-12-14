@@ -660,47 +660,47 @@ public class Juego implements Comando {
         int dado2Val;
         boolean volverATirar = true;
 
-        while (volverATirar) {
-            // Determinar tirada
-            if (forzado) {
-                dado1Val = dado1Forzado;
-                dado2Val = dado2Forzado;
-            } else {
-                dado1Val = new Dado().hacerTirada();
-                dado2Val = new Dado().hacerTirada();
-            }
-            valorTirada = dado1Val + dado2Val;
+        if (forzado) {
+            dado1Val = dado1Forzado;
+            dado2Val = dado2Forzado;
+        } else {
+            dado1Val = new Dado().hacerTirada();
+            dado2Val = new Dado().hacerTirada();
+        }
 
-            consola.imprimir("\tTirada: " + dado1Val + " + " + dado2Val + " = " + valorTirada);
+        valorTirada = dado1Val + dado2Val;
+        consola.imprimir("\tTirada: " + dado1Val + " + " + dado2Val + " = " + valorTirada);
 
             // Verificar dobles
-            if (dado1Val == dado2Val) {
+        if (dado1Val == dado2Val) {
 
-                jugadorActual.setDoblesConsecutivos(jugadorActual.getDoblesConsecutivos() + 1);
+            jugadorActual.setDoblesConsecutivos(jugadorActual.getDoblesConsecutivos() + 1);
 
-                // tres dobles = carcel
-                if (jugadorActual.getDoblesConsecutivos() == 3) {
-                    jugadorActual.encarcelar();
-                    jugadorActual.setDoblesConsecutivos(0);
-                    jugadorActual.incrementarVecesEnCarcel();
-                    // acabarTurno();
-                    return;
-                } else {
-                    consola.imprimir("\t¡Dobles! " + avatarActual.getJugador().getNombre() + " vuelve a tirar.");
-                }
+            // tres dobles = carcel
+            if (jugadorActual.getDoblesConsecutivos() == 3) {
+                jugadorActual.encarcelar();
+                jugadorActual.setDoblesConsecutivos(0);
+                jugadorActual.incrementarVecesEnCarcel();
+                // acabarTurno();
+                tirado=true;
+                return;
             } else {
-                jugadorActual.setDoblesConsecutivos(0); // Reiniciar si no es doble
+                consola.imprimir("\t¡Dobles! " + avatarActual.getJugador().getNombre() + " vuelve a tirar.");
+                tirado = false;
             }
-            // Mover avatar
-            avatarActual.moverAvatar(valorTirada);
+        } else {
+            jugadorActual.setDoblesConsecutivos(0); // Reiniciar si no es doble
+            tirado = true;
+        }
+        // Mover avatar
+        avatarActual.moverAvatar(valorTirada);
 
-            if (forzado) break;
-            if (dado1Val != dado2Val) volverATirar = false; // No seguir tirando si no es doble
-            else {
-                try {
-                    Thread.sleep(1000); // pausa de 1 segundos
-                } catch (InterruptedException e) {
-                }
+        if (forzado) return;
+        if (dado1Val != dado2Val) volverATirar = false; // No seguir tirando si no es doble
+        else {
+            try {
+                Thread.sleep(1000); // pausa de 1 segundos
+            } catch (InterruptedException e) {
             }
         }
 
@@ -712,6 +712,7 @@ public class Juego implements Comando {
             jugadorActual.setDoblesConsecutivos(0);
             jugadorActual.incrementarVecesEnCarcel();
             // acabarTurno();
+            tirado = true;
             return; // Terminar turno
         } 
         else if(destino instanceof CasillaCom){
@@ -732,7 +733,7 @@ public class Juego implements Comando {
         }
         consola.imprimir(tablero.toString());
 
-        tirado = true; // marcar que el jugador ya tiró
+        //tirado = true; // marcar que el jugador ya tiró
     }
     @Override
     public void lanzarDados() throws DadosException {

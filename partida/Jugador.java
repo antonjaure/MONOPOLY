@@ -90,8 +90,8 @@ public class Jugador {
         inicio.anhadirAvatar(avatar);
         setAvatar(avatar);
 
-        juego.setJugador(this);
-        juego.setAvatar(avatar);
+        //juego.setJugador(this);
+        //juego.setAvatar(avatar);
     }
 
     //Otros métodos:
