@@ -1,5 +1,6 @@
 package partida;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -24,6 +25,7 @@ public class Jugador {
     private int doblesConsecutivos = 0; // variable de clase para contar dobles
     private int cartaComunidadId = 0; // id de la carta de comunidad actual
     private int cartaSuerteId = 0; // id de la carta de suerte actual
+    private ArrayList<Trato> tratos; // lista de tratos que tiene el jugador
     // --- Atributos adicionales para estadísticas ---
     private float dineroInvertido = 0;            // Dinero invertido en compra de propiedades y edificaciones
     private float pagoTasasEImpuestos = 0;      // Dinero pagado en tasas e impuestos
@@ -220,6 +222,14 @@ public class Jugador {
             }
         }
         return patrimonio;
+    }
+
+    public ArrayList<Trato> getTratos() {
+        return tratos;
+    }
+
+    public void setTratos(ArrayList<Trato> tratos) {
+        this.tratos = tratos;
     }
 
     public boolean isEnCarcel() { //getter para saber si esta en la carcel

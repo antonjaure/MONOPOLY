@@ -1,6 +1,7 @@
 package monopoly;
 
 import excepciones.*;
+import partida.*;
 
 public interface Comando {
 
@@ -34,6 +35,17 @@ public interface Comando {
 
     // Necesita saber QUÉ deshipotecar
     void deshipotecar(String nombreCasilla);
+
+
+
+   /*LAS DISTINTAS IMPLEMENTACIONES DE PROPORCIONAR TRATOS
+    las variables con un 1 en el nombre pertenecen al jugador que propone el trato
+    las variables con un 2 en el nombre pertenecen al jugador al que se le propone el trato*/
+   
+    void proponerTrato(String comando) throws TratosException;
+
+    //void listarTratos(Jugador jugador);
+
 
 
     // ==========================================================

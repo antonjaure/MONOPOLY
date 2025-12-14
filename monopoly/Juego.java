@@ -32,6 +32,7 @@ public class Juego implements Comando {
     private int indiceSuerte = 0;
     private int indiceComunidad = 0;
     public static ConsolaNormal consola = new ConsolaNormal();
+    private ArrayList<Trato> tratos;
 
     public void setJugador(Jugador jugador) {
         if (jugadores == null) {
@@ -340,6 +341,18 @@ public class Juego implements Comando {
                         mostrarEstadisticas(partes[1]); // De un jugador
                     }
                     break;
+
+                case "trato":
+                    if(partes[2].equals("cambiar") && partes.length == 5 || partes.length == 6) {
+                       try{
+                            proponerTrato(comando);
+                        }catch (Exception error) {
+                            consola.imprimir(error.getMessage());
+                        }
+                    }
+                    else{
+                        consola.imprimir("\t*** Uso: trato <nombre del jugador que recibe el trato>  cambiar (<trato>) ***");
+                    }
 
                 case "help":
                 case "ayuda":
@@ -1014,4 +1027,139 @@ public class Juego implements Comando {
             consola.imprimir("*** Error: no se encontró el archivo. ***\n");
         }
     }
+
+    // Método simple para verificar si un String es un número
+    private boolean esNumero(String str) {
+        if (str == null) return false;
+        try {
+            Float.parseFloat(str);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+
+    @Override
+    public void proponerTrato(String comando) throws TratosException {
+
+        
+
+        Jugador jugadorPropone = jugadores.get(turno);
+        Jugador jugadorRecibe = null;
+        Propiedad propiedadPropone = null;
+        Propiedad propiedadRecibe = null;
+        float dineroPropone = 0.0f;
+        float dineroRecibe = 0.0f;
+
+
+       
+        String[] primeraParte = comando.split(":");
+        String cabecera = primeraParte[0].trim(); // "trato Maria"
+        String nombreJugadorRecibe = cabecera.substring(6).trim(); // Quitamos "trato " (6 chars)
+
+        for (Jugador j : jugadores) {
+            if (j.getNombre().equalsIgnoreCase(nombreJugadorRecibe)) {
+                if (j == jugadorPropone) {
+                    throw new TratosException("No puedes proponerte un trato a ti mismo.");
+                }
+                else {
+                    jugadorRecibe= j;
+                }
+            }
+        }
+
+        int inicioParentesis = comando.indexOf('(');
+        int finParentesis = comando.lastIndexOf(')');
+
+        if (inicioParentesis == -1 || finParentesis == -1) {
+                System.out.println("Error: Formato incorrecto (faltan paréntesis).");
+                return;
+            }
+
+        String contenido = comando.substring(inicioParentesis + 1, finParentesis);
+        // contenido ahora es ej: "Solar12 y 100000, Solar3"
+
+        // 3. Dividir en dos partes usando la coma (,)
+        // parte[0] = Lo que ofrece el jugador que propone (Jugador 1)
+        // parte[1] = Lo que pide a cambio (Jugador 2)
+        String[] lados = contenido.split(",");
+
+        if (lados.length != 2) {
+            System.out.println("Error: El trato debe tener dos partes separadas por coma.");
+            return;
+        }
+
+        String lado1 = lados[0].trim();
+
+        // Dividimos por " y " (con espacios para evitar romper nombres que contengan 'y')
+        // "\\s+y\\s+" busca la letra 'y' rodeada de espacios.
+        String[] elementos = lado1.split("\\s+y\\s+");
+
+        for (String elemento : elementos) {
+            elemento = elemento.trim();
+            
+            // Intentamos ver si es dinero
+            if (esNumero(elemento)) {
+                dineroPropone = Float.parseFloat(elemento);
+                if (jugadorPropone.getFortuna() < dineroPropone)
+                    throw new TratosException(jugadorPropone.getNombre() + " no tiene suficiente dinero para realizar el trato.");
+
+            } else {
+                // Si no es número, asumimos que es una propiedad
+                Casilla casilla = tablero.encontrar_casilla(elemento);
+
+                if (propiedadPropone == null)
+                    throw new TratosException("La casilla '" + propiedadPropone + "' no existe.");
+                if (!(propiedadPropone instanceof Propiedad))
+                    throw new TratosException("La casilla '" + propiedadPropone + "' no es una propiedad.");
+
+                //Comprobamos que el jugador son dueños de las propiedades
+                if(jugadorPropone.getPropiedades().contains(propiedadPropone)) 
+                    throw new TratosException(jugadorPropone.getNombre() + " no es dueño de la propiedad '" + propiedadPropone + "'."); 
+
+                propiedadPropone = (Propiedad) casilla;
+            }
+        }
+
+
+        //Segunda mitad para jugador Recibe
+
+        String lado2 = lados[1].trim();
+
+        // Dividimos por " y " (con espacios para evitar romper nombres que contengan 'y')
+        // "\\s+y\\s+" busca la letra 'y' rodeada de espacios.
+        String[] elementos2 = lado2.split("\\s+y\\s+");
+
+         for (String elemento : elementos2) {
+            elemento = elemento.trim();
+            
+            // Intentamos ver si es dinero
+            if (esNumero(elemento)) {
+                dineroRecibe = Float.parseFloat(elemento);
+                //No se comprueba el dinero que tiene el que recibe el trato ya que puede hipotecar o vender edificios en su turno
+
+            } else {
+                // Si no es número, asumimos que es una propiedad
+                Casilla casilla = tablero.encontrar_casilla(elemento);
+
+                if (propiedadRecibe == null)
+                    throw new TratosException("La casilla '" + propiedadRecibe + "' no existe.");
+                if (!(propiedadRecibe instanceof Propiedad))
+                    throw new TratosException("La casilla '" + propiedadRecibe + "' no es una propiedad.");
+
+                //Comprobamos que el jugador son dueños de las propiedades
+                if(jugadorRecibe.getPropiedades().contains(propiedadRecibe)) 
+                    throw new TratosException(jugadorRecibe.getNombre() + " no es dueño de la propiedad '" + propiedadRecibe + "'."); 
+
+                propiedadRecibe = (Propiedad) casilla;
+            }
+
+        }
+
+        Trato trato = new Trato(jugadorPropone, jugadorRecibe, propiedadPropone, propiedadRecibe, dineroPropone, dineroRecibe);
+
+        this.tratos.add(trato);
+    }
+
 }
