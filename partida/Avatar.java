@@ -92,14 +92,14 @@ public class Avatar {
     
         // Comprobar si se pasó por la salida (posición 0)
         if ((posActual + valorTirada) >= totalCasillas) {
-            System.out.println("\t" + this.getJugador().getNombre() + " pasa por Salida y recibe 2.000.000€");
+            Juego.consola.imprimir("\t" + this.getJugador().getNombre() + " pasa por Salida y recibe 2.000.000€");
             this.getJugador().sumarFortuna(2000000f);
             this.getJugador().agregarPasarPorSalida(2000000f);
             int num_vueltas = this.getJugador().getVueltas();
             this.getJugador().setVueltas(num_vueltas + 1);
         }
         /*if (origen.getPosicion() - valorTirada < 0) {
-            System.out.println("\t" + this.getJugador().getNombre() + " pasa por Salida y recibe 2.000.000€");
+            Juego.consola.imprimir("\t" + this.getJugador().getNombre() + " pasa por Salida y recibe 2.000.000€");
             this.getJugador().sumarFortuna(2000000f);
             this.getJugador().agregarPasarPorSalida(2000000f);
         }*/
@@ -110,7 +110,7 @@ public class Avatar {
         this.lugar = destino;
     
         // Mostrar movimiento
-        System.out.println("\tEl avatar " + this.id + " avanza " + valorTirada +
+        Juego.consola.imprimir("\tEl avatar " + this.id + " avanza " + valorTirada +
                 " posiciones, desde '" + origen.getNombre() + "' hasta '" + destino.getNombre() + "'.");
     }
     // alternativa para mover un avatar directamente a una casilla, sin tener en cuenta por donde pase
@@ -119,7 +119,7 @@ public class Avatar {
         Casilla destino = MonopolyETSE.juego.getTablero().encontrar_casilla(nombreCasilla);
 
         if(origen.getPosicion() > destino.getPosicion()) {
-            System.out.println("\t" + this.getJugador().getNombre() + " pasa por Salida y recibe 2.000.000€");
+            Juego.consola.imprimir("\t" + this.getJugador().getNombre() + " pasa por Salida y recibe 2.000.000€");
             this.getJugador().sumarFortuna(2000000f);
             this.getJugador().agregarPasarPorSalida(2000000f);
             int num_vueltas = this.getJugador().getVueltas();
@@ -132,7 +132,7 @@ public class Avatar {
         this.lugar = destino;
 
         // Mostrar movimiento
-        System.out.println("\tEl avatar " + this.id + " avanza hasta '" + destino.getNombre() + "'.");
+        Juego.consola.imprimir("\tEl avatar " + this.id + " avanza hasta '" + destino.getNombre() + "'.");
     }
     
     /*Método que permite generar un ID para un avatar. Sólo lo usamos en esta clase (por ello es privado).

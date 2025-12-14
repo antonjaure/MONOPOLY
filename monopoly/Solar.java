@@ -70,7 +70,7 @@ public class Solar extends Propiedad {
             }
         }
         if (count < tamGrupo) {
-            System.out.println("\t*** No se puede edificar. Necesitas adquirir todo el grupo primero. ***");
+            Juego.consola.imprimir("\t*** No se puede edificar. Necesitas adquirir todo el grupo primero. ***");
             return;
         }
         if (this.getEdificios() == null) setEdificios(new ArrayList<>());
@@ -78,7 +78,7 @@ public class Solar extends Propiedad {
         switch (tipo) {
             case "casa":
                 if (this.valores.get("casa") > propietario.getFortuna()) {
-                    System.out.println("\t*** No tienes suficiente liquidez. Coste por casa: " + valores.get("casa") + " ***");
+                    Juego.consola.imprimir("\t*** No tienes suficiente liquidez. Coste por casa: " + valores.get("casa") + " ***");
                     return;
                 }
                 if (!construirCasa()) return;
@@ -96,7 +96,7 @@ public class Solar extends Propiedad {
                 break;
             case "hotel":
                 if (this.valores.get("hotel") > propietario.getFortuna()) {
-                    System.out.println("\t*** No tienes suficiente liquidez. Coste por hotel: " + valores.get("hotel") + " ***");
+                    Juego.consola.imprimir("\t*** No tienes suficiente liquidez. Coste por hotel: " + valores.get("hotel") + " ***");
                     return;
                 }
                 if (!construirHotel()) return;
@@ -125,7 +125,7 @@ public class Solar extends Propiedad {
                 break;
             case "piscina":
                 if (this.valores.get("piscina") > propietario.getFortuna()) {
-                    System.out.println("\t*** No tienes suficiente liquidez. Coste por piscina:  " + valores.get("piscina") + " ***");
+                    Juego.consola.imprimir("\t*** No tienes suficiente liquidez. Coste por piscina:  " + valores.get("piscina") + " ***");
                     return;
                 }
                 if (!construirPiscina()) return;
@@ -143,7 +143,7 @@ public class Solar extends Propiedad {
                 break;
             case "pista":
                 if (this.valores.get("pista") > propietario.getFortuna()) {
-                    System.out.println("\t*** No tienes suficiente liquidez. Coste por pista: " + valores.get("pista") + " ***");
+                    Juego.consola.imprimir("\t*** No tienes suficiente liquidez. Coste por pista: " + valores.get("pista") + " ***");
                     return;
                 }
                 if (!construirPista()) return;
@@ -160,21 +160,21 @@ public class Solar extends Propiedad {
                 MonopolyETSE.juego.getTablero().getPistas().add(pista);
                 break;
             default:
-                System.out.println("\t*** Tipo de edificio no registrado. ***");
+                Juego.consola.imprimir("\t*** Tipo de edificio no registrado. ***");
                 return;
         }
-        System.out.println("\t" + Valor.GREEN + "Edificio (" + tipo + ") construido en " + this.getNombre() + Valor.RESET);
+        Juego.consola.imprimir("\t" + Valor.GREEN + "Edificio (" + tipo + ") construido en " + this.getNombre() + Valor.RESET);
     }
 
     public void venderEdificio(String tipoEd, int n) {
         if (this.getDuenho() != MonopolyETSE.juego.getJugadores().get(MonopolyETSE.juego.getTurno())) {
-            System.out.println("\t*** No puedes vender. La casilla '" + this.getNombre() + "' no es tuya. ***");
-            System.out.println("}\n");
+            Juego.consola.imprimir("\t*** No puedes vender. La casilla '" + this.getNombre() + "' no es tuya. ***");
+            Juego.consola.imprimir("}\n");
             return;
         }
         if (n < 1) {
-            System.out.println("\t*** Debes vender al menos 1 propiedad. ***");
-            System.out.println("}\n");
+            Juego.consola.imprimir("\t*** Debes vender al menos 1 propiedad. ***");
+            Juego.consola.imprimir("}\n");
             return;
         }
         Jugador j = MonopolyETSE.juego.getJugadores().get(MonopolyETSE.juego.getTurno());
@@ -186,7 +186,7 @@ public class Solar extends Propiedad {
                     if (ed.getTipo().equals("casa")) count++;
                 }
                 if (count < n) {
-                    System.out.println("\t*** No puedes vender " + n + " casas. Solo tienes " + count + ". ***");
+                    Juego.consola.imprimir("\t*** No puedes vender " + n + " casas. Solo tienes " + count + ". ***");
                     return;
                 }
                 int i = 0;
@@ -204,7 +204,7 @@ public class Solar extends Propiedad {
                         i++;
                     }
                 }
-                System.out.println("\t" + j.getNombre() + " ha vendido " + n + " casas en " + this.getNombre() + ", recibiendo " + (n*getValorCasa())
+                Juego.consola.imprimir("\t" + j.getNombre() + " ha vendido " + n + " casas en " + this.getNombre() + ", recibiendo " + (n*getValorCasa())
                         + "€. En la propiedad queda(n) " + (count - n) + " casas.");
                 break;
             case "hotel":
@@ -212,8 +212,8 @@ public class Solar extends Propiedad {
                     if (ed.getTipo().equals("hotel")) count++;
                 }
                 if (count == 0) {
-                    System.out.println("\t*** No tienes ningún hotel construído. ***");
-                    System.out.println("}\n");
+                    Juego.consola.imprimir("\t*** No tienes ningún hotel construído. ***");
+                    Juego.consola.imprimir("}\n");
                     return;
                 }
                 Iterator<Edificio> it2 = this.getEdificios().iterator();
@@ -233,15 +233,15 @@ public class Solar extends Propiedad {
                     print = "\tSolo se puede vender un hotel" + print;
                 }
                 else print = "\t" + j.getNombre() + " ha vendido 1 hotel en " + this.getNombre() + print;
-                System.out.println(print);
+                Juego.consola.imprimir(print);
                 break;
             case "piscina":
                 for (Edificio ed : this.getEdificios()) {
                     if (ed.getTipo().equals("piscina")) count++;
                 }
                 if (count == 0) {
-                    System.out.println("\t*** No tienes ninguna piscina construída. ***");
-                    System.out.println("}\n");
+                    Juego.consola.imprimir("\t*** No tienes ninguna piscina construída. ***");
+                    Juego.consola.imprimir("}\n");
                     return;
                 }
                 Iterator<Edificio> it3 = this.getEdificios().iterator();
@@ -261,15 +261,15 @@ public class Solar extends Propiedad {
                     print2 = "\tSolo se puede vender una piscina" + print2;
                 }
                 else print2 = "\t" + j.getNombre() + " ha vendido 1 piscina en " + this.getNombre() + print2;
-                System.out.println(print2);
+                Juego.consola.imprimir(print2);
                 break;
             case "pista":
                 for (Edificio ed : this.getEdificios()) {
                     if (ed.getTipo().equals("pista")) count++;
                 }
                 if (count == 0) {
-                    System.out.println("\t*** No tienes ninguna pista construída. ***");
-                    System.out.println("}\n");
+                    Juego.consola.imprimir("\t*** No tienes ninguna pista construída. ***");
+                    Juego.consola.imprimir("}\n");
                     return;
                 }
                 Iterator<Edificio> it4 = this.getEdificios().iterator();
@@ -289,11 +289,11 @@ public class Solar extends Propiedad {
                     print3 = "\tSolo se puede vender una pista" + print3;
                 }
                 else print3 = "\t" + j.getNombre() + " ha vendido 1 pista en " + this.getNombre() + print3;
-                System.out.println(print3);
+                Juego.consola.imprimir(print3);
                 break;
             default:
-                System.out.println("\t*** No puedes vender. Tipo de edificio no registrado. ***");
-                System.out.println("}\n");
+                Juego.consola.imprimir("\t*** No puedes vender. Tipo de edificio no registrado. ***");
+                Juego.consola.imprimir("}\n");
                 return;
         }
     }
@@ -304,10 +304,10 @@ public class Solar extends Propiedad {
             if (ed.getTipo().equals("casa")) count += 1;
         }
         if (count == 4) {
-            System.out.println("\t*** Máximo de 4 casas alcanzado. ***");
+            Juego.consola.imprimir("\t*** Máximo de 4 casas alcanzado. ***");
             return false;
         }
-        System.out.println("\tSe pueden construir " + (4 - count - 1) + " casas más.");
+        Juego.consola.imprimir("\tSe pueden construir " + (4 - count - 1) + " casas más.");
         return true;
     }
 
@@ -315,13 +315,13 @@ public class Solar extends Propiedad {
         int count = 0;
         for (Edificio ed : this.getEdificios()) {
             if (ed.getTipo().equals("hotel")) {
-                System.out.println("\t" + Valor.RED + "Ya hay un hotel construido." + Valor.RESET);
+                Juego.consola.imprimir("\t" + Valor.RED + "Ya hay un hotel construido." + Valor.RESET);
                 return false;
             }
             if (ed.getTipo().equals("casa")) count += 1;
         }
         if (count != 4) {
-            System.out.println("\t*** Se necesitan 4 casas para construir un hotel. ***");
+            Juego.consola.imprimir("\t*** Se necesitan 4 casas para construir un hotel. ***");
             return false;
         }
         return true;
@@ -331,7 +331,7 @@ public class Solar extends Propiedad {
         boolean hayHotel = false;
         for (Edificio ed : this.getEdificios()) {
             if (ed.getTipo().equals("piscina")) {
-                System.out.println("\t" + Valor.RED + "Ya hay una piscina construida." + Valor.RESET);
+                Juego.consola.imprimir("\t" + Valor.RED + "Ya hay una piscina construida." + Valor.RESET);
                 return false;
             }
             if (ed.getTipo().equals("hotel")) {
@@ -339,7 +339,7 @@ public class Solar extends Propiedad {
             }
         }
         if (!hayHotel) {
-            System.out.println("\t*** Se necesita un hotel para construir una piscina. ***");
+            Juego.consola.imprimir("\t*** Se necesita un hotel para construir una piscina. ***");
             return false;
         }
         return true;
@@ -349,7 +349,7 @@ public class Solar extends Propiedad {
         boolean hayPiscina = false;
         for (Edificio ed : this.getEdificios()) {
             if (ed.getTipo().equals("pista")) {
-                System.out.println("\t" + Valor.RED + "Ya hay una pista construida." + Valor.RESET);
+                Juego.consola.imprimir("\t" + Valor.RED + "Ya hay una pista construida." + Valor.RESET);
                 return false;
             }
             if (ed.getTipo().equals("piscina")) {
@@ -357,7 +357,7 @@ public class Solar extends Propiedad {
             }
         }
         if (!hayPiscina) {
-            System.out.println("\t*** Se necesita una piscina para construir una pista de deporte. ***");
+            Juego.consola.imprimir("\t*** Se necesita una piscina para construir una pista de deporte. ***");
             return false;
         }
         return true;
@@ -366,37 +366,39 @@ public class Solar extends Propiedad {
     public void hipotecar(Jugador jugadorActual) {
         // Verificar dueño
         if (this.getDuenho() != jugadorActual) {
-            System.out.println("\t" + Valor.RED + "Error: Solo el dueño puede hipotecar esta casilla." + Valor.RESET);
+            Juego.consola.imprimir("\t" + Valor.RED + "Error: Solo el dueño puede hipotecar esta casilla." + Valor.RESET);
             return;
         }
 
         // Verificar si ya está hipotecada
         if (this.hipotecada) {
-            System.out.println("\t" + Valor.RED + "Error: La propiedad ya está hipotecada." + Valor.RESET);
+            Juego.consola.imprimir("\t" + Valor.RED + "Error: La propiedad ya está hipotecada." + Valor.RESET);
             return;
         }
 
         // Verificar si hay edificios
         if (this.getEdificios() != null && !this.getEdificios().isEmpty()) {
-            System.out.println("\t" + Valor.YELLOW + "El dueño tiene edificios en esta casilla. Debe venderlos antes de hipotecar." + Valor.RESET);
-            Scanner sc = new Scanner(System.in);
-            System.out.println("\t¿Quieres vender los edificios ahora? (s/n)");
-            String respuesta = sc.nextLine();
-
-            if (respuesta.equalsIgnoreCase("s")) {
-
+            Juego.consola.imprimir("\t" + Valor.YELLOW + "El dueño tiene edificios en esta casilla. Debe venderlos antes de hipotecar." + Valor.RESET);
+            
+            // CAMBIO PRINCIPAL: Pasamos la pregunta directamente al método leer()
+            String respuesta = Juego.consola.leer("\t¿Quieres vender los edificios ahora? (s/n)");
+    
+            if (respuesta.trim().equalsIgnoreCase("s")) {
+    
                 while (!this.getEdificios().isEmpty()) {
-                    System.out.println("\t¿Qué edificio quieres vender? (casa / hotel / piscina / pista)");
-                    String tipo = sc.nextLine().toLowerCase();
-
-                    System.out.println("\t¿Cuántos quieres vender?");
-                    int cantidad = Integer.parseInt(sc.nextLine());
-
-                    this.venderEdificio(tipo, cantidad);
+                    // Preguntamos el tipo directamente en el leer
+                    String tipo = Juego.consola.leer("\t¿Qué edificio quieres vender? (casa / hotel / piscina / pista)").toLowerCase();
+                    this.venderEdificio(tipo, 1);
                 }
-
+                
+                // Verificación de seguridad por si salió del bucle sin vender todo
+                if (!this.getEdificios().isEmpty()) {
+                     Juego.consola.imprimir("\t" + Valor.RED + "Aún quedan edificios. No se puede hipotecar." + Valor.RESET);
+                     return;
+                }
+    
             } else {
-                System.out.println("\t" + Valor.RED + "No se han vendido los edificios. No se puede hipotecar la casilla." + Valor.RESET);
+                Juego.consola.imprimir("\t" + Valor.RED + "No se han vendido los edificios. No se puede hipotecar la casilla." + Valor.RESET);
                 return;
             }
         }
@@ -407,26 +409,26 @@ public class Solar extends Propiedad {
         this.puedeCobrarAlquiler = false; // Bloquear alquileres
         float dinero = getHipoteca() / 2;
         jugadorActual.sumarFortuna(dinero); // Entregar dinero
-        System.out.println("\t" + Valor.GREEN + "Casilla hipotecada con éxito. Se han recibido " + this.getHipoteca() + "€." + Valor.RESET);
+        Juego.consola.imprimir("\t" + Valor.GREEN + "Casilla hipotecada con éxito. Se han recibido " + this.getHipoteca() + "€." + Valor.RESET);
     }
 
     public void deshipotecar(Jugador jugadorActual){
         // Verificar dueño
         if (this.getDuenho() != jugadorActual) {
-            System.out.println("\t" + Valor.RED + "Error: Solo el dueño puede deshipotecar esta casilla." + Valor.RESET);
+            Juego.consola.imprimir("\t" + Valor.RED + "Error: Solo el dueño puede deshipotecar esta casilla." + Valor.RESET);
             return;
         }
 
         // Verificar si está hipotecada
         if (!this.hipotecada) {
-            System.out.println("\t" + Valor.RED + "Error: La propiedad no está hipotecada." + Valor.RESET);
+            Juego.consola.imprimir("\t" + Valor.RED + "Error: La propiedad no está hipotecada." + Valor.RESET);
             return;
         }
 
         // Verificar si el jugador tiene suficiente dinero
         float costoDeshipotecar = this.getHipoteca() ;
         if (jugadorActual.getFortuna() < costoDeshipotecar) {
-            System.out.println("\t" + Valor.RED + "Error: No tienes suficiente dinero para deshipotecar esta casilla." + Valor.RESET);
+            Juego.consola.imprimir("\t" + Valor.RED + "Error: No tienes suficiente dinero para deshipotecar esta casilla." + Valor.RESET);
             return;
         }
 
@@ -434,7 +436,7 @@ public class Solar extends Propiedad {
         this.hipotecada = false; // Marca la casilla como no hipotecada
         this.puedeCobrarAlquiler = true; // Permitir alquileres
         jugadorActual.sumarFortuna(-costoDeshipotecar/2); // Cobrar al jugador
-        System.out.println("\t" + Valor.GREEN + "Casilla deshipotecada con éxito. Se han pagado " + costoDeshipotecar + "€." + Valor.RESET);
+        Juego.consola.imprimir("\t" + Valor.GREEN + "Casilla deshipotecada con éxito. Se han pagado " + costoDeshipotecar + "€." + Valor.RESET);
     }
 
     public boolean alquiler() {

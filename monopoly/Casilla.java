@@ -57,7 +57,7 @@ public abstract class Casilla {
     public void gestionarPago(Jugador jugadorActual, Jugador banca, int tirada) {
 
         if (this.duenho == jugadorActual) {
-            System.out.println("\tEsta casilla te pertenece.");
+            Juego.consola.imprimir("\tEsta casilla te pertenece.");
             return;
         }
 
@@ -66,18 +66,18 @@ public abstract class Casilla {
             case Propiedad p -> {
                 // Si la propiedad está hipotecada, no se cobra alquiler
                 if (!p.puedeCobrarAlquiler) {
-                    System.out.println("\tLa propiedad está hipotecada. No se cobra alquiler.");
+                    Juego.consola.imprimir("\tLa propiedad está hipotecada. No se cobra alquiler.");
                     return;
                 }
 
                 // Si la propiedad es de la banca significa que no es de nadie
                 if (p.getDuenho() == MonopolyETSE.juego.getBanca()) {
-                    System.out.println("\tCasilla en venta.");
+                    Juego.consola.imprimir("\tCasilla en venta.");
                     return;
                 }
 
                 if (!evaluarCasilla(jugadorActual)) {
-                    System.out.println("\t" + jugadorActual.getNombre() + " no tiene dinero suficiente para pagar el alquiler.");
+                    Juego.consola.imprimir("\t" + jugadorActual.getNombre() + " no tiene dinero suficiente para pagar el alquiler.");
                     return;
                 }
 
@@ -98,7 +98,7 @@ public abstract class Casilla {
                     float newRentabilidad = p.getRentabilidad() + cantidad;
                     p.setRentabilidad(newRentabilidad);
                 }
-                System.out.println("\t" + jugadorActual.getNombre() + " paga "+ String.format("%.0f", cantidad) + "€ a " + duenho.getNombre());
+                Juego.consola.imprimir("\t" + jugadorActual.getNombre() + " paga "+ String.format("%.0f", cantidad) + "€ a " + duenho.getNombre());
                 // Actualizar estadísticas
                 jugadorActual.agregarPagoDeAlquileres(cantidad);
                 duenho.agregarCobroDeAlquileres(cantidad);
@@ -106,14 +106,14 @@ public abstract class Casilla {
             // Casillas sin dueño (o de la banca)
             case Impuesto i -> {
                 if (!evaluarCasilla(jugadorActual)) {
-                    System.out.println("\t" + jugadorActual.getNombre() + " no tiene dinero para pagar el impuesto.");
+                    Juego.consola.imprimir("\t" + jugadorActual.getNombre() + " no tiene dinero para pagar el impuesto.");
                     return;
                 }
                 float cantidad = i.getImpuesto();
                 jugadorActual.sumarFortuna(-cantidad);
                 Parking parking = (Parking) MonopolyETSE.juego.getTablero().encontrar_casilla("Parking");
                 parking.sumarValor(cantidad);
-                System.out.println("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ que se depositan en el Parking");
+                Juego.consola.imprimir("\t" + jugadorActual.getNombre() + " paga " + cantidad + "€ que se depositan en el Parking");
                 // Actualizar estadísticas
                 jugadorActual.agregarPagoTasasEImpuestos(cantidad);
             }
@@ -142,7 +142,7 @@ public abstract class Casilla {
                     jugadorActual.incrementarVecesEnCarcel();
                 }
             }
-            default -> System.out.println("\tCasilla de paso. No pasa nada.");
+            default -> Juego.consola.imprimir("\tCasilla de paso. No pasa nada.");
         }
     }
 

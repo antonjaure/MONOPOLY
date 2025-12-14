@@ -39,12 +39,12 @@ public abstract class Propiedad extends Casilla {
 
     public void comprar(Jugador jugador) {
         if (jugador.getAvatar().getLugar() != this) {
-            System.out.println("\t" + Valor.RED + "Error: Debes estar sobre la casilla para comprarla." + Valor.RESET);
+            Juego.consola.imprimir("\t" + Valor.RED + "Error: Debes estar sobre la casilla para comprarla." + Valor.RESET);
             return;
         }
 
         if (!this.getTipo().equals("Solar") && !this.getTipo().equals("Servicios") && !this.getTipo().equals("Transporte")) {
-            System.out.println("\t" + Valor.RED + "Error: La casilla no es adquirible." + Valor.RESET);
+            Juego.consola.imprimir("\t" + Valor.RED + "Error: La casilla no es adquirible." + Valor.RESET);
             return;
         }
 
@@ -60,14 +60,14 @@ public abstract class Propiedad extends Casilla {
                 jugador.añadirPropiedad(propiedad); //Se añade la casilla al arraylist de propiedades del jugador.
                 MonopolyETSE.juego.getBanca().eliminarPropiedad(propiedad); //Se elimina la casilla del arraylist de propiedades de laMonopolyETSE.menu.getBanca().
 
-                System.out.println("\t" + Valor.GREEN + "¡Compra realizada con éxito!" + Valor.RESET);
+                Juego.consola.imprimir("\t" + Valor.GREEN + "¡Compra realizada con éxito!" + Valor.RESET);
             }
             else {
-                System.out.println("\t" + Valor.RED + "Error: La casilla ya tiene dueño." + Valor.RESET); //No es necesario, pero se deja para manejar errores.
+                Juego.consola.imprimir("\t" + Valor.RED + "Error: La casilla ya tiene dueño." + Valor.RESET); //No es necesario, pero se deja para manejar errores.
             }
         }
         else {
-            System.out.println("\t" + Valor.RED + "Error: La casilla ya tiene dueño o no tiene suficiente dinero para comprarla." + Valor.RESET);
+            Juego.consola.imprimir("\t" + Valor.RED + "Error: La casilla ya tiene dueño o no tiene suficiente dinero para comprarla." + Valor.RESET);
         }
     }
 

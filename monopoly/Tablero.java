@@ -551,12 +551,12 @@ public class Tablero {
             }
         }
 
-        System.out.println("\tcasillaMasRentable: " + casillaMasRentable.getNombre());
-        System.out.println("\tgrupoMasRentable: " + grupoMasRentable.getColorGrupo());
-        System.out.println("\tcasillaMasFrecuentada: " + casillaMasFrecuentada.getNombre());
-        System.out.println("\tjugadorMasVueltas: " + jugadorMasVueltas.getNombre());
-        System.out.println("\tjugadorEnCabeza: " + jugadorEnCabeza.getNombre());
-        System.out.println("\n}");
+        Juego.consola.imprimir("\tcasillaMasRentable: " + casillaMasRentable.getNombre());
+        Juego.consola.imprimir("\tgrupoMasRentable: " + grupoMasRentable.getColorGrupo());
+        Juego.consola.imprimir("\tcasillaMasFrecuentada: " + casillaMasFrecuentada.getNombre());
+        Juego.consola.imprimir("\tjugadorMasVueltas: " + jugadorMasVueltas.getNombre());
+        Juego.consola.imprimir("\tjugadorEnCabeza: " + jugadorEnCabeza.getNombre());
+        Juego.consola.imprimir("\n}");
     }
 
     private final List<List<Integer>> SolServTrans = Arrays.asList(

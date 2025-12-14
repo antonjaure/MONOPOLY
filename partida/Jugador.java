@@ -57,7 +57,7 @@ public class Jugador {
             }
         }
         if (!tipoValido) {
-            System.out.println("\t*** Avatares disponibles: " + juego.getTipos() + " ***");
+            Juego.consola.imprimir("\t*** Avatares disponibles: " + juego.getTipos() + " ***");
             return;
         }
 
@@ -69,18 +69,18 @@ public class Jugador {
         }
 
         if (!tipo && !nom){
-            System.out.println("\t*** Jugador ya activo. ***");
+            Juego.consola.imprimir("\t*** Jugador ya activo. ***");
             return;
         }
 
         if (!tipo) {
-            System.out.println("\t*** Avatar en uso. ***");
+            Juego.consola.imprimir("\t*** Avatar en uso. ***");
             return;
         }
 
         if (nom) setNombre(nombre);
         else {
-            System.out.println("\t*** Nombre en uso. ***");
+            Juego.consola.imprimir("\t*** Nombre en uso. ***");
             return;
         }
 
@@ -136,7 +136,7 @@ public class Jugador {
         this.setEnCarcel(true);
         this.setTiradasCarcel(0);
 
-        System.out.println("\t" + this.getNombre() + " ha sido enviado a la cárcel.");
+        Juego.consola.imprimir("\t" + this.getNombre() + " ha sido enviado a la cárcel.");
     }
 
     // Metodo para encontrar un jugador de la lista de jugadores activos
@@ -144,7 +144,7 @@ public class Jugador {
     public static Jugador buscarJugador(String jugador) {
         ArrayList<Jugador> jugadores = juego.getJugadores();
         if (jugadores == null || jugadores.isEmpty()) {
-            System.out.println("\t*** No hay jugadores en la partida. ***");
+            Juego.consola.imprimir("\t*** No hay jugadores en la partida. ***");
             return null;
         }
 
@@ -153,7 +153,7 @@ public class Jugador {
                 return j;
             }
         }
-        System.out.println("\t*** Jugador '" + jugador + "' no registrado. ***");
+        Juego.consola.imprimir("\t*** Jugador '" + jugador + "' no registrado. ***");
         return null;
     };
 
@@ -168,13 +168,13 @@ public class Jugador {
 
     // --- Método para mostrar estadísticas ---
     public void mostrarEstadisticas() {
-        System.out.println("\tdineroInvertido: " + (int)dineroInvertido);
-        System.out.println("\tpagoTasasEImpuestos: " + (int)pagoTasasEImpuestos);
-        System.out.println("\tpagoDeAlquileres: " + (int)pagoDeAlquileres);
-        System.out.println("\tcobroDeAlquileres: " + (int)cobroDeAlquileres);
-        System.out.println("\tpasarPorCasillaDeSalida: " + (int)pasarPorCasillaDeSalida);
-        System.out.println("\tpremiosInversionesOBote: " + (int)premiosInversionesOBote);
-        System.out.println("\tvecesEnLaCarcel: " + vecesEnLaCarcel);
+        Juego.consola.imprimir("\tdineroInvertido: " + (int)dineroInvertido);
+        Juego.consola.imprimir("\tpagoTasasEImpuestos: " + (int)pagoTasasEImpuestos);
+        Juego.consola.imprimir("\tpagoDeAlquileres: " + (int)pagoDeAlquileres);
+        Juego.consola.imprimir("\tcobroDeAlquileres: " + (int)cobroDeAlquileres);
+        Juego.consola.imprimir("\tpasarPorCasillaDeSalida: " + (int)pasarPorCasillaDeSalida);
+        Juego.consola.imprimir("\tpremiosInversionesOBote: " + (int)premiosInversionesOBote);
+        Juego.consola.imprimir("\tvecesEnLaCarcel: " + vecesEnLaCarcel);
     }
 
     public String getNombre() {
