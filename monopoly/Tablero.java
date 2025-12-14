@@ -325,8 +325,10 @@ public class Tablero {
                     }
                     // añadimos la posicion al nombre
                     if (!calle.equals(vacio)) {
-                        int posCasilla = encontrar_casilla(calle).getPosicion();
-                        calle = "(" + posCasilla + ") " + calle;
+                        Casilla casilla = encontrar_casilla(calle);
+                        int posCasilla = casilla.getPosicion();
+                        if (!(casilla instanceof CasillaSuerte) && !(casilla instanceof CasillaCom))
+                            calle = "(" + posCasilla + ") " + calle;
                     }
 
                     // dividimos en dos líneas
@@ -416,8 +418,6 @@ public class Tablero {
         return null;
     }
 
-
-
     private String avataresString(ArrayList<Avatar> avatares){
         StringBuilder avs = new StringBuilder();
         for (Avatar av : avatares){
@@ -462,7 +462,6 @@ public class Tablero {
         String linea2 = String.format("%-20s", line2.toString());
         return new String[]{linea1, linea2};
     }
-
 
     //Método usado para buscar la casilla con el nombre pasado como argumento:
     public Casilla encontrar_casilla(String nombre){
