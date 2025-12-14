@@ -1,48 +1,17 @@
-crear jugador Pedro pelota
-crear jugador Maria coche
-lanzar dados 6+6
-edificar casa
-lanzar dados 6+6
-lanzar dados 5+6
+crear jugador Anton coche
+crear jugador Testa sombrero
+lanzar dados 1+0
+comprar Solar1
 acabar turno
-lanzar dados 3+3 
-comprar Solar3
-edificar piscina
-lanzar dados 1+1
-comprar Solar4
-edificar casa
-lanzar dados 5+6
+lanzar dados 1+0
 acabar turno
+lanzar dados 1+2
+comprar Solar2
+trato Anton: cambiar (1, Solar1)
+acabar turno
+lanzar dados 1+0
+acabar turno 
+listar tratos
 jugador
-lanzar dados 6+6
-comprar Solar19
-lanzar dados 4+4
-edificar casa
-lanzar dados 5+3
-acabar turno
-lanzar dados 6+6
-comprar Solar19
-lanzar dados 6+6
-lanzar dados 4+2
-comprar Solar5
-edificar casa
-edificar casa
-edificar casa
-edificar casa
-acabar turno
-lanzar dados 6+6
-lanzar dados 6+6
-lanzar dados 5+6
-acabar turno
-lanzar dados 4+4 
-lanzar dados 2+1
-acabar turno
-lanzar dados 3+3
-lanzar dados 3+5
-acabar turno
-lanzar dados 6+6
-lanzar dados 6+6
-lanzar dados 3+2
-edificar hotel
-acabar turno
-
+aceptar trato1
+jugador

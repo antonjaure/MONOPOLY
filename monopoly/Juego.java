@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 
+import javax.smartcardio.ATR;
 
 import excepciones.*;
 import partida.*;
@@ -96,6 +97,8 @@ public class Juego implements Comando {
         this.barajaSuerte = new ArrayList<>();
         this.barajaComunidad = new ArrayList<>();
         inicializarBarajas();
+
+        this.tratos = new ArrayList<>();
 
         this.tablero.inicializar();
     }
@@ -330,6 +333,9 @@ public class Juego implements Comando {
                             case "avatares":
                                 listarAvatares();
                                 break;
+                            case "tratos":
+                                listarTratos();
+                                break;
                             default:
                                 consola.imprimir("\t*** Opción de listar no reconocida. ***");
                         }
@@ -357,6 +363,36 @@ public class Juego implements Comando {
                     else{
                         consola.imprimir("\t*** Uso: trato <nombre del jugador que recibe el trato>  cambiar (<trato>) ***");
                     }
+                    break;
+                case "aceptar":
+                    if(partes.length == 2) {
+                        try{
+                            String idTratoString = partes[1].substring(5);
+                            int idTrato = Integer.parseInt(idTratoString);
+                            aceptarTrato(idTrato);
+                        }catch (Exception error) {
+                            consola.imprimir(error.getMessage());
+                        }
+                    }
+                    else{
+                        consola.imprimir("\t*** Uso: aceptar <id trato> ***");
+                    }
+                    break;
+                case "eliminar": 
+                    if(partes.length == 2) {
+                        try{
+                            String idTratoString = partes[1].substring(5);
+                            int idTrato = Integer.parseInt(idTratoString);
+                            eliminarTrato(idTrato);
+                        }catch (Exception error) {
+                            consola.imprimir(error.getMessage());
+                        }
+                    }
+                    else{
+                        consola.imprimir("\t*** Uso: eliminar <id trato> ***");
+                    }
+                    break;
+                
 
                 case "help":
                 case "ayuda":
@@ -1043,8 +1079,6 @@ public class Juego implements Comando {
     @Override
     public void proponerTrato(String comando) throws TratosException {
 
-        
-
         Jugador jugadorPropone = jugadores.get(turno);
         Jugador jugadorRecibe = null;
         Propiedad propiedadPropone = null;
@@ -1052,8 +1086,6 @@ public class Juego implements Comando {
         float dineroPropone = 0.0f;
         float dineroRecibe = 0.0f;
 
-
-       
         String[] primeraParte = comando.split(":");
         String cabecera = primeraParte[0].trim(); // "trato Maria"
         String nombreJugadorRecibe = cabecera.substring(6).trim(); // Quitamos "trato " (6 chars)
@@ -1109,10 +1141,10 @@ public class Juego implements Comando {
                 // Si no es número, asumimos que es una propiedad
                 Casilla casilla = tablero.encontrar_casilla(elemento);
 
-                if (propiedadPropone == null)
-                    throw new TratosException("La casilla '" + propiedadPropone + "' no existe.");
-                if (!(propiedadPropone instanceof Propiedad))
-                    throw new TratosException("La casilla '" + propiedadPropone + "' no es una propiedad.");
+                if (casilla == null)
+                    throw new TratosException("La casilla '" + elemento + "' no existe.");
+                if (!(casilla instanceof Propiedad))
+                    throw new TratosException("La casilla '" + casilla.getNombre() + "' no es una propiedad.");
 
                 //Comprobamos que el jugador son dueños de las propiedades
                 if(jugadorPropone.getPropiedades().contains(propiedadPropone)) 
@@ -1143,9 +1175,9 @@ public class Juego implements Comando {
                 // Si no es número, asumimos que es una propiedad
                 Casilla casilla = tablero.encontrar_casilla(elemento);
 
-                if (propiedadRecibe == null)
+                if (casilla == null)
                     throw new TratosException("La casilla '" + propiedadRecibe + "' no existe.");
-                if (!(propiedadRecibe instanceof Propiedad))
+                if (!(casilla instanceof Propiedad))
                     throw new TratosException("La casilla '" + propiedadRecibe + "' no es una propiedad.");
 
                 //Comprobamos que el jugador son dueños de las propiedades
@@ -1158,8 +1190,129 @@ public class Juego implements Comando {
         }
 
         Trato trato = new Trato(jugadorPropone, jugadorRecibe, propiedadPropone, propiedadRecibe, dineroPropone, dineroRecibe);
+        
+        if(this.tratos == null) {
+            ArrayList<Trato> tratos = new ArrayList<>();
+        }
 
         this.tratos.add(trato);
+    }
+
+    private void imprimirTrato(Trato trato, int idTrato) {
+
+
+        consola.imprimir("{\n\tid: trato" + idTrato);
+        consola.imprimir("\tjugadorPropone: " + trato.jugadorPropone.getNombre());
+        String mensaje = "\ttrato: cambiar (";
+
+        
+
+        //LO QUE SE PROPONE 
+        if (trato.getPropiedadPropone() != null && trato.getDineroPropone() != 0) {
+            mensaje = mensaje + trato.getPropiedadPropone().getNombre() + " y " + trato.getDineroPropone();
+            
+        }
+        else if(trato.getPropiedadPropone() != null){
+            mensaje = mensaje + trato.getPropiedadPropone().getNombre();
+            
+        }
+        else if(trato.getDineroPropone() != 0) {
+            mensaje = mensaje + trato.getDineroPropone();
+        }
+
+        mensaje = mensaje + ", ";
+
+        //LO QUE SE RECIBE
+        if(trato.getPropiedadRecibe() != null && trato.getDineroRecibe() != 0) {
+            mensaje = mensaje + trato.getPropiedadRecibe().getNombre() + " y " + trato.getDineroRecibe();
+        }
+        else if(trato.getPropiedadRecibe() != null){
+            mensaje = mensaje + trato.getPropiedadRecibe().getNombre();
+        }
+        else if(trato.getDineroRecibe() != 0) {
+            mensaje = mensaje + trato.getDineroRecibe() + "";        
+        }
+
+        consola.imprimir(mensaje + ")\n}");
+    }
+
+    public void listarTratos() {
+
+        Jugador jugador = jugadores.get(turno);
+        String nombreJugador = jugador.getNombre();
+        int bandera = 0; //Variable bandera usamos para controlar el jugador tiene por lo menos un trato
+        int idTrato = 1; //Se pasa a imprimirTrato para que pueda obtener el id.
+
+        
+
+        for (Trato t : tratos) {
+            if(t.getJugadorRecibe().getNombre().equals(nombreJugador)){
+                imprimirTrato(t, idTrato);
+                bandera = 1;
+            }
+
+            idTrato++;
+        }
+
+        if(bandera == 0) {
+            consola.imprimir("\n" + jugador.getNombre() + " no ha recibido propuestas de tratos.\n");
+        }
+    }
+
+    public void eliminarTrato(int idTrato) throws TratosException {
+        if(idTrato < 1 || idTrato > tratos.size()) {
+            consola.imprimir("El trato con id " + idTrato + " no existe.");
+            return;
+        }
+
+        Trato trato = tratos.get((idTrato - 1));
+
+        if(!(trato.getJugadorPropone().getNombre().equals(jugadores.get(turno).getNombre()))) {
+            throw new TratosException("El trato" + idTrato + " no fue propuesto por " + jugadores.get(turno).getNombre() + ".");
+        }
+
+        tratos.remove(idTrato - 1);
+    }
+
+    public void aceptarTrato(int idTrato) throws TratosException {
+
+        Jugador jugadorActual = jugadores.get(turno);
+
+        if(idTrato < 1 || idTrato > tratos.size()) {
+            throw new TratosException("El trato con id " + idTrato + " no existe.");
+        }
+
+        Trato trato = tratos.get(idTrato - 1);
+
+        if(!trato.getJugadorRecibe().getNombre().equals(jugadorActual.getNombre())) {
+            throw new TratosException("El trato con id " + idTrato + " no está dirigido a " + jugadorActual.getNombre() + ".");
+        }
+       
+        //Propiedades
+        if(trato.getPropiedadPropone() != null) {
+            trato.getPropiedadPropone().setDuenho(trato.getJugadorRecibe());
+            trato.getJugadorRecibe().añadirPropiedad(trato.getPropiedadPropone());
+            trato.getJugadorPropone().eliminarPropiedad(trato.getPropiedadPropone());
+        }
+        if(trato.getPropiedadRecibe() != null) {
+            trato.getPropiedadRecibe().setDuenho(trato.getJugadorPropone());
+            trato.getJugadorPropone().añadirPropiedad(trato.getPropiedadRecibe());
+            trato.getJugadorRecibe().eliminarPropiedad(trato.getPropiedadRecibe());
+        }
+
+        //Calculamos el dinero que gana el jugador que recibe el trato y su negativo es el del que pierde
+        float costeAceptarTrato = trato.getDineroPropone() - trato.getDineroRecibe();
+
+        if(jugadorActual.getFortuna() < costeAceptarTrato) {
+            throw new TratosException(jugadorActual.getNombre() + " no tiene suficiente dinero para aceptar el trato.");
+        }
+        jugadorActual.sumarFortuna(-costeAceptarTrato);
+        trato.getJugadorPropone().sumarFortuna(costeAceptarTrato);
+        
+    
+        //Eliminar el trato de la lista de tratos
+        tratos.remove(idTrato - 1);
+
     }
 
 }

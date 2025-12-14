@@ -32,6 +32,19 @@ public class Trato {
         return jugadorRecibe;
     }
 
+    public Propiedad getPropiedadPropone() {
+        return propiedadPropone;
+    }
+    public Propiedad getPropiedadRecibe() {
+        return propiedadRecibe;
+    }
+    public float getDineroPropone() {
+        return dineroPropone;
+    }
+    public float getDineroRecibe() {
+        return dineroRecibe;
+    }
+
     
 
     public void setJugadorPropone(Jugador jugadorPropone) {

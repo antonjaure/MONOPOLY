@@ -26,7 +26,11 @@ public interface Comando {
 
     void proponerTrato(String comando) throws TratosException;
 
-    //void listarTratos(Jugador jugador);
+    void listarTratos();
+
+    void eliminarTrato(int idTrato) throws TratosException;
+
+    void aceptarTrato(int idTrato) throws TratosException;
 
 
 
