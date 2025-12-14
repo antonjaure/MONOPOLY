@@ -30,7 +30,6 @@ public class Grupo {
             for (Integer pos : posiciones) {
                 String nombre = (pos == 12) ? "Electricidad" : "Agua";
                 
-                // CAMBIO: Constructor de 6 argumentos (Jugador, nombre, tipo, pos, precio, impuestoBase)
                 Servicio s = new Servicio(tablero.getBanca(), nombre, "Servicios", pos, precio, precio/2); 
                 
                 s.setGrupo(this);
@@ -45,7 +44,6 @@ public class Grupo {
             for (Integer pos : posiciones) {
                 String nombre = "Transporte" + contador;
                 
-                // CAMBIO: Constructor de 6 argumentos
                 Transporte t = new Transporte(tablero.getBanca(), nombre, "Transporte", pos, precio, precio/2); 
                 
                 t.setGrupo(this);
@@ -77,13 +75,11 @@ public class Grupo {
         Tablero tablero = MonopolyETSE.juego.getTablero();
         List<List<Object>> datosSolares = tablero.getSolares();
         
-        // CORRECCIÓN 1: Usamos el nombre correcto de la variable
         List<Integer> posicionesSolares = tablero.getSolServTrans().get(0);
 
         for (String nombreBuscado : nombresSolares) {
             int indiceEncontrado = -1;
             
-            // Buscar en la lista de datos por NOMBRE
             for (int i = 0; i < datosSolares.size(); i++) {
                 String nombreEnLista = (String) datosSolares.get(i).get(0);
                 if (nombreEnLista.equals(nombreBuscado)) {
@@ -97,7 +93,6 @@ public class Grupo {
                 continue; 
             }
 
-            // CORRECCIÓN 2: Usamos la variable bien escrita 'posicionesSolares'
             int posicionTablero = posicionesSolares.get(indiceEncontrado);
             List<Object> datos = datosSolares.get(indiceEncontrado);
             
@@ -105,8 +100,6 @@ public class Grupo {
             float precio = ((Number) datos.get(1)).floatValue(); 
             float hipoteca = ((Number) datos.get(2)).floatValue();
 
-            // CORRECCIÓN 3: Constructor de Solar con 6 argumentos y setGrupo después
-            // (Jugador, nombre, tipo, posicion, precio, hipoteca)
             Solar solar = new Solar(tablero.getBanca(), nombreBuscado, "Solar", posicionTablero, precio, hipoteca);
             
             solar.setGrupo(this); // Asignamos el grupo aquí
@@ -116,12 +109,10 @@ public class Grupo {
         }
     }
 
-    // --- MÉTODOS PÚBLICOS ---
 
     public boolean esDuenhoGrupo(Jugador jugador) {
         if (jugador == null) return false;
         
-        // Contamos cuántas propiedades de ESTE grupo tiene el jugador
         int contador = 0;
         for (Propiedad p : miembros) {
             if (p.getDuenho() == jugador) {
@@ -132,7 +123,6 @@ public class Grupo {
         return contador == miembros.size();
     }
     
-    // NOTA: He cambiado 'members' por 'miembros' arriba si te da error, usa 'miembros.size()'
 
     // Getters y Setters básicos
     public ArrayList<Propiedad> getMiembros() { return miembros; }

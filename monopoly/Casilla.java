@@ -119,7 +119,6 @@ public abstract class Casilla {
             }
             case Parking p -> {
                 Juego.consola.imprimir("\t" + jugadorActual.getNombre() + " recibe el bote de " + p.getValor() + "€");
-                // FUNCIONES DE ESTADÍSTICAS SOLICITADAS:
                 jugadorActual.sumarFortuna(p.getValor());
                 jugadorActual.agregarPremiosInversionesOBote(p.getValor());
                 p.setValor(0); // Vaciar el bote
@@ -186,7 +185,7 @@ public abstract class Casilla {
 
             case Impuesto i:   /////////////    *** esto hace que pague el impuesto, pero también permite que compre la casilla ***
                 float impuesto = i.getImpuesto();
-                return actual.getFortuna() >= impuesto; // Si tiene dinero para el impuesto = true, else false
+                return actual.getFortuna() >= impuesto;
             case Accion a:
                 return true; //No pasa nada, se roba carta.
             case Especial e:
@@ -197,7 +196,7 @@ public abstract class Casilla {
                 }
                 else if(nombre.equals("Cárcel")){
                     float salidaCarcel = e.getImpuesto();
-                    return actual.getFortuna() >= salidaCarcel; // Si tiene dinero para pagar la cárcel = true, else false
+                    return actual.getFortuna() >= salidaCarcel;
                 }
                 System.err.println("\nError al evaluarCasilla().\n");
                 return false;

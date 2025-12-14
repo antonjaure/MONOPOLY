@@ -172,9 +172,7 @@ public class Juego implements Comando {
     /*Metodo que interpreta el comando introducido y toma la acción correspondiente.
      * Parámetro: cadena de caracteres (el comando).
      */
-    /*
-     * Método que interpreta el comando introducido y toma la acción correspondiente.
-     */
+
     private void ejecutarComando(String comando) {
         // Dividir el comando en palabras
         String[] partes = comando.trim().split("\\s+");
@@ -183,7 +181,6 @@ public class Juego implements Comando {
         // Extraer la acción principal (primera palabra)
         String accion = partes[0].toLowerCase();
 
-        // Imprimir llave de apertura (formato solicitado)
         consola.imprimir("{"); 
 
         try {
@@ -374,7 +371,7 @@ public class Juego implements Comando {
             consola.imprimir("\t*** Error procesando el comando: " + e.getMessage() + " ***");
         }
 
-        consola.imprimir("}\n"); // Cierre de formato
+        consola.imprimir("}\n");
     }
 
     @Override
@@ -384,7 +381,7 @@ public class Juego implements Comando {
             return;
         }
         // Validar nombre duplicado
-        for(Jugador j : jugadores) { // Asumo que usas 'jugadores' como variable
+        for(Jugador j : jugadores) { 
              if(j.getNombre().equalsIgnoreCase(nombre)) {
                  consola.imprimir("El nombre ya está en uso.\n");
                  return;
@@ -483,7 +480,6 @@ public class Juego implements Comando {
     @Override
     public void mostrarEstadisticas(String nombreJugador) {
         if (nombreJugador == null) {
-            // Estadísticas globales (delegar en Tablero)
             tablero.estadisticas();
         } else {
             // Estadísticas de un jugador
@@ -704,7 +700,6 @@ public class Juego implements Comando {
     }
     @Override
     public void lanzarDados() throws DadosException {
-        // Llama a tu método privado con los valores por defecto
         lanzarDados(0, 0, false);
     }
 
@@ -725,7 +720,6 @@ public class Juego implements Comando {
             try {
                 ((Propiedad) casilla).comprar(jugadores.get(turno));
             } catch (Exception e) {
-                // Captura excepciones que lance Propiedad.comprar (ej: falta dinero)
                 consola.imprimir(e.getMessage() + "\n");
             }
         } else {
@@ -810,7 +804,6 @@ public class Juego implements Comando {
     public void listarVenta() {
         ArrayList<Propiedad> sinDuenho = banca.getPropiedades();
         
-        // No hace falta crear una lista auxiliar 'enVenta', podemos imprimir directamente
         for (Propiedad p : sinDuenho) {
             if (p instanceof Solar || p instanceof Transporte || p instanceof Servicio) {
                 descCasilla(p.getNombre());

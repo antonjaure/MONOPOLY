@@ -75,7 +75,6 @@ public class Tablero {
         return grupos; 
     }
 
-    // --- CAMBIO EN EL CONSTRUCTOR ---
     public Tablero(Jugador banca) {
         this.banca = banca;
         this.casas = new ArrayList<>();
@@ -84,11 +83,8 @@ public class Tablero {
         this.pistas = new ArrayList<>();
         this.grupos = new HashMap<>();
         
-        // BORRA ESTA LÍNEA DEL CONSTRUCTOR:
-        // generarCasillas();  <-- ¡BORRAR!
     }
 
-    // --- AÑADE ESTE MÉTODO NUEVO DEBAJO DEL CONSTRUCTOR ---
     public void inicializar() {
         generarCasillas();
     }
@@ -96,18 +92,13 @@ public class Tablero {
 
     private void generarCasillas() {
         posiciones = new ArrayList<>();
-        
-        // 1. ESTO ES NUEVO: Primero creo las 4 filas vacías explícitamente.
-        // Antes intentabas meter cosas sin haber hecho esto -> Error de índice.
+
         for (int i = 0; i < 4; i++) posiciones.add(new ArrayList<>());
 
-        // 2. ESTO ES VITAL: Primero inserto los lados (llenan la lista con nulls y casillas especiales)
         this.insertarLadoSur();
         this.insertarLadoOeste();
         this.insertarLadoNorte();
         this.insertarLadoEste();
-
-        // 3. Y AL FINAL genero los grupos (que sobrescriben los nulls con propiedades)
         generarGrupos(); 
     }
 
@@ -170,7 +161,6 @@ public class Tablero {
 
     //Método para insertar las casillas del lado norte.
     private void insertarLadoNorte() {
-        // CAMBIO: Obtenemos la lista 2 (ya creada vacía), no hacemos new
         ArrayList<Casilla> ladoNorte = posiciones.get(2); 
         for (int i = 20; i < 31; i++) {
             ladoNorte.add(asignarCasilla(i));
@@ -178,30 +168,24 @@ public class Tablero {
     }
     //Método para insertar las casillas del lado sur.
     private void insertarLadoSur() {
-        // CAMBIO: Obtenemos la lista 0
         ArrayList<Casilla> ladoSur = posiciones.get(0);
         for (int i = 0; i < 11; i++) {
             ladoSur.add(asignarCasilla(i));
         }
-        // CAMBIO: Borramos el add final
     }
     //Método que inserta casillas del lado oeste.
     private void insertarLadoOeste() {
-        // CAMBIO: Obtenemos la lista 1
         ArrayList<Casilla> ladoOeste = posiciones.get(1);
         for (int i = 11; i < 20; i++) {
             ladoOeste.add(asignarCasilla(i));
         }
-        // CAMBIO: Borramos el add final
     }
     //Método que inserta las casillas del lado este.
     private void insertarLadoEste() {
-        // CAMBIO: Obtenemos la lista 3
         ArrayList<Casilla> ladoEste = posiciones.get(3);
         for (int i = 31; i < 40; i++) {
             ladoEste.add(asignarCasilla(i));
         }
-        // CAMBIO: Borramos el add final
     }
 
     //Para imprimir el tablero, modificamos el método toString().
@@ -480,11 +464,10 @@ public class Tablero {
         // Asegurar que las posiciones están generadas
         if (posiciones == null) generarCasillas();
 
-        int posActual = origen.getPosicion(); // asumo que es 0..39
+        int posActual = origen.getPosicion();
         // cálculo circular en base 0:
-        int nuevaPos = (posActual + pasos) % 40; // resultado 0..39
+        int nuevaPos = (posActual + pasos) % 40; 
 
-        // Buscar la casilla con esa posición dentro de "posiciones"
         for (ArrayList<Casilla> fila : posiciones) {
             for (Casilla c : fila) {
                 if (c.getPosicion() == nuevaPos) {
@@ -492,7 +475,6 @@ public class Tablero {
                 }
             }
         }
-
         // Si no encuentra (fallback)
         return origen;
     }

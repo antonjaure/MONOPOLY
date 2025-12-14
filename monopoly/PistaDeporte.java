@@ -8,6 +8,6 @@ public class PistaDeporte extends Edificio {
 
     @Override
     public String getTipo() {
-        return "pista"; // O "pista de deporte" según prefieras que salga en pantalla
+        return "pista"; // 
     }
 }

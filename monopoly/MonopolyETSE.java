@@ -2,7 +2,6 @@ package monopoly;
 
 public class MonopolyETSE {
 
-    // Única referencia estática al juego
     public static Juego juego;
 
     public static void main(String[] args) {
