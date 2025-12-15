@@ -3,14 +3,11 @@ crear jugador Testa sombrero
 lanzar dados 1+0
 comprar Solar1
 acabar turno
-lanzar dados 1+0
-acabar turno
 lanzar dados 1+2
 comprar Solar2
-trato Anton: cambiar (1, Solar1)
+trato Anton: cambiar (Solar2, Solar1 y 1)
+trato Anton: cambiar (Solar2, Solar1 y 1)
 acabar turno
-lanzar dados 1+0
-acabar turno 
 listar tratos
 jugador
 aceptar trato1

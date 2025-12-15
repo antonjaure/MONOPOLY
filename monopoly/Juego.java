@@ -150,9 +150,10 @@ public class Juego implements Comando {
 
 
     public void iniciarPartida() {
-        consola.imprimir(Valor.RED + "Monopoly ETSE\n" + Valor.RESET);
-        consola.imprimir("Iniciando partida...\n");
 
+        //consola.imprimir(Valor.RED + "Monopoly ETSE\n" + Valor.RESET);
+        //consola.imprimir("Iniciando partida...\n");
+        
         boolean salir = false;
         while (!salir) {
             // El propio Juego pide el comando a la consola
@@ -1197,6 +1198,35 @@ public class Juego implements Comando {
         }
 
         this.tratos.add(trato);
+
+        String mensaje = jugadorRecibe.getNombre() + ", ¿te doy ";
+        
+         if (trato.getPropiedadPropone() != null && trato.getDineroPropone() != 0) {
+            mensaje = mensaje + trato.getPropiedadPropone().getNombre() + " y " + trato.getDineroPropone();
+            
+        }
+        else if(trato.getPropiedadPropone() != null){
+            mensaje = mensaje + trato.getPropiedadPropone().getNombre();
+            
+        }
+        else if(trato.getDineroPropone() != 0) {
+            mensaje = mensaje + trato.getDineroPropone();
+        }
+
+        mensaje = mensaje + ", ";
+
+        if(trato.getPropiedadRecibe() != null && trato.getDineroRecibe() != 0) {
+            mensaje = mensaje + trato.getPropiedadRecibe().getNombre() + " y " + trato.getDineroRecibe();
+        }
+        else if(trato.getPropiedadRecibe() != null){
+            mensaje = mensaje + trato.getPropiedadRecibe().getNombre();
+        }
+        else if(trato.getDineroRecibe() != 0) {
+            mensaje = mensaje + trato.getDineroRecibe() + "";        
+        }
+
+        consola.imprimir(mensaje);
+
     }
 
     private void imprimirTrato(Trato trato, int idTrato) {
@@ -1273,6 +1303,8 @@ public class Juego implements Comando {
         }
 
         tratos.remove(idTrato - 1);
+
+        consola.imprimir("Trato" + idTrato + " eliminado.");
     }
 
     public void aceptarTrato(int idTrato) throws TratosException {
@@ -1313,6 +1345,8 @@ public class Juego implements Comando {
     
         //Eliminar el trato de la lista de tratos
         tratos.remove(idTrato - 1);
+
+        consola.imprimir("Trato con " + trato.getJugadorPropone().getNombre() + " aceptado");
 
     }
 
