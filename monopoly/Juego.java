@@ -354,7 +354,7 @@ public class Juego implements Comando {
                     break;
 
                 case "trato":
-                    if(partes[2].equals("cambiar") && partes.length == 5 || partes.length == 6) {
+                    if(partes[2].equals("cambiar") && partes.length == 5 || partes.length == 7) {
                        try{
                             proponerTrato(comando);
                         }catch (Exception error) {
@@ -1112,11 +1112,7 @@ public class Juego implements Comando {
             }
 
         String contenido = comando.substring(inicioParentesis + 1, finParentesis);
-        // contenido ahora es ej: "Solar12 y 100000, Solar3"
 
-        // 3. Dividir en dos partes usando la coma (,)
-        // parte[0] = Lo que ofrece el jugador que propone (Jugador 1)
-        // parte[1] = Lo que pide a cambio (Jugador 2)
         String[] lados = contenido.split(",");
 
         if (lados.length != 2) {
@@ -1126,8 +1122,6 @@ public class Juego implements Comando {
 
         String lado1 = lados[0].trim();
 
-        // Dividimos por " y " (con espacios para evitar romper nombres que contengan 'y')
-        // "\\s+y\\s+" busca la letra 'y' rodeada de espacios.
         String[] elementos = lado1.split("\\s+y\\s+");
 
         for (String elemento : elementos) {
@@ -1225,6 +1219,8 @@ public class Juego implements Comando {
             mensaje = mensaje + trato.getDineroRecibe() + "";        
         }
 
+
+        mensaje = mensaje + "?";
         consola.imprimir(mensaje);
 
     }
